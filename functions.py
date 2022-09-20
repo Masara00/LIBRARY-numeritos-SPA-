@@ -45,29 +45,51 @@ import numpy as np
 
 
 ## | JAVI |
-develop
-
 sns.set_style('whitegrid')
 
-def graficas (df:dataframe,y):
+def graficas (df,y):
     '''
     Función para representar varias graficas antes de realizar cualquier modelo
-    df es un DataFrame
-    y es la variable dependiente y se expresa como df(['y'])
+    df es un DataFrame.
+
+    Args:
+        df:Dataframe con las variables numéricas
+        y: Variable target.
+
+    Return:
+        Subplot compuesto por:
+        Gráfica 'pairplot'
+        Gráfica 'heatmap'
     '''
     plt.figure(figsize=(20,20))
     sns.pairplot(df)
-    fig, axes = plt.subplots(2,1)
+    plt.fig, axes = plt.subplots(2,1)
     sns.distplot(y, ax = axes[0])
     sns.heatmap(df.corr(), annot=True, ax = axes[1])
     axes[0].set_title("Distribucion")
     axes[1].set_title("Mapa Correlación");
 
-def funcion_lineal_regression(X:list,y,test_size_1:float,random_state_1:int):
-    '''Función para ingresar los datos de las variables previsoras (X) y la variable target (y), 
+def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
+    '''
+    Función para ingresar los datos de las variables previsoras (X) y la variable target (y), 
     los parámetros necesarios para realizar el train test split (random_state y test_size).
 
-    En esta función se extrae como salida el módelo entrenado, el coeff_df, los valores de intercepto y las gradientes. 
+    Args:
+        X:Dataframe con las variables predictoras
+        y: Variable target
+        test_size:float, porcentaje designado para test
+        random_state: semilla para reproducir la función.
+
+    Return:
+        Devuelve las siguientes variables:
+        X_train: Dataframe de las variables predictoras para el entrenamiento del modelo de regresión lineal
+        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
+        y_train: Dataframe de las variables target para el entrenamiento del modelo de regresión lineal
+        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
+        lin_reg: módelo entrenado
+        lin_reg.intercept_: float, valor de ordenadas de la función de regresión lineal
+        lin_reg.coef_: lista, coeficientes de la función de regresión lineal
+        coeff_df: Dataframe con los coeficientes de la función de regresión lineal.
     '''
     
     lin_reg = LinearRegression()   
@@ -90,18 +112,31 @@ def funcion_lineal_regression(X:list,y,test_size_1:float,random_state_1:int):
     print("Estos son las pendientes de cada gradiente visto en un Dataframe:\n-----")
     print(coeff_df)
 
-    return lin_reg,coeff_df, lin_reg.intercept_,lin_reg.coef_
+    return X_train, X_test, y_train, y_test,lin_reg, lin_reg.intercept_,lin_reg.coef_,coeff_df
 
-def función_metricas_error (model:function,X_test:Dataframe,y_test:DataFrame,X_train:DataFrame,y_train:DataFrame):
+def función_metricas_error (model,X_test,y_test,X_train,y_train):
     '''
     Función que a partir de la función entrenada te facilita las métricas más importantes en regresión lineal.
-    Se ingresa la función entrenada y los valores de test: X_test,y_test.
-    También se ingresan los datos de entrenamiento del  módelo para calcular las métricas de error
+    
+    Args:
+        model: modelo entrenado de regresión lineal
+        X_train: Dataframe de las variables predictoras para el entrenamiento del modelo de regresión lineal
+        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
+        y_train: Dataframe de las variables target para el entrenamiento del modelo de regresión lineal
+        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal.
 
-    Se extrae de esta función las variables:
-    mae_pred,mape_pred,mse_pred,msqe_pred,mae_train,mape_train,mse_train,msqe_train
-    OJO!! Tengo dudas sobre si el model se queda entrenado.
+    Return:
+        Devuelve las siguientes variables:
+        mae_pred: Mean Absolute Error de las prediciones 
+        mape_pred: Mean absolute percentage error de las predicciones
+        mse_pred: Mean Squared Error de las prediciones
+        msqe_pred: Mean Squared Quadratic Error de las predicciones
+        mae_train: Mean Absolute Error del entrenamiento
+        mape_train: Mean absolute percentage error del entrenamiento
+        mse_train: Mean Squared Error del entrenamiento
+        msqe_train: Mean Squared Quadratic Error de las entrenamiento.
     '''
+
     predictions = model.predict(X_test)                   #   Determino los resultados que deberían de dar con los valores guardados para
     score=model.score(X_test, y_test)
     mae_pred= metrics.mean_absolute_error(y_test, predictions)
@@ -132,9 +167,22 @@ def función_metricas_error (model:function,X_test:Dataframe,y_test:DataFrame,X_
 
     return mae_pred,mape_pred,mse_pred,msqe_pred,mae_train,mape_train,mse_train,msqe_train
 
-def funcion_ridge (model:function,X_test:Dataframe,y_test:DataFrame,X_train:DataFrame,y_train:DataFramme,alpha_1:int):
-    '''Función para entrenar la función de ridge y el calculo del error regularizando o sin regularizar del MSE.
-    Se extrae de esta función la función de Ridge entrenada.'''
+
+def funcion_ridge (model,X_test,y_test,X_train,y_train,alpha_1):
+    '''
+    Función para entrenar la función de ridge y el calculo del error regularizando o sin regularizar del MSE.
+
+    Args:
+        model: modelo entrenado de regresión lineal
+        X_train: Dataframe de las variables predictoras para el entrenamiento del modelo de regresión lineal
+        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
+        y_train: Dataframe de las variables target para el entrenamiento del modelo de regresión lineal
+        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
+        alpha_1:int. Número de variable alpha para entrenar la función Ridge.
+
+    Return:
+        RidgeR: función Ridge entrenada.
+    '''
     
     ridgeR = Ridge(alpha = alpha_1)
     ridgeR.fit(X_train, y_train)
@@ -145,7 +193,6 @@ def funcion_ridge (model:function,X_test:Dataframe,y_test:DataFrame,X_train:Data
     mse_ridge_pred=metrics.mean_squared_error(y_test, ridgeR.predict(X_test))
     mse_ridge_train=metrics.mean_squared_error(y_train, ridgeR.predict(X_train))
 
-
     print("------")
     print("Train MSE sin regularización:", round(mse_train,2))
     print("Test MSE sin regularización:", round(mse_pred,2))
@@ -155,10 +202,21 @@ def funcion_ridge (model:function,X_test:Dataframe,y_test:DataFrame,X_train:Data
    
     return ridgeR
 
-def correccion_Lasso_a_aplicar(model:function,X_test:Dataframe,y_test:DataFrame,X_train:DataFrame,y_train:DataFramme,alpha_1:int):
-    '''Función para entrenar la función de Lasso y el calculo del error regularizando o sin regularizar del MSE.
-    Se extrae de esta función la función de Ridge entrenada.'''
+def correccion_Lasso_a_aplicar(model,X_test,y_test,X_train,y_train,alpha_1:int):
+    '''
+    Función para entrenar la función de Lasso y el calculo del error regularizando o sin regularizar del MSE.
 
+    Args:
+        model: modelo entrenado de regresión lineal
+        X_train: Dataframe de las variables predictoras para el entrenamiento del modelo de regresión lineal
+        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
+        y_train: Dataframe de las variables target para el entrenamiento del modelo de regresión lineal
+        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
+        alpha_1:int. Número de variable alpha para entrenar la función Ridge.
+
+    Return:
+        LassoR: función Ridge entrenada.
+    '''
 
     lassoR = Lasso(alpha=alpha_1)
     lassoR.fit(X_train, y_train)
@@ -178,30 +236,40 @@ def correccion_Lasso_a_aplicar(model:function,X_test:Dataframe,y_test:DataFrame,
 
     return lassoR
 
-def correccion_ridge_a_aplicar(model:function, ridgeR:function, X_train:Dataframe, X_test:Dataframe, y_train:Dataframe, y_test:Dataframe,log_ini:int,log_fin:int,n_alphas:int):
-    '''Función que evalua la regularización de Ridge para un modelo de regresión lineal entrenado y
+def correccion_ridge_a_aplicar(model, X_test, y_test, ridgeR, log_ini:int,log_fin:int,n_alphas:int):
+    '''
+    Función que evalua la regularización de Ridge para un modelo de regresión lineal entrenado y
     que a partir de los valores logarítmicos y alpha muestra una gráfica donde se puede localizar 
     el punto más bajo de los errores y así determinar cuál es el valor de alpha más adecuado.
+
+    Args:
+        model: modelo entrenado de regresión lineal
+        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
+        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
+        ridgeR: función de Ridge entrenada
+        log_ini:int, valor inicial logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
+        log_fin:int, valor final logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
+        n_alphas:int. Número de variable alpha a usar para optimizar la función Ridge.
+
+    Return:
+        Grafica: muestra los valores de alpha en abscisas en el rango indicado y los valores de Mean Square Error de la función.
+
     
     OJO!!! esta función está por revisar'''
     predictions = model.predict(X_test)                   #   Determino los resultados que deberían de dar con los valores guardados para
 
     alphas = np.logspace(log_ini, log_fin, n_alphas) 
     baseline_error = metrics.mean_squared_error(y_test, predictions)
-    coef_ridge = []
+    coef_ridgeR = []
     err_ridge = []
     baseline = []
 
     for a in alphas:
-        ridge = Ridge(alpha=a)
-        ridge.fit(X_train, y_train)
-        
-        coef_ridge.append(ridge.coef_)
-        
-        y_pred = ridge.predict(X_test)
-        ridge_error = metrics.mean_squared_error(y_pred, y_test)
-        
-        err_ridge.append(ridge_error)
+        ridgeR.set_params(alpha=a)
+        coef_ridgeR.append(ridgeR.coef_)
+        y_pred = ridgeR.predict(X_test)
+        lasso_error = metrics.mean_squared_error(y_pred, y_test)    
+        err_ridge.append(lasso_error)
         baseline.append(baseline_error)
     print(min(err_ridge))
     
@@ -218,26 +286,42 @@ def correccion_ridge_a_aplicar(model:function, ridgeR:function, X_train:Datafram
     plt.title(r'Regression error ($\lambda$)', fontsize=30)
     plt.show();
 
-def correccion_Lasso_a_aplicar(model:function, lassoR:function, X_train:DataFrame, X_test:DataFrame, y_train:DataFrame, y_test:DataFrame,log_ini:int,log_fin:int,n_alphas:int):
-    '''Función que evalua la regularización de Lasso para un modelo de regresión lineal entrenado y
+def correccion_Lasso_a_aplicar(model, X_test, y_test, lassoR, log_ini:int,log_fin:int,n_alphas:int):
+    '''
+    Función que evalua la regularización de Lasso para un modelo de regresión lineal entrenado y
     que a partir de los valores logarítmicos y alpha muestra una gráfica donde se puede localizar 
     el punto más bajo de los errores y así determinar cuál es el valor de alpha más adecuado.
-    
-    OJO!!! esta función está por revisar'''
+
+    Args:
+        model: modelo entrenado de regresión lineal
+        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
+        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
+        LassoR función de Lasso entrenada
+        log_ini:int, valor inicial logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
+        log_fin:int, valor final logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
+        n_alphas:int. Número de variable alpha a usar para optimizar la función Ridge.
+
+    Return:
+        Grafica: muestra los valores de alpha en abscisas en el rango indicado y los valores de Mean Square Error de la función.
+
+    OJO!!! esta función está por revisar
+    '''
+
     predictions = model.predict(X_test)
     alphas = np.logspace(log_ini, log_fin, n_alphas) 
     baseline_error = metrics.mean_squared_error(y_test, predictions)
-    coef_ridge = []
-    err_ridge = []
+    coef_lassoR = []
+    err_lasso = []
     baseline = []
 
     for a in alphas:
         lassoR.set_params(alpha=a)
-        lassoR.fit(X_train, y_train)
         coef_lassoR.append(lassoR.coef_)
         y_pred = lassoR.predict(X_test)
         lasso_error = metrics.mean_squared_error(y_pred, y_test)    
         err_lasso.append(lasso_error)
+        baseline.append(baseline_error)
+
 
     print(min(err_lasso))
     plt.figure(figsize=(20,10))
@@ -253,31 +337,43 @@ def correccion_Lasso_a_aplicar(model:function, lassoR:function, X_train:DataFram
     plt.title(r'Regression error ($\lambda$)', fontsize=30)
    plt.show();
 
-def error_modelo(model:function, X_test:DataFrame, y_test:DataFrame):
+def error_modelo(model, X_test, y_test):
     '''
     Función que a partir de un modelo entrenado con las variables X_test e y_test, muestra las
-    métricas más relevantes de un módelo clasificatorio y devuelve un DataFrame de los mismos.
+    métricas más relevantes de un módelo clasificatorio.
+
+    Args:
+        model: modelo entrenado de regresión lineal
+        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
+        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal.
+
+    Return:
+        df_error: Dataframe donde aparecen los datos de 'Accuracy','f-1 score','Recall','Precision'.
+        Muestra también el cálculo de la curva ROC
+        Grafica de la matriz de confunsión. 
+
     '''
+
     y_pred = model.predict(X_test)
     f1_model=f1_score(y_test, y_pred,average='macro')
     acc_model=accuracy_score(y_test, y_pred)
     precision_model=precision_score(y_test, y_pred,average='macro')
     recall_model=recall_score(y_test, y_pred,average='macro')
-    roc_auc_model=roc_auc_score(y_test, model.predict_proba(X_test),multi_class='ovr')
+    roc_auc_score=roc_auc_score(y_test, model.predict_proba(X_test),multi_class='ovr')
     conf_model=confusion_matrix(y_test, y_pred, normalize='true')
     model_error = {'accuracy': acc_model, 'f-1': f1_model, 'recall': recall_model , 'precision': precision_model}
-    df=pd.DataFrame.from_dict(model_error,orient='index')
+    df_error=pd.DataFrame.from_dict(model_error,orient='index')
 
     print('Accuracy', acc_model)
     print('F1', f1_model)
     print('Precision', precision_model)
     print('Recall', recall_model)
     print('-'*30)
-    print('ROC', roc_auc_model)
+    print('ROC', roc_auc_score)
 
     plt.figure(figsize=(10,10))
     sns.heatmap(conf_model, annot=True)
-    return df
+    return df_error
 
 =======
 
