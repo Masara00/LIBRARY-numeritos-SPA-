@@ -806,5 +806,29 @@ def muestra_nan(df):
     suma_nan = df.isnull().sum().sort_values(ascending = False)
     percentaje_nan = (df.isnull().sum() / df.isnull().count()*100).sort_values(ascending = False)
     return pd.concat([suma_nan, percentaje_nan], axis=1, keys = ['suma_nan', 'percentaje_nan'])
+
+
+#|| LAURA ||
+
+def pieplot_one_column(dataframe, column, title, background_colour, colour_map=None):
+    '''
+    Función para representar un pie plot, mostrando el value.counts de una columna
+    Permite personalizar paleta de colores, color de fondo y título.
+    Args:
+        dataframe: Dataframe a utilizar (dataframe)
+        column: Nombre de la columna para hacer el value counts (str)
+        title: Título de la figura (str)
+        background_colour: Color de fondo en formate HEX o palabra (str)
+        colour_map: Mapa de color de matplotlib en formato: cm.seismic, las paletas se 
+                    pueden encontrar en https://matplotlib.org/stable/tutorials/colors/colormaps.html
+    Return:
+        Gráfica pieplot
+    '''
+    fig, ax = plt.subplots(facecolor=background_colour, figsize=(13, 8))
+    data = dataframe[column].value_counts()
+    data.plot(kind='pie', autopct='%.0f%%', wedgeprops={"edgecolor":"white"},colormap=colour_map)
+    plt.legend(loc = 2, bbox_to_anchor = (1,1), prop={'size': 15}, facecolor=background_colour, edgecolor='white', )
+    plt.title(title, pad=30, fontsize = 15)
+    plt.show();
     
     
