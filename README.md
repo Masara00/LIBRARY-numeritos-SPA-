@@ -12,6 +12,7 @@
 ### [Javier Tenorio](https://github.com/75Engel)
 ### [Antonio Morales](https://github.com/Toni2Morales)
 ### [Mario](https://github.com/Masara00)
+### [Christian Jerome Bader](https://github.com/jeromebader)
 ### [Sara Bareda](saradevera)
 ### [Enrique](https://github.com/EnriRuRu)
 ### [Xin](xyaimao)
