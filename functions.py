@@ -12,10 +12,31 @@ from sklearn import linear_model, metrics, model_selection
 from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score
 from sklearn import metrics
 from sklearn import preprocessing
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
+from sklearn.linear_model import ElasticNet
+from sklearn.ensemble import BaggingRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import VotingRegressor
+from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.svm import SVR
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from sklearn import metrics
 
 sns.set_style('whitegrid')
 
-def graficas(df:dataframe,y):
+def graficas (df:dataframe,y):
     '''
     Función para representar varias graficas antes de realizar cualquier modelo
     df es un DataFrame
@@ -244,3 +265,4 @@ def error_modelo(model:function, X_test:DataFrame, y_test:DataFrame):
     plt.figure(figsize=(10,10))
     sns.heatmap(conf_model, annot=True)
     return df
+
