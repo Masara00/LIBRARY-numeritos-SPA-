@@ -9,6 +9,9 @@ import seaborn as sns
 import plotly.graph_objs as go
 import re
 from plotly.offline import init_notebook_mode, iplot, plot
+from matplotlib import cm
+import joypy
+from joypy import joyplot
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression,Ridge,Lasso
@@ -831,6 +834,33 @@ def pieplot_one_column(dataframe, column, title, background_colour, colour_map=N
     plt.legend(loc = 2, bbox_to_anchor = (1,1), prop={'size': 15}, facecolor=background_colour, edgecolor='white', )
     plt.title(title, pad=30, fontsize = 15)
     plt.show();
+
+
+def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line_colour='white', colour_map=None, 
+                       figsize=(7,4), x_limit=None):
+    '''
+    Función para representar un joyplot, mostrando los valores de una columna, agrupados por otra
+    Permite personalizar paleta de colores, título y color de linea.
+    Args:
+        dataframe: Dataframe a utilizar (dataframe)
+        classifier_column: Columna por la que se quiere hacer un groupby (str)
+        numeric_column: Columna de la que se analizarán los datos
+        title: Título de la figura (str)
+        line_colour: Color de línea de contorno, en formato HEX o palabra (str). Por defecto es 'white'
+        colour_map: Mapa de color de matplotlib en formato: cm.seismic, las paletas se 
+                    pueden encontrar en https://matplotlib.org/stable/tutorials/colors/colormaps.html
+                    Por defecto es la paleta automática de matplotlib
+        figsize: Tamaño de la figura, en formato tupla. Por defecto es (7,4)
+        x_limit: Límites para el eje x, formato lista. Por defecto es None.
+    Return:
+        Gráfica joyplot
+    '''
+    fig, axes = joyplot(dataframe, by = classifier_column, column = numeric_column, colormap=colour_map, fade = True, 
+    figsize = figsize, title = title, linewidth=0.4, linecolor=line_colour)
+    for a in axes[:-1]:
+        a.set_xlim(x_limit)  
+    plt.show()
+
 
 =======
 ## | QINGHUA |
