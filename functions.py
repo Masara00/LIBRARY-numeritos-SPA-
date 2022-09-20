@@ -36,8 +36,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn import metrics
 from datetime import datetime
+from imblearn.over_sampling import SMOTE
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.pipeline import Pipeline 
+from sklearn.preprocessing import LabelEncoder
 from pandas_profiling import ProfileReport
-=======
 from skimage.io import imread
 import os
 import cv2
@@ -335,7 +339,7 @@ def correccion_Lasso_a_aplicar(model, X_test, y_test, lassoR, log_ini:int,log_fi
     plt.ylabel('error', fontsize=30)
     ax.legend(fontsize=30)
     plt.title(r'Regression error ($\lambda$)', fontsize=30)
-   plt.show();
+    plt.show();
 
 def error_modelo(model, X_test, y_test):
     '''
@@ -375,7 +379,6 @@ def error_modelo(model, X_test, y_test):
     sns.heatmap(conf_model, annot=True)
     return df_error
 
-=======
 
 ## | LUIS | 20_09_14_28
 
@@ -402,23 +405,22 @@ def time_now():
     return diaSemana, dia, mes, anyo, hora, minuto, segundo
 
 def feature_visual(url):
-'''Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
+    '''Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
 (Comparativa por columnas, mapa de calor, mapa de correlaciones.)'''    
     df=pd.read_csv(url)
     profile=ProfileReport(df, title="Pandas Profiling Report")
     return print(profile)
 
-def Feature_analisis(df):
-    '''Análisis incial del df '''
-    print(df.head())
-    print(-*10)
-    print(df.info())
-    print(-*10)
-    print(df.isnull().sum())
-    print(-*10)
-    print(df.value_counts())
+# def Feature_analisis(df):
+#     '''Análisis incial del df '''
+#     print(df.head())
+#     print(-*10)
+#     print(df.info())
+#     print(-*10)
+#     print(df.isnull().sum())
+#     print(-*10)
+#     print(df.value_counts())
     
-=======
 
 ## | SARA | 20_09_14_28
 
@@ -635,7 +637,6 @@ def radical_dropping(df):
 
 
         
-=======
 ## | MARIO |
 
     
@@ -831,6 +832,173 @@ def pieplot_one_column(dataframe, column, title, background_colour, colour_map=N
     plt.title(title, pad=30, fontsize = 15)
     plt.show();
 
+=======
+## | QINGHUA |
+
+
+def feature_important(model,X):
+    '''
+    funcion que saca feature important del modelo  y su grafico
+
+    args:
+        model: el modelo
+        X: datafeme de los features
+
+    returns:
+        datafreme de feature impottant
+        grafico de feature impottant
+    '''
+    df=pd.DataFrame(model.feature_importances_,
+                X.columns,
+                columns = ["Feature imp"]).sort_values("Feature imp", ascending=False)
+    grafico=df.sort_values("Feature imp").plot.barh(y='Feature imp')
+    return (df,grafico)
+
+
+def subplots(df,X,y1,y2):
+    '''
+    función que hace un subplot de una variable, distribuida según los datos de otras dos variables
+    
+    args:
+        x:columa elegido para x
+        y1:columa elegido para y de scatterplot
+        y2:columa elegido para y de  lineplot
+
+    returns:
+        grafico subplot 
+
+    '''
+    f,(axi1,axi2)=plt.subplots(2,1 ,figsize=(10,10))
+    sns.scatterplot(x=X,y=y1,data=df,ax=axi1)
+    sns.lineplot(x=X,y=y2,data=df,ax=axi2)
+
+## Christian
+
+def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
+    """ Función para realizar over o undersampling o randomsampling para datos no balanceados.\n
+        Se realiza después del train test split.
+
+        Args:
+        X_train (array)  : valores de X_train
+        y_train (array)  : valores de y_train
+        randomstate (int) : valor del randomstate
+        scalertype (str) : nombre del scaler:  minmax , standard
+        sampletype (str) : nombre del sampler : over, under , random
+
+        Returns:
+        X_train_res (array) : nuevo array del X_train scaled y sampled
+        y_train_res (array) : nuevo array del y_train scaled y sampled
+    """
+    
+    if scalertype == "minmax":
+        scaler = MinMaxScaler()
+    elif scalertype == "standard":
+        scaler = StandardScaler()
+    else:
+        scaler = MinMaxScaler()
+
+    X_train_scal = scaler.fit_transform(X_train)  # Valor mínimo 10 --> 0, Valor máximo 50 --> 1
+    print ("data scaled with scaler:", scaler)
+
+    over = SMOTE(random_state = randomstate)
+    under = RandomUnderSampler(random_state = randomstate)
+    rus = RandomUnderSampler(random_state = randomstate)
+
+    if sampletype == "over":
+        steps = [('o',over)]  
+    elif sampletype == "under":
+        steps = [('u',under)]
+    else:
+        steps = [('r',rus)]
+
+
+    pipeline1 = Pipeline(steps=steps)
+    X_train_res, y_train_res = pipeline1.fit_resample(X_train_scal, y_train)
 
     
+    print('After scaling and sampling, the shape of train_X: {}'.format(X_train_res.shape))
+    print('After scaling and sampling, the shape of train_y: {} \n'.format(y_train_res.shape))
+    print ("applied Methods: ",steps)
+
+    return  X_train_res,  y_train_res
+
+
+
+def string_replacer (df,col,replacestring,newvalue):
+    """ Reemplaza un string deseado por otro string deseado en toda la columna.
+
+        Args:
+        df (DataFrame) :   Dataframe en que se debe aplicar
+        col (str) :        Nombre de la columna
+        replacestring (str) :  El string que debe ser reemplazado
+        newvalue (str) : El nuevo valor 
+
+        Returns:
+        df[co] (array):  Array de la columna actualizado
+     """
+    df[col] = df[col].apply(lambda x : x.replace(replacestring,newvalue) )
+    return df[col]
+
+
+def force_number_convert (listnames,df,newtype):
+    """ 
+    Convierte una lista de columnas tipo string a un tipo deseado.
+
+    Args:
+    listnames (list) : Lista con los nombres de las columnas
+    df (DataFrame) : DataFrame a actualizar
+    newtype (string) : String del tipo nuevo por ejemplo Float64
+
+    Returns:
+    df (DataFrame) : DataFrame actualizado
+    """
+
+
+
+    for i in listnames:
+        df[i] = df[i].astype(newtype)
+
+    return df
+
+
+
+def dt64_to_float(dt64):
+   """ 
+   Convierte una columna del datetime en un float
+   
+   Args:
+   dt64 (array) : Array en el formato DateTime64
+
+   Returns:
+   values_float (array)  : Array con los valores convertidos de datetime a float
+
+   """
+   year = dt64.astype('M8[Y]')
+   days = (dt64 - year).astype('timedelta64[D]')
+   year_next = year + np.timedelta64(1, 'Y')
+   days_of_year = (year_next.astype('M8[D]') - year.astype('M8[D]')).astype('timedelta64[D]')
+   values_float = 1970 + year.astype(float) + days / (days_of_year)
+   return values_float
+
+
+
+def basic_encoding (df):
+    """
+    Realiza el encoding de variables categorícas en númericas de manera simple,  \n 
+    sin agregar nuevas columnas.
+
+    Args:
+    df (DataFrame) : DataFrame actual
+
+    Returns:
+    df (DataFrame) : Devuelve nuevo DataFrame
+
     
+    """
+    le = LabelEncoder()
+    for i in df.columns:
+            if df[i].dtype == 'object':
+                    enc_name = i+"_encoded"
+                    df[enc_name] = le.fit_transform(df[i])
+
+    return df
