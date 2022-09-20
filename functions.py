@@ -12,7 +12,9 @@ from plotly.offline import init_notebook_mode, iplot, plot
 from matplotlib import cm
 import joypy
 from joypy import joyplot
+import random
 
+import cv2 as cv
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression,Ridge,Lasso
 from sklearn import linear_model, metrics, model_selection
@@ -880,6 +882,26 @@ def acotar_valores_clase(dataframe, columna_filtro, clase, max_val, min_val):
     indexNames = above_threshold + below_threshold
     
     dataframe.drop(indexNames, inplace=True)
+
+
+def Perspective_aug(src, strength):
+    '''
+    Función que utiliza OpenCV para aplicar una distrosión a una imagen (wrap perspective)
+    Args:
+        src: Array de píxels de la imagen a transformar 
+        strength: Nivel de distorsión, a más alto, mayor distorsión (int)
+    Return:
+        Devuelve la imagen distorsionada
+    '''
+    image = src
+    pts_base = np.float32([[0, 0], [300, 0], [0, 300], [300, 300]])
+    pts1=np.random.rand(4, 2)*random.uniform(-strength,strength)+pts_base
+    pts1=pts1.astype(np.float32)
+    M = cv.getPerspectiveTransform(pts1, pts_base)
+    trans_img = cv.warpPerspective(image, M, (src.shape[1], src.shape[0]))
+    trans_img = cv.warpPerspective(image, M, (src.shape[1], src.shape[0]))
+
+    return trans_img
 
 =======
 ## | QINGHUA |
