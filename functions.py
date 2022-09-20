@@ -304,7 +304,6 @@ def correccion_Lasso_a_aplicar(model, X_test, y_test, lassoR, log_ini:int,log_fi
     Return:
         Grafica: muestra los valores de alpha en abscisas en el rango indicado y los valores de Mean Square Error de la función.
 
-
     OJO!!! esta función está por revisar
     '''
 
