@@ -467,6 +467,79 @@ def drop_con_condicion(df, columna, condicion):
     df.drop(df[df[columna]==condicion].index, inplace=True)
     return df
 
+
+## | IRENE | 20_09_15_00
+
+def data_report(df):
+
+    '''
+    Genera DF cuyas columnas son las del df, y filas q indican el tipo de dato, porcentaje de missings, número de valores únicos 
+    y porcentaje de cardinalidad.
+
+    Arg:
+        df: dataframe
+
+    Returns:
+        Dataframe de valor informativo
+    '''
+
+    cols = pd.DataFrame(df.columns.values, columns=["COL_N"])
+
+    types = pd.DataFrame(df.dtypes.values, columns=["DATA_TYPE"])
+
+    percent_missing = round(df.isnull().sum() * 100 / len(df), 2)
+    percent_missing_df = pd.DataFrame(percent_missing.values, columns=["MISSINGS (%)"])
+
+    unicos = pd.DataFrame(df.nunique().values, columns=["UNIQUE_VALUES"])
+    
+    percent_cardin = round(unicos['UNIQUE_VALUES']*100/len(df), 2)
+    percent_cardin_df = pd.DataFrame(percent_cardin.values, columns=["CARDIN (%)"])
+
+    concatenado = pd.concat([cols, types, percent_missing_df, unicos, percent_cardin_df], axis=1, sort=False)
+    concatenado.set_index('COL_N', drop=True, inplace=True)
+
+
+    return concatenado.T
+
+
+def number_of_outliers(df):
+    
+    '''
+    Devuelve la suma de outliers en cada columna
+
+    Arg:
+        df: dataframe 
+
+    Returns:
+        Imprime por pantalla la suma de outliers para cada columna
+    '''
+    
+    Q1 = df.quantile(0.25)
+    Q3 = df.quantile(0.75)
+    IQR = Q3 - Q1
+    
+    return ((df < (Q1 - 1.5 * IQR)) | (df > (Q3 + 1.5 * IQR))).sum()
+
+
+def radical_dropping(df):
+
+    '''
+    Elimina todos los missings y duplicados
+
+    Arg:
+        df: dataframe
+
+    Returns:
+        Dataframe modificado
+    '''
+
+    df.drop_duplicates(inplace=True)
+
+    df.dropna(inplace=True)
+
+
+        
+=======
 ## | MARIO |
 
     
