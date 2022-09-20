@@ -13,6 +13,8 @@ from matplotlib import cm
 import joypy
 from joypy import joyplot
 import random
+import wget
+import pygame
 
 
 import cv2 as cv
@@ -905,6 +907,31 @@ def wrap_perspective_cv2(src, strength):
     trans_img = cv.warpPerspective(image, M, (src.shape[1], src.shape[0]))
 
     return trans_img
+
+
+def sql_rules():
+    '''
+    Función que hace sonar el estribillo de "No te olvides de poner el where en el delete from.
+    Primero descarga el audio en el directorio actual, y después la hace sonar a través de pygame
+    Return:
+        Suena el estribil
+    '''
+    # get current directory and create path
+    current_dir = os.getcwd()
+    if '/Users' in current_dir:
+        path = current_dir + '/noteolvidesdeponerelwhere.mp3'
+    else:
+        # AQUÍ HAY QUE CAMBIAR LA / EN EL NOMBRE DEL ARCHIVO PARA QUE SEA PARA WINDOWS, NO SÉ SI HAY QUE HACER OTRO PARA LINUX
+        path = current_dir + '/noteolvidesdeponerelwhere.mp3'
+
+    # download the wav file in your current directory
+    url = 'https://drive.google.com/uc?export=download&id=1_2xEhK3rBiG8XaNJTymTy7TpDXGEo7Id'
+    wget.download(url, path)
+
+    # initiate pygame and play sound
+    pygame.init()
+    pygame.mixer.init()
+    pygame.mixer.Sound.play(pygame.mixer.Sound(path))
 
 
 ## | QINGHUA |
