@@ -830,5 +830,7 @@ def pieplot_one_column(dataframe, column, title, background_colour, colour_map=N
     plt.legend(loc = 2, bbox_to_anchor = (1,1), prop={'size': 15}, facecolor=background_colour, edgecolor='white', )
     plt.title(title, pad=30, fontsize = 15)
     plt.show();
+
+
     
     
