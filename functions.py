@@ -13,10 +13,11 @@ from matplotlib import cm
 import joypy
 from joypy import joyplot
 
+from time import time
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression,Ridge,Lasso
 from sklearn import linear_model, metrics, model_selection
-from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score
+from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score, mean_absolute_error, explained_variance_score
 from sklearn import metrics
 from sklearn import preprocessing
 from sklearn.linear_model import LinearRegression
@@ -25,7 +26,7 @@ from sklearn.linear_model import Lasso
 from sklearn.linear_model import ElasticNet
 from sklearn.ensemble import BaggingRegressor
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.ensemble import VotingRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.neighbors import KNeighborsRegressor
@@ -860,7 +861,6 @@ def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line
         a.set_xlim(x_limit)  
     plt.show()
 
-=======
 ## | QINGHUA |
 
 
@@ -1028,5 +1028,108 @@ def basic_encoding (df):
             if df[i].dtype == 'object':
                     enc_name = i+"_encoded"
                     df[enc_name] = le.fit_transform(df[i])
+
+    return df
+
+
+def clean_emoji(text):
+    ''' Funcion para limpiar los emojis que aparecen dentro de un texto.
+    
+        Args:
+        text (str): texto sobre el que se pretende realizar la función.
+        
+        Returns:
+        emoj_text (text): el texto que se introduce en el argumento pero 
+        sin ningún emoji.
+    
+    '''
+    emoji_text = re.compile("["
+                           u"\U0001F600-\U0001F64F"  # emoticons
+                           u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                           u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                           u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                           u"\U00002702-\U000027B0"
+                           u"\U000024C2-\U0001F251"
+                           "]+", flags=re.UNICODE)
+    return emoji_text.sub(r'', text)
+
+
+def nine_Regressor_Models( X_train, y_train, X_test, y_test):
+    '''Función para aplicar los modelos KNeighborsRegressor, GradientBoostingRegressor, ExtraTreesRegressor, .\n
+       RandomForestRegressor, RandomForestRegressor, DecisionTreeRegressor y LinearRegression.
+       
+       Args:
+       X_train (array o dataFrame): valores de X_train
+       y_train (array o dataFrame): valores de y_train
+       X_test (array o dataFrame): valores de X_train
+       y_test (array o dataFrame): valores de y_train
+       
+       Returns:
+       la función imprime:
+       Modelo
+       Training time
+       Explained variance
+       Mean absolute error
+       R2 score
+    '''
+    
+    lista_modelo = []
+    lista_precision =[]
+    lista_mae=[]
+    lista_varianza=[]
+   
+    
+    regressors = [
+        KNeighborsRegressor(),
+        GradientBoostingRegressor(),
+        ExtraTreesRegressor(),
+        RandomForestRegressor(),
+        DecisionTreeRegressor(),
+        LinearRegression()
+    ]
+
+    head = 10
+    for model in regressors[:head]:
+        start = time()
+        model.fit(X_train, y_train)
+        train_time = time() - start
+        start = time()
+        y_pred = model.predict(X_test)
+        predict_time = time()-start    
+        lista_modelo.append(model)
+        lista_precision.append(r2_score(y_test, y_pred))
+        lista_mae.append(mean_absolute_error(y_test, y_pred))
+        lista_varianza.append(explained_variance_score)
+        
+        print(model)
+        print("\tTraining time: %0.3fs" % train_time)
+        print("\tPrediction time: %0.3fs" % predict_time)
+        print("\tExplained variance:", explained_variance_score(y_test, y_pred))
+        print("\tMean absolute error:", mean_absolute_error(y_test, y_pred))
+        print("\tR2 score:", r2_score(y_test, y_pred))
+        print()
+        
+        
+def drop_outliers(df, field_name):
+    ''' Esta función borra los outliers de la columna (field_name) del dataSet(df)
+
+        Args:
+        df (dataFrame): dataFrame original
+        field_name (pandas.core.series): columna original
+        
+        Returns:
+        df (dataFrame): nuevo dataFrame sin outliers en field_name
+    '''
+    
+    iqr = 1.5 * (np.percentile(df[field_name], 75) - np.percentile(df[field_name], 25))
+    
+    try:
+        df.drop(df[df[field_name] > (iqr + np.percentile(df[field_name], 75))].index, inplace=True)
+    except:
+        pass
+    try:
+        df.drop(df[df[field_name] < (np.percentile(df[field_name], 25) - iqr)].index, inplace=True)
+    except:
+        pass
 
     return df
