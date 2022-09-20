@@ -14,11 +14,13 @@ import joypy
 from joypy import joyplot
 import random
 
+
 import cv2 as cv
+from time import time
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression,Ridge,Lasso
 from sklearn import linear_model, metrics, model_selection
-from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score
+from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score, mean_absolute_error, explained_variance_score
 from sklearn import metrics
 from sklearn import preprocessing
 from sklearn.linear_model import LinearRegression
@@ -27,7 +29,7 @@ from sklearn.linear_model import Lasso
 from sklearn.linear_model import ElasticNet
 from sklearn.ensemble import BaggingRegressor
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.ensemble import VotingRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.neighbors import KNeighborsRegressor
@@ -862,6 +864,7 @@ def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line
         a.set_xlim(x_limit)  
     plt.show()
 
+
 def acotar_valores_clase(dataframe, columna_filtro, clase, max_val, min_val):
     '''
     Función para acotar el rango de valores de una determinada columna, haciendo una máscara por cada 
@@ -903,7 +906,7 @@ def Perspective_aug(src, strength):
 
     return trans_img
 
-=======
+
 ## | QINGHUA |
 
 
@@ -942,6 +945,24 @@ def subplots(df,X,y1,y2):
     f,(axi1,axi2)=plt.subplots(2,1 ,figsize=(10,10))
     sns.scatterplot(x=X,y=y1,data=df,ax=axi1)
     sns.lineplot(x=X,y=y2,data=df,ax=axi2)
+
+
+def graf_displot(df):
+    '''
+    funcion que genera n graficos de distribucion segun las columnas numericas que tiene
+
+    args:
+        df: datafreme
+    
+    returns:
+        n graficos de distribucion
+
+    '''
+    numCols = df.select_dtypes(exclude='object').columns
+    for col in numCols:
+        plt.figure(figsize=(10,10))
+        sns.displot(x=col,data=df, palette=["#ff006e", "#83c5be", "#3a0ca3"])
+        plt.show()
 
 ## Christian
 
@@ -1073,3 +1094,232 @@ def basic_encoding (df):
                     df[enc_name] = le.fit_transform(df[i])
 
     return df
+
+
+def clean_emoji(text):
+    ''' Funcion para limpiar los emojis que aparecen dentro de un texto.
+    
+        Args:
+        text (str): texto sobre el que se pretende realizar la función.
+        
+        Returns:
+        emoj_text (text): el texto que se introduce en el argumento pero 
+        sin ningún emoji.
+    
+    '''
+    emoji_text = re.compile("["
+                           u"\U0001F600-\U0001F64F"  # emoticons
+                           u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                           u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                           u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                           u"\U00002702-\U000027B0"
+                           u"\U000024C2-\U0001F251"
+                           "]+", flags=re.UNICODE)
+    return emoji_text.sub(r'', text)
+
+
+def nine_Regressor_Models( X_train, y_train, X_test, y_test):
+    '''Función para aplicar los modelos KNeighborsRegressor, GradientBoostingRegressor, ExtraTreesRegressor, .\n
+       RandomForestRegressor, RandomForestRegressor, DecisionTreeRegressor y LinearRegression.
+       
+       Args:
+       X_train (array o dataFrame): valores de X_train
+       y_train (array o dataFrame): valores de y_train
+       X_test (array o dataFrame): valores de X_train
+       y_test (array o dataFrame): valores de y_train
+       
+       Returns:
+       la función imprime:
+       Modelo
+       Training time
+       Explained variance
+       Mean absolute error
+       R2 score
+    '''
+    
+    lista_modelo = []
+    lista_precision =[]
+    lista_mae=[]
+    lista_varianza=[]
+   
+    
+    regressors = [
+        KNeighborsRegressor(),
+        GradientBoostingRegressor(),
+        ExtraTreesRegressor(),
+        RandomForestRegressor(),
+        DecisionTreeRegressor(),
+        LinearRegression()
+    ]
+
+    head = 10
+    for model in regressors[:head]:
+        start = time()
+        model.fit(X_train, y_train)
+        train_time = time() - start
+        start = time()
+        y_pred = model.predict(X_test)
+        predict_time = time()-start    
+        lista_modelo.append(model)
+        lista_precision.append(r2_score(y_test, y_pred))
+        lista_mae.append(mean_absolute_error(y_test, y_pred))
+        lista_varianza.append(explained_variance_score)
+        
+        print(model)
+        print("\tTraining time: %0.3fs" % train_time)
+        print("\tPrediction time: %0.3fs" % predict_time)
+        print("\tExplained variance:", explained_variance_score(y_test, y_pred))
+        print("\tMean absolute error:", mean_absolute_error(y_test, y_pred))
+        print("\tR2 score:", r2_score(y_test, y_pred))
+        print()
+        
+        
+def drop_outliers(df, field_name):
+    ''' Esta función borra los outliers de la columna (field_name) del dataSet(df)
+
+        Args:
+        df (dataFrame): dataFrame original
+        field_name (pandas.core.series): columna original
+        
+        Returns:
+        df (dataFrame): nuevo dataFrame sin outliers en field_name
+    '''
+    
+    iqr = 1.5 * (np.percentile(df[field_name], 75) - np.percentile(df[field_name], 25))
+    
+    try:
+        df.drop(df[df[field_name] > (iqr + np.percentile(df[field_name], 75))].index, inplace=True)
+    except:
+        pass
+    try:
+        df.drop(df[df[field_name] < (np.percentile(df[field_name], 25) - iqr)].index, inplace=True)
+    except:
+        pass
+
+    return df
+
+def PruebaModelos(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), KNeighborsRegressor(), SVR()], 
+ModelosClasificacion = [LogisticRegression(), DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), KNeighborsClassifier(), SVC()], 
+agregar = [], quitar = [], metricas = [], tipo = "regresion"):
+    """Función para probar un conjunto de modelos de regresión y clasificación con los parámetros por defecto devolviendo las metricas de precisión de cada modelo.
+        Esto es útil para hacerse una primera idea de hacia cuál modelo poder enfocarse
+    
+    Args:
+        xtrain(array): Variables predictoras usadas para entrenar el modelo.
+
+        ytrain(array): Variable a predecir usada para entrenar el modelo.
+
+        xtest(array): Variables predictoras con las que predecir y comprobar la eficacia del modelo.
+
+        ytest(array): Variable predictora con la que comporbar la eficacia del modelo.
+
+
+        ModelosRegresión(list): por defecto, LinearRegression, Ridge, Lasso, ElasticNet, DecisionTreeRegressor, RandomForestRegressor, ExtraTreesRegressor, KNeighborsRegressory SVR.
+
+        Se puede pasar otra lista entera si se desea.
+
+        ModelosClasificacion(list):por defecto, LogisticRegression, DecisionTreeClassifier, RandomForestClassifier, ExtraTreesClassifier, KNeighborsClassifier y SVC
+
+        Se puede pasar otra lista entera si se desea.
+
+        agregar(list): Agrega un nuevo modelo para entrenar a lo que vienen por defecto.
+
+        quitar(list): Quita un modelo para entrenar de los que vienen por defecto.
+
+        metricas(list): Añade una metrica nueva para ver la eficacia del modelo(Para un tipo de modelo de regresión se puede añadir MAPE y para uno de clasificación se puede añadir Recall)
+
+        tipo(str): Elige entre si quieres entrenar modelos de regresión o de clasificación. Las opciones son "regresión" o "clasificacion".
+    
+    Return:None
+    """
+    medidas = []
+    resultado = ""
+    if tipo == "regresion":
+        for i in agregar:
+            ModelosRegresion.append(i)
+        for i in quitar:
+            ModelosRegresion.remove(i)
+        for modelo in ModelosRegresion:
+            if modelo != SVR():
+                modelo.fit(x, y)
+            else:
+                stdr = StandardScaler.fit_transform(x)
+                modelo.fit(stdr, y)
+            if metricas == []:
+                medidas.append(str("MAE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_absolute_error(ytest, modelo.predict(xtest)))))
+                medidas.append(str("MSE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_squared_error(ytest, modelo.predict(xtest)))))
+            elif metrics.mean_absolute_percentage_error() in metricas:
+                medidas.append(str("MAPE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_absolute_percentage_error(ytest, modelo.predict(xtest)))))
+            else:
+                print("Metrica inválida")
+                break
+    elif tipo == "clasificacion":
+        for i in agregar:
+            ModelosClasificacion.append(i)
+        for i in quitar:
+            ModelosRegresion.remove(i)
+        for modelo in ModelosClasificacion:
+            if modelo != SVC():
+                modelo.fit(x, y)
+            else:
+                stdr = StandardScaler.fit_transform(x)
+                modelo.fit(stdr, y)
+            if metricas == []:
+                medidas.append(str("Accuracy" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.accuracy_score(ytest, modelo.predict(xtest)))))
+                medidas.append(str("Precission" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.precision_score(ytest, modelo.predict(xtest)))))
+            elif metrics.recall_score() in metricas:
+                medidas.append(str("Recall" + " " + str(modelo)[:-2], + ":" + " " + str(metrics.recall_score(ytest, modelo.predict(xtest)))))
+            else:
+                print("Metrica inválida")
+                break
+    else:
+        print("Tipo de modelo inválido")
+    # print(medidas[0])
+    for m in medidas:
+        resultado = resultado + m + "\n"
+    print(resultado)
+
+def MinMaxCorr(data, min, max = None):
+    """Función para buscar las columnas que tienen una correlación dentro de un rango. Su uso común es buscar las columnas que tienen mayor correlación entre ellas la cual sea
+        diferente de 1.
+    
+    Args:
+        data(DataFrame): DataFrame del cual obtener la correlación.
+
+        min(int): Número mínimo de correlación que buscar.
+
+        max(int): Número máximo de correlación que buscas. Por defecto tiene None y buscará todos los valores por encima del parámetro min que no sea 1.bit_length
+    Return: Matriz de correlación con las columnas que tienen más correlación entre ellas
+    """
+    if max == None:
+        resultado = data.corr()[(data.corr() > min) & (data.corr() != 1)].dropna(axis = 1, how = "all").dropna(axis = 0, how = "all")
+    else:
+        resultado = data.corr()[(data.corr() > min) & (data.corr() < max)].dropna(axis = 1, how = "all").dropna(axis = 0, how = "all")
+    return resultado
+
+def root_mean_squared_error(y_true, y_pred):
+    """Función para añadir la métrica de RMSE que no viene por defecto en Sklean.
+    
+    Args:
+        y_true(array): Variable objetivo con los valores correctos.
+
+        y_pred(array): Variable objetivo con valores predichos por el modelo deseado.
+    
+    Return:int
+    """
+    return np.square(metrics.mean_squared_error(y_true, y_pred))
+
+def DfTransType(data, type1 = "object", type2 = "float64"):
+    """Función para transoformar todas las columnas un DataFrame con un tipo de dato concreto a otro.
+    
+    Args:
+        data(DataFrame): DataFrame al cual transformar sus columnas.
+
+        type1(str): Tipo de dato a cambiar. Por defecto es "object".
+
+        type2(str): Tipo de dato al cual cambiar. Por defecto es "float64".
+    
+    Return:None
+    """
+    for i in data.dtypes[data.dtypes == type1].index:
+        data[i] = data[i].astype(type2)
