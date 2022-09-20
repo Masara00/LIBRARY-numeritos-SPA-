@@ -746,3 +746,65 @@ def read_data(path):
 
         X.append(smallimage)
     return np.array(X)
+
+## | Xin |
+
+def gen_diagrama_caja(df):
+
+    """Funcion que genera n diagramas de caja segun el numero de columnas numericas que contiene el datafreme.
+
+    Args: 
+        df : datafreme
+
+    Returns: 
+        n diagrama de caja 
+
+    """
+    num_cols = df.select_dtypes(exclude='object').columns
+    for col in num_cols:
+        fig = plt.figure(figsize= (5,5))
+        sns.boxplot(x=df[col],)
+        fig.tight_layout()  
+        plt.show()
+
+
+
+def sustituir_outliers(df, col):
+    """Funcion que detecta los outliers del datafreme, y lo sustituye por la media. 
+
+    Args: 
+        df : datafreme
+        col : la columna que contiene outliers
+
+    Returns: 
+        datafreme sustituido
+
+    """
+
+    q1 = df[col].quantile(0.25)
+    q3 = df[col].quantile(0.75)
+    intraquartile_range = q3 - q1
+    fence_low  = q1 - 1.5 * intraquartile_range
+    fence_high = q3 + 1.5 * intraquartile_range
+    df[col]=np.where(df[col] > fence_high,df[col].mean(),df[col])
+    df[col]=np.where(df[col] < fence_low,df[col].mean(),df[col])
+
+    return df
+
+
+def muestra_nan(df):
+
+    """Funcion que muestra los missing values de cada columna de detafreme y el porcentaje de missing values.
+
+    Args: 
+        df : datafreme
+
+    Returns: 
+        detafreme : datafreme nuevo donde muestra el porcentaje de missing values. 
+
+    """
+    suma_nan = df.isnull().sum().sort_values(ascending = False)
+    percentaje_nan = (df.isnull().sum() / df.isnull().count()*100).sort_values(ascending = False)
+    return pd.concat([suma_nan, percentaje_nan], axis=1, keys = ['suma_nan', 'percentaje_nan'])
+    
+    
