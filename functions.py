@@ -923,6 +923,24 @@ def subplots(df,X,y1,y2):
     sns.scatterplot(x=X,y=y1,data=df,ax=axi1)
     sns.lineplot(x=X,y=y2,data=df,ax=axi2)
 
+
+def graf_displot(df):
+    '''
+    funcion que genera n graficos de distribucion segun las columnas numericas que tiene
+
+    args:
+        df: datafreme
+    
+    returns:
+        n graficos de distribucion
+
+    '''
+    numCols = df.select_dtypes(exclude='object').columns
+    for col in numCols:
+        plt.figure(figsize=(10,10))
+        sns.displot(x=col,data=df, palette=["#ff006e", "#83c5be", "#3a0ca3"])
+        plt.show()
+
 ## Christian
 
 def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
@@ -1156,3 +1174,4 @@ def drop_outliers(df, field_name):
         pass
 
     return df
+
