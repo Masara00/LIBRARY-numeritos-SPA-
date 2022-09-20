@@ -1,6 +1,7 @@
 '''
 Librerias a utilizar
 '''
+import profile
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -33,6 +34,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn import metrics
+from datetime import datetime
+from pandas_profiling import ProfileReport
 
 sns.set_style('whitegrid')
 
@@ -266,3 +269,42 @@ def error_modelo(model:function, X_test:DataFrame, y_test:DataFrame):
     sns.heatmap(conf_model, annot=True)
     return df
 
+def time_now():
+    """
+    Función que devuelve la fecha y hora actual
+    :param: No tiene parámetros.
+    :return: Tupla de strings con el día de la semana, día del mes, mes, año, hora, minuto y segundo actual.
+    :rtype: tuple
+    """
+
+    dt = datetime.now()
+
+    dia = str(dt.day).zfill(2)
+    mes = str(dt.month).zfill(2)
+    anyo = str(dt.year).zfill(2)
+    hora = str(dt.hour).zfill(2)
+    minuto = str(dt.minute).zfill(2)
+    segundo = str(dt.second).zfill(2)
+
+    hoy = datetime.today()
+    diaSemana = hoy.strftime("%A")
+
+    return diaSemana, dia, mes, anyo, hora, minuto, segundo
+
+def feature_visual(url):
+'''Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
+(Comparativa por columnas, mapa de calor, mapa de correlaciones.)'''    
+    df=pd.read_csv(url)
+    profile=ProfileReport(df, title="Pandas Profiling Report")
+    return print(profile)
+
+def Feature_analisis(df):
+    '''Análisis incial del df '''
+    print(df.head())
+    print(-*10)
+    print(df.info())
+    print(-*10)
+    print(df.isnull().sum())
+    print(-*10)
+    print(df.value_counts())
+    
