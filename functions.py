@@ -1,16 +1,20 @@
 '''
 Librerias a utilizar
 '''
-import numpy as np
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression,Ridge,Lasso
-from sklearn import linear_model, metrics, model_selection
-from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score
+from sklearn.linear_model import LinearRegression, Ridge, Lasso,ElasticNet,LogisticRegression,metrics, model_selection
+from sklearn.ensemble import BaggingRegressor, RandomForestRegressor,VotingRegressor,ExtraTreesRegressor,RandomForestClassifier,ExtraTreesClassifier
+from sklearn.tree import DecisionTreeRegressor,DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsRegressor,KNeighborsClassifier
+from sklearn.svm import SVR,SVC
+from sklearn.preprocessing import StandardScaler
 from sklearn import metrics
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score
 from sklearn import preprocessing
 
 sns.set_style('whitegrid')
@@ -244,3 +248,69 @@ def error_modelo(model:function, X_test:DataFrame, y_test:DataFrame):
     plt.figure(figsize=(10,10))
     sns.heatmap(conf_model, annot=True)
     return df
+
+def PruebaModelos(x, y, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), KNeighborsRegressor(), SVR()], 
+ModelosClasificacion = [LogisticRegression(), DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), KNeighborsClassifier(), SVC()], 
+agregar = [], quitar = [], metricas = [], tipo = "regresion"):
+
+    medidas = []
+    resultado = ""
+    if tipo == "regresion":
+        for i in agregar:
+            ModelosRegresion.append(i)
+        for i in quitar:
+            ModelosRegresion.remove(i)
+        for modelo in ModelosRegresion:
+            if modelo != SVR():
+                modelo.fit(x, y)
+            else:
+                stdr = StandardScaler.fit_transform(x)
+                modelo.fit(stdr, y)
+            if metricas == []:
+                medidas.append(str("MAE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_absolute_error(ytest, modelo.predict(xtest)))))
+                medidas.append(str("MSE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_squared_error(ytest, modelo.predict(xtest)))))
+            elif metrics.mean_absolute_percentage_error() in metricas:
+                medidas.append(str("MAPE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_absolute_percentage_error(ytest, modelo.predict(xtest)))))
+            else:
+                print("Metrica inválida")
+                break
+    elif tipo == "clasificacion":
+        for i in agregar:
+            ModelosClasificacion.append(i)
+        for i in quitar:
+            ModelosRegresion.remove(i)
+        for modelo in ModelosClasificacion:
+            if modelo != SVC():
+                modelo.fit(x, y)
+            else:
+                stdr = StandardScaler.fit_transform(x)
+                modelo.fit(stdr, y)
+            if metricas == []:
+                medidas.append(str("Accuracy" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.accuracy_score(ytest, modelo.predict(xtest)))))
+                medidas.append(str("Precission" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.precision_score(ytest, modelo.predict(xtest)))))
+            elif metrics.recall_score() in metricas:
+                medidas.append(str("Recall" + " " + str(modelo)[:-2], + ":" + " " + str(metrics.recall_score(ytest, modelo.predict(xtest)))))
+            else:
+                print("Metrica inválida")
+                break
+    else:
+        print("Tipo de modelo inválido")
+    # print(medidas[0])
+    for m in medidas:
+        resultado = resultado + m + "\n"
+    print(resultado)
+        
+
+def MinMaxCorr(data, min, max = None):
+    if max == None:
+        resultado = data.corr()[(data.corr() > min) & (data.corr() != 1)].dropna(axis = 1, how = "all").dropna(axis = 0, how = "all")
+    else:
+        resultado = data.corr()[(data.corr() > min) & (data.corr() < max)].dropna(axis = 1, how = "all").dropna(axis = 0, how = "all")
+    return resultado
+
+def root_mean_squared_error(y_true, y_pred):
+    return np.square(metrics.mean_squared_error(y_true, y_pred))
+
+def DfObjNum(data, type1 = "object", type2 = "float64"):
+    for i in data.dtypes[data.dtypes == type1].index:
+        data[i] = data[i].astype(type2)
