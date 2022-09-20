@@ -1,6 +1,7 @@
 '''
 Librerias a utilizar
 '''
+import profile
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -34,9 +35,17 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn import metrics
+from datetime import datetime
+from pandas_profiling import ProfileReport
+=======
+from skimage.io import imread
+import os
+import cv2
+import numpy as np
 
 
 ## | JAVI |
+develop
 
 sns.set_style('whitegrid')
 
@@ -270,6 +279,50 @@ def error_modelo(model:function, X_test:DataFrame, y_test:DataFrame):
     sns.heatmap(conf_model, annot=True)
     return df
 
+=======
+
+## | LUIS | 20_09_14_28
+
+def time_now():
+    """
+    Función que devuelve la fecha y hora actual
+    :param: No tiene parámetros.
+    :return: Tupla de strings con el día de la semana, día del mes, mes, año, hora, minuto y segundo actual.
+    :rtype: tuple
+    """
+
+    dt = datetime.now()
+
+    dia = str(dt.day).zfill(2)
+    mes = str(dt.month).zfill(2)
+    anyo = str(dt.year).zfill(2)
+    hora = str(dt.hour).zfill(2)
+    minuto = str(dt.minute).zfill(2)
+    segundo = str(dt.second).zfill(2)
+
+    hoy = datetime.today()
+    diaSemana = hoy.strftime("%A")
+
+    return diaSemana, dia, mes, anyo, hora, minuto, segundo
+
+def feature_visual(url):
+'''Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
+(Comparativa por columnas, mapa de calor, mapa de correlaciones.)'''    
+    df=pd.read_csv(url)
+    profile=ProfileReport(df, title="Pandas Profiling Report")
+    return print(profile)
+
+def Feature_analisis(df):
+    '''Análisis incial del df '''
+    print(df.head())
+    print(-*10)
+    print(df.info())
+    print(-*10)
+    print(df.isnull().sum())
+    print(-*10)
+    print(df.value_counts())
+    
+=======
 
 ## | SARA | 20_09_14_28
 
@@ -414,6 +467,7 @@ def drop_con_condicion(df, columna, condicion):
     df.drop(df[df[columna]==condicion].index, inplace=True)
     return df
 
+
 ## | IRENE | 20_09_15_00
 
 def data_report(df):
@@ -485,3 +539,114 @@ def radical_dropping(df):
 
 
         
+=======
+## | MARIO |
+
+    
+def read_data_bw(path, im_size, class_names_label):
+
+    '''Lectura y etiquetado de imágenes en blanco y negro.
+
+    Args:
+        path: ruta donde estarán el resto de carpetas.
+
+        im_size: tamaño al que queremos pasar todas las imagenes.
+
+        class_names_label: nombre de las variables a etiquetar.
+      
+    Returns:
+        X: el array de los datos de las imágenes.
+
+        Y: array con los label correspondientes a las imágenes.
+    '''
+    X = []
+    Y = []
+    
+    for folder in os.listdir(path):
+        print('Comenzamos a leer ficheros de la carpeta', folder)
+        label = class_names_label[folder]
+        folder_path = os.path.join(path,folder)
+        ##### CODE #####
+        # Iterar sobre todo lo que haya en path
+        for file in os.listdir(folder_path):
+            image_path = os.path.join(folder_path, file)
+
+            # Leer la imagen en blanco y negro
+            image = imread(image_path)
+            
+            # Resize de las imagenes
+            smallimage = cv2.resize(image, im_size)
+            
+            # Guardo en X e Y
+            X.append(smallimage)
+            Y.append(label)
+        print('Terminamos de leer ficheros de la carpeta', folder)
+        
+
+    return np.array(X), np.array(Y)
+    # Ejemplo de class_names_label: tipo diccionario
+    # class_names_label {'angry': 0,'disgust': 1,'fear': 2,'happy': 3,'neutral': 4,'sad': 5,'surprise': 6}
+
+
+
+def read_data_color(path, im_size, class_names_label):
+
+    '''Lectura y etiquetado de imágenes a color.
+
+    Args:
+        path: ruta donde estarán el resto de carpetas.
+
+        im_size: tamaño al que queremos pasar todas las imagenes.
+
+        class_names_label: nombre de las variables a etiquetar.
+      
+    Returns:
+        X: el array de los datos de las imágenes.
+
+        Y: array con los label correspondientes a las imágenes.
+    '''
+
+    X = []
+    Y = []
+    
+    for folder in os.listdir(path):
+        print('Comenzamos a leer ficheros de la carpeta', folder)
+        label = class_names_label[folder]
+        folder_path = os.path.join(path,folder)
+        ##### CODE #####
+        # Iterar sobre todo lo que haya en path
+        for file in os.listdir(folder_path):
+            image_path = os.path.join(folder_path, file)
+            # Leer la imagen a color y aplicarle el resize
+            image = imread(image_path)
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            smallimage = cv2.resize(image, im_size)
+            
+            # Guardo en X
+            X.append(smallimage)
+            Y.append(label)
+        print('Terminamos de leer ficheros de la carpeta', folder)
+        
+
+    return np.array(X), np.array(Y)
+
+
+def read_data(path):
+    '''Lectura de imágenes de una carpeta.
+
+    Args:
+        path: ruta donde están las imágenes.
+      
+    Returns:
+        X: el array de los datos de las imágenes.
+
+    '''
+    
+    X = []
+    for file in os.listdir(path):
+        image = imread(path + '/' + file)
+        smallimage = cv2.resize(image, (224,224))
+        print(path + '/' + file)
+
+        X.append(smallimage)
+    return np.array(X)
