@@ -5,6 +5,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.graph_objs as go
+import re
+from plotly.offline import init_notebook_mode, iplot, plot
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression,Ridge,Lasso
@@ -12,8 +15,6 @@ from sklearn import linear_model, metrics, model_selection
 from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score
 from sklearn import metrics
 from sklearn import preprocessing
-import pandas as pd
-import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
@@ -33,6 +34,9 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn import metrics
+
+
+## | JAVI |
 
 sns.set_style('whitegrid')
 
@@ -264,5 +268,149 @@ def error_modelo(model:function, X_test:DataFrame, y_test:DataFrame):
 
     plt.figure(figsize=(10,10))
     sns.heatmap(conf_model, annot=True)
+    return df
+
+
+## | SARA | 20_09_14_28
+
+def grafico_goscatter(df, columna_eje_x, columna_eje_y, color, texto_labels):
+    '''
+    Función para crear un gráfico PLOTLY scatter de tipo lineal
+    a partir de una columna de un dataframe,
+    definiendo las columnas en el eje x e y, 
+    el color de la línea y la etiqueta de la misma.
+
+    Args:
+        df: dataframe
+        columna_eje_x: columna del dataframe que aparecerá en el eje X
+        columna_eje_y: columna del dataframe que aparecerá en el eje y
+        color: color de la línea
+        texto_labels: texto que aparece cuando pasamos por encima el cursos
+    
+    Returns:
+        Devuelve la gráfica.
+    '''
+
+    trace = go.Scatter(
+                x = df[columna_eje_x],
+                y = df[columna_eje_y],
+                mode= 'lines',
+                marker = dict(color = color),
+                texttemplate="simple_white",
+                text = df[texto_labels])
+    fig = go.Figure(data = trace)
+    iplot(fig)
+
+
+def sustituye_texto(df, columna, condicion, reemplazo):
+    '''
+    Función para sustituir texto por columnas,
+    donde se cumpla una condición mediante == (máscara).
+
+    Args:
+        df: dataframe
+        columna: columna del dataframe
+        condicion: lo que queremos sustituir
+        reemplazo: lo que queremos que aparezca
+
+    Returns:
+        Dataframe modificado.
+
+    Ejemplos:
+    * Con strings
+        df[df['personaje']==Monica]=df[df['personaje']==Monica].apply(lambda x: x.replace('Monica', 'Monica Geller))
+
+    * Con int o float
+        df[df['money']==80]=df[df['money']==80].apply(lambda x: x.replace(80, 100))
+    '''
+
+    df[df[columna]==condicion]=df[df[columna]==condicion].apply(lambda x: x.replace(condicion, reemplazo))
+    return df
+
+
+def extraer_con_regex(df, columna, clave_regex):
+    '''
+    Función para quedarnos con la parte del texto o del dato que queramos
+    mediante regex. 
+    La columna existente se reemplaza por el resultado después de aplicar
+    regex.
+    *Formato para la clave_regex = '(regex)'
+
+    Args:
+        df: dataframe
+        columna: columna del dataframe
+        clave_regex: la clave regex que seleccione lo que nos queremos quedar.
+             *Formato para la clave_regex = '(regex)'
+ 
+    Returns:
+        Dataframe modificado.
+
+    Ejemplo:
+        df['personaje'] = df['personaje'].str.extract(r'(^\w+)')
+    '''
+    
+    df[columna] = df[columna].str.extract(clave_regex)
+    return df
+
+
+def eliminar_entre_parentesis_en_df(df, columna):
+    '''
+    Función para eliminar texto entre paréntesis (acotaciones).
+    Se aplica sobre toda la columna del dataframe.
+    
+    Args:
+        df: dataframe
+        columna: columna del dataframe
+
+    Returns:
+        Dataframe modificado.
+    '''
+
+    for i in range(len(df[columna])):
+        if '(' in df[columna][i]:
+            df[columna][i] ="".join(re.split("\(|\)|\[|\]", df[columna][i]))
+    return df
+
+
+def where_contains(df, columna, palabra_clave):
+    '''
+    Función para crear columnas nuevas en un dataframe,
+    a partir de si en otra columna está o no la palabra_clave.
+    En caso de que esté la palabra, la columna nueva generará un 1.
+    En caso de que no esté, generará un 0.
+
+    Solo es válida para strings.
+    
+    Args:
+        df: dataframe
+        columna: columna del dataframe
+        palabra_clave: string
+
+    Returns:
+        Dataframe modificado.
+
+    Ejemplo:
+        df['details']= np.where((df['details'].str.contains('hidromasaje')),1,0)
+    '''
+
+    df[columna]= np.where((df[columna].str.contains(palabra_clave)),1,0)
+    return df
+
+
+def drop_con_condicion(df, columna, condicion):
+    '''
+    Funcion para eliminar los registros de una columna que cumplen
+    una condición de tipo == condicion.
+        
+    Args:
+        df: dataframe
+        columna: columna del dataframe
+        condicion: lo que tienen que cumplir los registros que queremos eliminar
+
+    Returns:
+        Dataframe modificado.
+    '''
+
+    df.drop(df[df[columna]==condicion].index, inplace=True)
     return df
 
