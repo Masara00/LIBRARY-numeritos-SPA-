@@ -1268,10 +1268,10 @@ agregar = [], quitar = [], metricas = [], tipo = "regresion"):
             ModelosRegresion.remove(i)
         for modelo in ModelosRegresion:
             if modelo != SVR():
-                modelo.fit(x, y)
+                modelo.fit(xtrain, ytrain)
             else:
-                stdr = StandardScaler.fit_transform(x)
-                modelo.fit(stdr, y)
+                stdr = StandardScaler.fit_transform(xtrain)
+                modelo.fit(stdr, ytrain)
             if metricas == []:
                 medidas.append(str("MAE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_absolute_error(ytest, modelo.predict(xtest)))))
                 medidas.append(str("MSE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_squared_error(ytest, modelo.predict(xtest)))))
@@ -1287,10 +1287,10 @@ agregar = [], quitar = [], metricas = [], tipo = "regresion"):
             ModelosRegresion.remove(i)
         for modelo in ModelosClasificacion:
             if modelo != SVC():
-                modelo.fit(x, y)
+                modelo.fit(xtrain, ytrain)
             else:
-                stdr = StandardScaler.fit_transform(x)
-                modelo.fit(stdr, y)
+                stdr = StandardScaler.fit_transform(xtrain)
+                modelo.fit(stdr, ytrain)
             if metricas == []:
                 medidas.append(str("Accuracy" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.accuracy_score(ytest, modelo.predict(xtest)))))
                 medidas.append(str("Precission" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.precision_score(ytest, modelo.predict(xtest)))))
