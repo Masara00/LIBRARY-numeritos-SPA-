@@ -860,7 +860,6 @@ def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line
         a.set_xlim(x_limit)  
     plt.show()
 
-
 def acotar_valores_clase(dataframe, columna_filtro, clase, max_val, min_val):
     '''
     Función para acotar el rango de valores de una determinada columna, haciendo una máscara por cada 
