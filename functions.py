@@ -887,7 +887,7 @@ def acotar_valores_clase(dataframe, columna_filtro, clase, max_val, min_val):
     dataframe.drop(indexNames, inplace=True)
 
 
-def Perspective_aug(src, strength):
+def wrap_perspective_cv2(src, strength):
     '''
     Función que utiliza OpenCV para aplicar una distrosión a una imagen (wrap perspective)
     Args:
