@@ -806,5 +806,44 @@ def muestra_nan(df):
     suma_nan = df.isnull().sum().sort_values(ascending = False)
     percentaje_nan = (df.isnull().sum() / df.isnull().count()*100).sort_values(ascending = False)
     return pd.concat([suma_nan, percentaje_nan], axis=1, keys = ['suma_nan', 'percentaje_nan'])
+
+
+## | QINGHUA |
+
+
+def feature_important(model,X):
+    '''
+    funcion que saca feature important del modelo  y su grafico
+
+    args:
+        model: el modelo
+        X: datafeme de los features
+
+    returns:
+        datafreme de feature impottant
+        grafico de feature impottant
+    '''
+    df=pd.DataFrame(model.feature_importances_,
+                X.columns,
+                columns = ["Feature imp"]).sort_values("Feature imp", ascending=False)
+    grafico=df.sort_values("Feature imp").plot.barh(y='Feature imp')
+    return (df,grafico)
+
+
+def subplots(df,X,y1,y2):
+    '''
+    función que hace un subplot de una variable, distribuida según los datos de otras dos variables
     
-    
+    args:
+        x:columa elegido para x
+        y1:columa elegido para y de scatterplot
+        y2:columa elegido para y de  lineplot
+
+    returns:
+        grafico subplot 
+
+    '''
+    f,(axi1,axi2)=plt.subplots(2,1 ,figsize=(10,10))
+    sns.scatterplot(x=X,y=y1,data=df,ax=axi1)
+    sns.lineplot(x=X,y=y2,data=df,ax=axi2)
+
