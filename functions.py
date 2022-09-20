@@ -1175,3 +1175,128 @@ def drop_outliers(df, field_name):
 
     return df
 
+def PruebaModelos(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), KNeighborsRegressor(), SVR()], 
+ModelosClasificacion = [LogisticRegression(), DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), KNeighborsClassifier(), SVC()], 
+agregar = [], quitar = [], metricas = [], tipo = "regresion"):
+    """Función para probar un conjunto de modelos de regresión y clasificación con los parámetros por defecto devolviendo las metricas de precisión de cada modelo.
+        Esto es útil para hacerse una primera idea de hacia cuál modelo poder enfocarse
+    
+    Args:
+        xtrain(array): Variables predictoras usadas para entrenar el modelo.
+
+        ytrain(array): Variable a predecir usada para entrenar el modelo.
+
+        xtest(array): Variables predictoras con las que predecir y comprobar la eficacia del modelo.
+
+        ytest(array): Variable predictora con la que comporbar la eficacia del modelo.
+
+
+        ModelosRegresión(list): por defecto, LinearRegression, Ridge, Lasso, ElasticNet, DecisionTreeRegressor, RandomForestRegressor, ExtraTreesRegressor, KNeighborsRegressory SVR.
+
+        Se puede pasar otra lista entera si se desea.
+
+        ModelosClasificacion(list):por defecto, LogisticRegression, DecisionTreeClassifier, RandomForestClassifier, ExtraTreesClassifier, KNeighborsClassifier y SVC
+
+        Se puede pasar otra lista entera si se desea.
+
+        agregar(list): Agrega un nuevo modelo para entrenar a lo que vienen por defecto.
+
+        quitar(list): Quita un modelo para entrenar de los que vienen por defecto.
+
+        metricas(list): Añade una metrica nueva para ver la eficacia del modelo(Para un tipo de modelo de regresión se puede añadir MAPE y para uno de clasificación se puede añadir Recall)
+
+        tipo(str): Elige entre si quieres entrenar modelos de regresión o de clasificación. Las opciones son "regresión" o "clasificacion".
+    
+    Return:None
+    """
+    medidas = []
+    resultado = ""
+    if tipo == "regresion":
+        for i in agregar:
+            ModelosRegresion.append(i)
+        for i in quitar:
+            ModelosRegresion.remove(i)
+        for modelo in ModelosRegresion:
+            if modelo != SVR():
+                modelo.fit(x, y)
+            else:
+                stdr = StandardScaler.fit_transform(x)
+                modelo.fit(stdr, y)
+            if metricas == []:
+                medidas.append(str("MAE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_absolute_error(ytest, modelo.predict(xtest)))))
+                medidas.append(str("MSE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_squared_error(ytest, modelo.predict(xtest)))))
+            elif metrics.mean_absolute_percentage_error() in metricas:
+                medidas.append(str("MAPE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_absolute_percentage_error(ytest, modelo.predict(xtest)))))
+            else:
+                print("Metrica inválida")
+                break
+    elif tipo == "clasificacion":
+        for i in agregar:
+            ModelosClasificacion.append(i)
+        for i in quitar:
+            ModelosRegresion.remove(i)
+        for modelo in ModelosClasificacion:
+            if modelo != SVC():
+                modelo.fit(x, y)
+            else:
+                stdr = StandardScaler.fit_transform(x)
+                modelo.fit(stdr, y)
+            if metricas == []:
+                medidas.append(str("Accuracy" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.accuracy_score(ytest, modelo.predict(xtest)))))
+                medidas.append(str("Precission" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.precision_score(ytest, modelo.predict(xtest)))))
+            elif metrics.recall_score() in metricas:
+                medidas.append(str("Recall" + " " + str(modelo)[:-2], + ":" + " " + str(metrics.recall_score(ytest, modelo.predict(xtest)))))
+            else:
+                print("Metrica inválida")
+                break
+    else:
+        print("Tipo de modelo inválido")
+    # print(medidas[0])
+    for m in medidas:
+        resultado = resultado + m + "\n"
+    print(resultado)
+
+def MinMaxCorr(data, min, max = None):
+    """Función para buscar las columnas que tienen una correlación dentro de un rango. Su uso común es buscar las columnas que tienen mayor correlación entre ellas la cual sea
+        diferente de 1.
+    
+    Args:
+        data(DataFrame): DataFrame del cual obtener la correlación.
+
+        min(int): Número mínimo de correlación que buscar.
+
+        max(int): Número máximo de correlación que buscas. Por defecto tiene None y buscará todos los valores por encima del parámetro min que no sea 1.bit_length
+    Return: Matriz de correlación con las columnas que tienen más correlación entre ellas
+    """
+    if max == None:
+        resultado = data.corr()[(data.corr() > min) & (data.corr() != 1)].dropna(axis = 1, how = "all").dropna(axis = 0, how = "all")
+    else:
+        resultado = data.corr()[(data.corr() > min) & (data.corr() < max)].dropna(axis = 1, how = "all").dropna(axis = 0, how = "all")
+    return resultado
+
+def root_mean_squared_error(y_true, y_pred):
+    """Función para añadir la métrica de RMSE que no viene por defecto en Sklean.
+    
+    Args:
+        y_true(array): Variable objetivo con los valores correctos.
+
+        y_pred(array): Variable objetivo con valores predichos por el modelo deseado.
+    
+    Return:int
+    """
+    return np.square(metrics.mean_squared_error(y_true, y_pred))
+
+def DfTransType(data, type1 = "object", type2 = "float64"):
+    """Función para transoformar todas las columnas un DataFrame con un tipo de dato concreto a otro.
+    
+    Args:
+        data(DataFrame): DataFrame al cual transformar sus columnas.
+
+        type1(str): Tipo de dato a cambiar. Por defecto es "object".
+
+        type2(str): Tipo de dato al cual cambiar. Por defecto es "float64".
+    
+    Return:None
+    """
+    for i in data.dtypes[data.dtypes == type1].index:
+        data[i] = data[i].astype(type2)
