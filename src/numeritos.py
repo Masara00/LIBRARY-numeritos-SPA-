@@ -21,7 +21,6 @@ Numeritos
 '''
 
 
-import profile
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -38,7 +37,6 @@ import pygame
 import ssl
 from time import time
 import sys, time, os
-from pandas_profiling import ProfileReport
 from datetime import datetime
 
 from sklearn import metrics
@@ -46,7 +44,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, a
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, Ridge,Lasso, ElasticNet, LogisticRegression
 from sklearn import linear_model, metrics, model_selection
-from sklearn.ensemble import BaggingRegressor, RandomForestRegressor, GradientBoostingRegressor, VotingRegressor, ExtraTreesRegressor
+from sklearn.ensemble import BaggingRegressor, RandomForestRegressor, GradientBoostingRegressor, VotingRegressor, ExtraTreesRegressor, RandomForestClassifier, ExtraTreesClassifier
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
 from sklearn.svm import SVR, SVC
@@ -287,24 +285,6 @@ def current_time():
     diaSemana = hoy.strftime("%A")
 
     return diaSemana, dia, mes, anyo, hora, minuto, segundo
-
-
-
-def csv_visual_analysis(csv):
-    '''
-    Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
-    (Comparativa por columnas, mapa de calor, mapa de correlaciones.)
-
-    Args:
-        csv: archivo en formato csv del que se quiere hacer el análisis
-
-    Returns:
-        Análisis visual y de correlaciones de las diferentes variables numéricas en el dataset
-    '''    
-    df=pd.read_csv(csv)
-    profile=ProfileReport(df, title="Pandas Profiling Report")
-
-    return (profile)
 
 
 
