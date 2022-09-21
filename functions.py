@@ -1,93 +1,63 @@
 '''
 Librerias a utilizar
 '''
-import profile
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.graph_objs as go
-import re
-from plotly.offline import init_notebook_mode, iplot, plot
-from matplotlib import cm
-import joypy
-from joypy import joyplot
-import random
-import wget
-import pygame
-from sklearn.metrics import mean_squared_error
-import numpy as np
-from sklearn.metrics import r2_score
-from sklearn.metrics import mean_absolute_error
-
-import cv2 as cv
-from time import time
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression,Ridge,Lasso
-from sklearn import linear_model, metrics, model_selection
-from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score, mean_absolute_error, explained_variance_score
-from sklearn import metrics
-from sklearn import preprocessing
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import Ridge
-from sklearn.linear_model import Lasso
-from sklearn.linear_model import ElasticNet
-from sklearn.ensemble import BaggingRegressor
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.ensemble import VotingRegressor
-from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.svm import SVR
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import mean_squared_error
-import numpy as np
-from sklearn.metrics import r2_score
-from sklearn.metrics import mean_absolute_error
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
-from sklearn import metrics
 from datetime import datetime
 from imblearn.over_sampling import RandomOverSampler
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from imblearn.pipeline import Pipeline
 from imblearn.under_sampling import RandomUnderSampler
-from imblearn.pipeline import Pipeline 
-from sklearn.preprocessing import LabelEncoder
+from joypy import joyplot
+from matplotlib import cm
 from pandas_profiling import ProfileReport
+from plotly.offline import init_notebook_mode, iplot, plot
 from skimage.io import imread
-import os
+from sklearn import linear_model, metrics, model_selection
+from sklearn import metrics
+from sklearn import preprocessing
+from sklearn.ensemble import BaggingRegressor
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.ensemble import VotingRegressor
+from sklearn.linear_model import ElasticNet
+from sklearn.linear_model import Lasso
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression,Ridge,Lasso
+from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import Ridge
+from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score, mean_absolute_error, explained_variance_score
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import r2_score
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.svm import SVC
+from sklearn.svm import SVR
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeRegressor
+from time import time
 import cv2
+import cv2 as cv
+import joypy
+import matplotlib.pyplot as plt
 import numpy as np
+import os
+import pandas as pd
+import plotly.graph_objs as go
+import profile
+import pygame
+import random
+import re
+import seaborn as sns
+import ssl
+import sys, time, os
+import wget
 
 
-## | JAVI |
-sns.set_style('whitegrid')
 
-def graficas (df,y):
-    '''
-    Función para representar varias graficas antes de realizar cualquier modelo
-    df es un DataFrame.
-
-    Args:
-        df:Dataframe con las variables numéricas
-        y: Variable target.
-
-    Return:
-        Subplot compuesto por:
-        Gráfica 'pairplot'
-        Gráfica 'heatmap'
-    '''
-    plt.figure(figsize=(20,20))
-    sns.pairplot(df)
-    plt.fig, axes = plt.subplots(2,1)
-    sns.distplot(y, ax = axes[0])
-    sns.heatmap(df.corr(), annot=True, ax = axes[1])
-    axes[0].set_title("Distribucion")
-    axes[1].set_title("Mapa Correlación");
+## | JAVI | 20_09_14_28
 
 def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
     '''
@@ -113,8 +83,8 @@ def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
     '''
     
     lin_reg = LinearRegression()   
-    lin_reg.fit(X_train, y_train)                           #   Entrenas/generas el modelo para determinar los coeficientes
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size_1, random_state=random_state_1)
+    lin_reg.fit(X_train, y_train)                           #   Entrenas/generas el modelo para determinar los coeficientes
 
     print("Estos son los datos del test y del target:\n-----")
     print("Total features shape:", X.shape)
@@ -126,15 +96,12 @@ def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
     print("Estos son los datos del valor de y en x=0 y de las pendientes de cada gradiente de las variables:\n-----")
     print(lin_reg.intercept_)
     print(lin_reg.coef_)
-    coeff_df = pd.DataFrame(lin_reg.coef_,
-                            X.columns,
-                            columns=['Coefficient'])
-    print("Estos son las pendientes de cada gradiente visto en un Dataframe:\n-----")
-    print(coeff_df)
 
-    return X_train, X_test, y_train, y_test,lin_reg, lin_reg.intercept_,lin_reg.coef_,coeff_df
+    return X_train, X_test, y_train, y_test,lin_reg, lin_reg.intercept_,lin_reg.coef_
+    
 
-def función_metricas_error (model,X_test,y_test,X_train,y_train):
+
+def funcion_metricas_error (model,X_test,y_test,X_train,y_train):
     '''
     Función que a partir de la función entrenada te facilita las métricas más importantes en regresión lineal.
     
@@ -180,10 +147,6 @@ def función_metricas_error (model,X_test,y_test,X_train,y_train):
     print('MAPE:',mape_train)
     print('MSE:', mse_train)
     print('RMSE:', msqe_train)
-
-    print("Esta es la importancia de las variables:\n-----")
-    features = pd.DataFrame(model.coef_, X_train.columns, columns=['coefficient'])
-    print(features.head().sort_values('coefficient', ascending=False))
 
     return mae_pred,mape_pred,mse_pred,msqe_pred,mae_train,mape_train,mse_train,msqe_train
 
@@ -256,107 +219,6 @@ def funcion_lasso(model,X_test,y_test,X_train,y_train,alpha_1:int):
 
     return lassoR
 
-def correccion_ridge_a_aplicar(model, X_test, y_test, ridgeR, log_ini:int,log_fin:int,n_alphas:int):
-    '''
-    Función que evalua la regularización de Ridge para un modelo de regresión lineal entrenado y
-    que a partir de los valores logarítmicos y alpha muestra una gráfica donde se puede localizar 
-    el punto más bajo de los errores y así determinar cuál es el valor de alpha más adecuado.
-
-    Args:
-        model: modelo entrenado de regresión lineal
-        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
-        ridgeR: función de Ridge entrenada
-        log_ini:int, valor inicial logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        log_fin:int, valor final logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        n_alphas:int. Número de variable alpha a usar para optimizar la función Ridge.
-
-    Return:
-        Grafica: muestra los valores de alpha en abscisas en el rango indicado y los valores de Mean Square Error de la función.
-
-    
-    OJO!!! esta función está por revisar'''
-    predictions = model.predict(X_test)                   #   Determino los resultados que deberían de dar con los valores guardados para
-
-    alphas = np.logspace(log_ini, log_fin, n_alphas) 
-    baseline_error = metrics.mean_squared_error(y_test, predictions)
-    coef_ridgeR = []
-    err_ridge = []
-    baseline = []
-
-    for a in alphas:
-        ridgeR.set_params(alpha=a)
-        coef_ridgeR.append(ridgeR.coef_)
-        y_pred = ridgeR.predict(X_test)
-        lasso_error = metrics.mean_squared_error(y_pred, y_test)    
-        err_ridge.append(lasso_error)
-        baseline.append(baseline_error)
-    print(min(err_ridge))
-    
-    plt.figure(figsize=(20,12))
-    ax = plt.gca()
-    ax.plot(alphas, err_ridge, linewidth=5, color='red', label="Ridge regression")
-    ax.plot(alphas, baseline, linewidth=4,linestyle='--', color='blue', label='Linear regression')
-    ax.set_xscale('log')
-    plt.xlabel('$\lambda$', fontsize=30)
-    plt.xticks(fontsize=30)
-    plt.yticks(fontsize=30)
-    plt.ylabel('error', fontsize=30)
-    ax.legend(fontsize=30)
-    plt.title(r'Regression error ($\lambda$)', fontsize=30)
-    plt.show();
-
-def correccion_Lasso_a_aplicar(model, X_test, y_test, lassoR, log_ini:int,log_fin:int,n_alphas:int):
-    '''
-    Función que evalua la regularización de Lasso para un modelo de regresión lineal entrenado y
-    que a partir de los valores logarítmicos y alpha muestra una gráfica donde se puede localizar 
-    el punto más bajo de los errores y así determinar cuál es el valor de alpha más adecuado.
-
-    Args:
-        model: modelo entrenado de regresión lineal
-        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
-        LassoR función de Lasso entrenada
-        log_ini:int, valor inicial logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        log_fin:int, valor final logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        n_alphas:int. Número de variable alpha a usar para optimizar la función Ridge.
-
-    Return:
-        Grafica: muestra los valores de alpha en abscisas en el rango indicado y los valores de Mean Square Error de la función.
-
-    OJO!!! esta función está por revisar
-    '''
-
-    predictions = model.predict(X_test)
-    alphas = np.logspace(log_ini, log_fin, n_alphas) 
-    baseline_error = metrics.mean_squared_error(y_test, predictions)
-    coef_lassoR = []
-    err_lasso = []
-    baseline = []
-
-    for a in alphas:
-        lassoR.set_params(alpha=a)
-        coef_lassoR.append(lassoR.coef_)
-        y_pred = lassoR.predict(X_test)
-        lasso_error = metrics.mean_squared_error(y_pred, y_test)    
-        err_lasso.append(lasso_error)
-        baseline.append(baseline_error)
-
-
-    print(min(err_lasso))
-    plt.figure(figsize=(20,10))
-    ax = plt.gca()
-    ax.plot(alphas, err_lasso, linewidth=5, color='red', label="Lasso")
-    ax.plot(alphas, baseline, linewidth=4,linestyle='--', color='blue', label='Linear regression')
-    ax.set_xscale('log')
-    plt.xlabel('$\lambda$', fontsize=30)
-    plt.xticks(fontsize=30)
-    plt.yticks(fontsize=30)
-    plt.ylabel('error', fontsize=30)
-    ax.legend(fontsize=30)
-    plt.title(r'Regression error ($\lambda$)', fontsize=30)
-    plt.show();
-
 def error_modelo(model, X_test, y_test):
     '''
     Función que a partir de un modelo entrenado con las variables X_test e y_test, muestra las
@@ -369,7 +231,6 @@ def error_modelo(model, X_test, y_test):
 
     Return:
         df_error: Dataframe donde aparecen los datos de 'Accuracy','f-1 score','Recall','Precision'.
-        Muestra también el cálculo de la curva ROC
         Grafica de la matriz de confunsión. 
 
     '''
@@ -379,7 +240,6 @@ def error_modelo(model, X_test, y_test):
     acc_model=accuracy_score(y_test, y_pred)
     precision_model=precision_score(y_test, y_pred,average='macro')
     recall_model=recall_score(y_test, y_pred,average='macro')
-    roc_auc_score=roc_auc_score(y_test, model.predict_proba(X_test),multi_class='ovr')
     conf_model=confusion_matrix(y_test, y_pred, normalize='true')
     model_error = {'accuracy': acc_model, 'f-1': f1_model, 'recall': recall_model , 'precision': precision_model}
     df_error=pd.DataFrame.from_dict(model_error,orient='index')
@@ -389,7 +249,6 @@ def error_modelo(model, X_test, y_test):
     print('Precision', precision_model)
     print('Recall', recall_model)
     print('-'*30)
-    print('ROC', roc_auc_score)
 
     plt.figure(figsize=(10,10))
     sns.heatmap(conf_model, annot=True)
@@ -431,7 +290,7 @@ def feature_visual(csv):
     Returns:
         Analisis completo de cada columna
     '''
-  
+
     df=pd.read_csv(csv)
     profile=ProfileReport(df, title="Pandas Profiling Report")
     return (profile)
@@ -540,7 +399,7 @@ def eliminar_entre_parentesis_en_df(df, columna):
     return df
 
 
-def where_contains(df, columna, palabra_clave):
+def where_contains(df, columna, nueva_columna, palabra_clave):
     '''
     Función para crear columnas nuevas en un dataframe,
     a partir de si en otra columna está o no la palabra_clave.
@@ -561,7 +420,7 @@ def where_contains(df, columna, palabra_clave):
         df['details']= np.where((df['details'].str.contains('hidromasaje')),1,0)
     '''
 
-    df[columna]= np.where((df[columna].str.contains(palabra_clave)),1,0)
+    df[nueva_columna]= np.where((df[columna].str.contains(palabra_clave)),1,0)
     return df
 
 
@@ -654,7 +513,7 @@ def radical_dropping(df):
 
 
         
-## | MARIO |
+## | MARIO | 20-09-2022
 
     
 def read_data_bw(path, im_size, class_names_label):
@@ -765,7 +624,7 @@ def read_data(path):
         X.append(smallimage)
     return np.array(X)
 
-## | Xin |
+## | Xin | 20-09-2022
 
 def gen_diagrama_caja(df):
 
@@ -826,7 +685,7 @@ def muestra_nan(df):
     return pd.concat([suma_nan, percentaje_nan], axis=1, keys = ['suma_nan', 'percentaje_nan'])
 
 
-#|| LAURA ||
+#|| LAURA | 20-09-2022
 
 def pieplot_one_column(dataframe, column, title, background_colour, colour_map=None):
     '''
@@ -942,7 +801,27 @@ def sql_rules():
     pygame.mixer.Sound.play(pygame.mixer.Sound(path))
 
 
-## | QINGHUA |
+def help_data():
+    '''
+    Función que esr¡be 'me da error' en bucle, con estilo tipografía (las letras salen en diferentes tiempos).
+    Return:
+        El texto de 'me da error'
+    '''
+    print('Help it\'s on the way')
+    time.sleep(2)
+
+    message = 'me da error \n'
+    number = 0
+
+    while number < 2000:
+        for char in message:
+            sys.stdout.write(char)
+            sys.stdout.flush()
+            time.sleep(0.015)
+            number += 1 
+
+
+## | QINGHUA | 20-09-2022
 
 
 def feature_important(model,X):
@@ -999,8 +878,7 @@ def graf_displot(df):
         sns.displot(x=col,data=df, palette=["#ff006e", "#83c5be", "#3a0ca3"])
         plt.show()
 
-## Christian
-
+## | Christian | 20-09-2022
 def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
     """ Función para realizar over o undersampling o randomsampling para datos no balanceados.\n
         Se realiza después del train test split.
@@ -1068,9 +946,6 @@ def string_replacer (df,col,replacestring,newvalue):
 
 
 
-
-
-
 def basic_encoding (df):
     """
     Realiza el encoding de variables categorícas en númericas de manera simple,  \n 
@@ -1092,6 +967,7 @@ def basic_encoding (df):
 
     return df
 
+## | Enrique | 20-09-2022
 
 def clean_emoji(text):
     ''' Funcion para limpiar los emojis que aparecen dentro de un texto.
@@ -1195,7 +1071,7 @@ def drop_outliers(df, field_name):
 
     return df
 
-## | Antonio |
+## | Antonio | 20-09-2022
 def PruebaModelos(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), KNeighborsRegressor(), SVR()], 
 ModelosClasificacion = [LogisticRegression(), DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), KNeighborsClassifier(), SVC()], 
 agregar = [], quitar = [], metricas = [], tipo = "regresion"):
@@ -1323,7 +1199,7 @@ def DfTransType(data, type1 = "object", type2 = "float64"):
         data[i] = data[i].astype(type2)
 
 
-## Tarik
+## | Tarik | 20-09-2022
 
 def sustituye_nan_moda(data):
     '''
@@ -1362,10 +1238,10 @@ def train_regression(model, xtrain, ytrain, xtest, ytest):
     print(mean_absolute_error(ytest, mp))
     print('-'*100)
     print('MSE')
-    print(mean_squared_error(ytest,mp))
+    print(metrics.mean_squared_error(ytest,mp))
     print('-'*100)
     print('RMSE') 
-    print(np.sqrt(mean_squared_error(ytest, mp)))
+    print(np.sqrt(metrics.mean_squared_error(ytest, mp)))
     print('-'*100)
     print('R2 SCORE')
     print(r2_score(ytest,mp))
@@ -1373,19 +1249,5 @@ def train_regression(model, xtrain, ytrain, xtest, ytest):
     return mp
 
 
-def clean_edad(edad):   
-    '''
-    Función que elimina los datos de edad, que son imposibles,
-    ya que le hemos dado un rango, en el cual 119 es el maximo,
-    ya que es el record de longevidad.
 
-    Args: 
-        edad: columna o union de estas que contiene los datos.
-    
-    Return: Todas las edades reales, comprendidas en el rango impuesto.
-    '''                                                  
-    if edad>=0 and edad<=119:                                            
-        return edad
-    else:
-        return np.nan
 
