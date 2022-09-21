@@ -21,7 +21,6 @@ Numeritos
 '''
 
 
-import profile
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -38,7 +37,6 @@ import pygame
 import ssl
 from time import time
 import sys, time, os
-from pandas_profiling import ProfileReport
 from datetime import datetime
 
 from sklearn import metrics
@@ -287,24 +285,6 @@ def current_time():
     diaSemana = hoy.strftime("%A")
 
     return diaSemana, dia, mes, anyo, hora, minuto, segundo
-
-
-
-def csv_visual_analysis(csv):
-    '''
-    Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
-    (Comparativa por columnas, mapa de calor, mapa de correlaciones.)
-
-    Args:
-        csv: archivo en formato csv del que se quiere hacer el análisis
-
-    Returns:
-        Análisis visual y de correlaciones de las diferentes variables numéricas en el dataset
-    '''    
-    df=pd.read_csv(csv)
-    profile=ProfileReport(df, title="Pandas Profiling Report")
-
-    return (profile)
 
 
 
