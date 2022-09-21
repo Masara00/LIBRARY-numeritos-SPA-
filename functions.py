@@ -18,6 +18,10 @@ import pygame
 import ssl
 import sys, time, os
 
+from sklearn.metrics import mean_squared_error
+import numpy as np
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error
 
 import cv2 as cv
 from time import time
@@ -40,6 +44,10 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.svm import SVR
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import mean_squared_error
+import numpy as np
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -47,7 +55,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn import metrics
 from datetime import datetime
-from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import RandomOverSampler
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.pipeline import Pipeline 
@@ -60,7 +68,6 @@ import numpy as np
 
 
 ## | JAVI |
-sns.set_style('whitegrid')
 
 def graficas (df,y):
     '''
@@ -217,7 +224,7 @@ def funcion_ridge (model,X_test,y_test,X_train,y_train,alpha_1):
    
     return ridgeR
 
-def correccion_Lasso_a_aplicar(model,X_test,y_test,X_train,y_train,alpha_1:int):
+def funcion_lasso(model,X_test,y_test,X_train,y_train,alpha_1:int):
     '''
     Función para entrenar la función de Lasso y el calculo del error regularizando o sin regularizar del MSE.
 
@@ -251,107 +258,6 @@ def correccion_Lasso_a_aplicar(model,X_test,y_test,X_train,y_train,alpha_1:int):
 
     return lassoR
 
-def correccion_ridge_a_aplicar(model, X_test, y_test, ridgeR, log_ini:int,log_fin:int,n_alphas:int):
-    '''
-    Función que evalua la regularización de Ridge para un modelo de regresión lineal entrenado y
-    que a partir de los valores logarítmicos y alpha muestra una gráfica donde se puede localizar 
-    el punto más bajo de los errores y así determinar cuál es el valor de alpha más adecuado.
-
-    Args:
-        model: modelo entrenado de regresión lineal
-        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
-        ridgeR: función de Ridge entrenada
-        log_ini:int, valor inicial logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        log_fin:int, valor final logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        n_alphas:int. Número de variable alpha a usar para optimizar la función Ridge.
-
-    Return:
-        Grafica: muestra los valores de alpha en abscisas en el rango indicado y los valores de Mean Square Error de la función.
-
-    
-    OJO!!! esta función está por revisar'''
-    predictions = model.predict(X_test)                   #   Determino los resultados que deberían de dar con los valores guardados para
-
-    alphas = np.logspace(log_ini, log_fin, n_alphas) 
-    baseline_error = metrics.mean_squared_error(y_test, predictions)
-    coef_ridgeR = []
-    err_ridge = []
-    baseline = []
-
-    for a in alphas:
-        ridgeR.set_params(alpha=a)
-        coef_ridgeR.append(ridgeR.coef_)
-        y_pred = ridgeR.predict(X_test)
-        lasso_error = metrics.mean_squared_error(y_pred, y_test)    
-        err_ridge.append(lasso_error)
-        baseline.append(baseline_error)
-    print(min(err_ridge))
-    
-    plt.figure(figsize=(20,12))
-    ax = plt.gca()
-    ax.plot(alphas, err_ridge, linewidth=5, color='red', label="Ridge regression")
-    ax.plot(alphas, baseline, linewidth=4,linestyle='--', color='blue', label='Linear regression')
-    ax.set_xscale('log')
-    plt.xlabel('$\lambda$', fontsize=30)
-    plt.xticks(fontsize=30)
-    plt.yticks(fontsize=30)
-    plt.ylabel('error', fontsize=30)
-    ax.legend(fontsize=30)
-    plt.title(r'Regression error ($\lambda$)', fontsize=30)
-    plt.show();
-
-def correccion_Lasso_a_aplicar(model, X_test, y_test, lassoR, log_ini:int,log_fin:int,n_alphas:int):
-    '''
-    Función que evalua la regularización de Lasso para un modelo de regresión lineal entrenado y
-    que a partir de los valores logarítmicos y alpha muestra una gráfica donde se puede localizar 
-    el punto más bajo de los errores y así determinar cuál es el valor de alpha más adecuado.
-
-    Args:
-        model: modelo entrenado de regresión lineal
-        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
-        LassoR función de Lasso entrenada
-        log_ini:int, valor inicial logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        log_fin:int, valor final logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        n_alphas:int. Número de variable alpha a usar para optimizar la función Ridge.
-
-    Return:
-        Grafica: muestra los valores de alpha en abscisas en el rango indicado y los valores de Mean Square Error de la función.
-
-    OJO!!! esta función está por revisar
-    '''
-
-    predictions = model.predict(X_test)
-    alphas = np.logspace(log_ini, log_fin, n_alphas) 
-    baseline_error = metrics.mean_squared_error(y_test, predictions)
-    coef_lassoR = []
-    err_lasso = []
-    baseline = []
-
-    for a in alphas:
-        lassoR.set_params(alpha=a)
-        coef_lassoR.append(lassoR.coef_)
-        y_pred = lassoR.predict(X_test)
-        lasso_error = metrics.mean_squared_error(y_pred, y_test)    
-        err_lasso.append(lasso_error)
-        baseline.append(baseline_error)
-
-
-    print(min(err_lasso))
-    plt.figure(figsize=(20,10))
-    ax = plt.gca()
-    ax.plot(alphas, err_lasso, linewidth=5, color='red', label="Lasso")
-    ax.plot(alphas, baseline, linewidth=4,linestyle='--', color='blue', label='Linear regression')
-    ax.set_xscale('log')
-    plt.xlabel('$\lambda$', fontsize=30)
-    plt.xticks(fontsize=30)
-    plt.yticks(fontsize=30)
-    plt.ylabel('error', fontsize=30)
-    ax.legend(fontsize=30)
-    plt.title(r'Regression error ($\lambda$)', fontsize=30)
-    plt.show();
-
 def error_modelo(model, X_test, y_test):
     '''
     Función que a partir de un modelo entrenado con las variables X_test e y_test, muestra las
@@ -364,7 +270,6 @@ def error_modelo(model, X_test, y_test):
 
     Return:
         df_error: Dataframe donde aparecen los datos de 'Accuracy','f-1 score','Recall','Precision'.
-        Muestra también el cálculo de la curva ROC
         Grafica de la matriz de confunsión. 
 
     '''
@@ -374,7 +279,6 @@ def error_modelo(model, X_test, y_test):
     acc_model=accuracy_score(y_test, y_pred)
     precision_model=precision_score(y_test, y_pred,average='macro')
     recall_model=recall_score(y_test, y_pred,average='macro')
-    roc_auc_score=roc_auc_score(y_test, model.predict_proba(X_test),multi_class='ovr')
     conf_model=confusion_matrix(y_test, y_pred, normalize='true')
     model_error = {'accuracy': acc_model, 'f-1': f1_model, 'recall': recall_model , 'precision': precision_model}
     df_error=pd.DataFrame.from_dict(model_error,orient='index')
@@ -384,7 +288,6 @@ def error_modelo(model, X_test, y_test):
     print('Precision', precision_model)
     print('Recall', recall_model)
     print('-'*30)
-    print('ROC', roc_auc_score)
 
     plt.figure(figsize=(10,10))
     sns.heatmap(conf_model, annot=True)
@@ -396,9 +299,10 @@ def error_modelo(model, X_test, y_test):
 def time_now():
     """
     Función que devuelve la fecha y hora actual
-    :param: No tiene parámetros.
-    :return: Tupla de strings con el día de la semana, día del mes, mes, año, hora, minuto y segundo actual.
-    :rtype: tuple
+
+    Args: No tiene parámetros.
+
+    Return(tuple): Tupla de strings con el día de la semana, día del mes, mes, año, hora, minuto y segundo actual.
     """
 
     dt = datetime.now()
@@ -415,22 +319,15 @@ def time_now():
 
     return diaSemana, dia, mes, anyo, hora, minuto, segundo
 
-def feature_visual(url):
-    '''Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
-(Comparativa por columnas, mapa de calor, mapa de correlaciones.)'''    
-    df=pd.read_csv(url)
+def feature_visual(csv):
+  '''Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
+  (Comparativa por columnas, mapa de calor, mapa de correlaciones.)
+  '''    
+    df=pd.read_csv(csv)
     profile=ProfileReport(df, title="Pandas Profiling Report")
-    return print(profile)
+    return (profile)
 
-# def Feature_analisis(df):
-#     '''Análisis incial del df '''
-#     print(df.head())
-#     print(-*10)
-#     print(df.info())
-#     print(-*10)
-#     print(df.isnull().sum())
-#     print(-*10)
-#     print(df.value_counts())
+
     
 
 ## | SARA | 20_09_14_28
@@ -475,7 +372,7 @@ def sustituye_texto(df, columna, condicion, reemplazo):
         condicion: lo que queremos sustituir
         reemplazo: lo que queremos que aparezca
 
-    Returns:
+    Return:
         Dataframe modificado.
 
     Ejemplos:
@@ -504,10 +401,10 @@ def extraer_con_regex(df, columna, clave_regex):
         clave_regex: la clave regex que seleccione lo que nos queremos quedar.
              *Formato para la clave_regex = '(regex)'
  
-    Returns:
+    Return:
         Dataframe modificado.
 
-    Ejemplo:
+    Ejemplos:
         df['personaje'] = df['personaje'].str.extract(r'(^\w+)')
     '''
     
@@ -524,7 +421,7 @@ def eliminar_entre_parentesis_en_df(df, columna):
         df: dataframe
         columna: columna del dataframe
 
-    Returns:
+    Return:
         Dataframe modificado.
     '''
 
@@ -548,7 +445,7 @@ def where_contains(df, columna, palabra_clave):
         columna: columna del dataframe
         palabra_clave: string
 
-    Returns:
+    Return:
         Dataframe modificado.
 
     Ejemplo:
@@ -569,7 +466,7 @@ def drop_con_condicion(df, columna, condicion):
         columna: columna del dataframe
         condicion: lo que tienen que cumplir los registros que queremos eliminar
 
-    Returns:
+    Return:
         Dataframe modificado.
     '''
 
@@ -588,7 +485,7 @@ def data_report(df):
     Arg:
         df: dataframe
 
-    Returns:
+    Return:
         Dataframe de valor informativo
     '''
 
@@ -619,7 +516,7 @@ def number_of_outliers(df):
     Arg:
         df: dataframe 
 
-    Returns:
+    Return:
         Imprime por pantalla la suma de outliers para cada columna
     '''
     
@@ -638,7 +535,7 @@ def radical_dropping(df):
     Arg:
         df: dataframe
 
-    Returns:
+    Return:
         Dataframe modificado
     '''
 
@@ -656,13 +553,13 @@ def read_data_bw(path, im_size, class_names_label):
     '''Lectura y etiquetado de imágenes en blanco y negro.
 
     Args:
-        path: ruta donde estarán el resto de carpetas.
+        path(str): ruta donde estarán el resto de carpetas.
 
-        im_size: tamaño al que queremos pasar todas las imagenes.
+        im_size(tuple): tamaño al que queremos pasar todas las imagenes.
 
-        class_names_label: nombre de las variables a etiquetar.
+        class_names_label(dict): nombre de las variables a etiquetar.
       
-    Returns:
+    Return:
         X: el array de los datos de las imágenes.
 
         Y: array con los label correspondientes a las imágenes.
@@ -702,13 +599,13 @@ def read_data_color(path, im_size, class_names_label):
     '''Lectura y etiquetado de imágenes a color.
 
     Args:
-        path: ruta donde estarán el resto de carpetas.
+        path(str): ruta donde estarán el resto de carpetas.
 
-        im_size: tamaño al que queremos pasar todas las imagenes.
+        im_size(tuple): tamaño al que queremos pasar todas las imagenes.
 
-        class_names_label: nombre de las variables a etiquetar.
+        class_names_label(dict): nombre de las variables a etiquetar.
       
-    Returns:
+    Return:
         X: el array de los datos de las imágenes.
 
         Y: array con los label correspondientes a las imágenes.
@@ -743,9 +640,9 @@ def read_data(path):
     '''Lectura de imágenes de una carpeta.
 
     Args:
-        path: ruta donde están las imágenes.
+        path(str): ruta donde están las imágenes.
       
-    Returns:
+    Return:
         X: el array de los datos de las imágenes.
 
     '''
@@ -768,7 +665,7 @@ def gen_diagrama_caja(df):
     Args: 
         df : datafreme
 
-    Returns: 
+    Return: 
         n diagrama de caja 
 
     """
@@ -788,7 +685,7 @@ def sustituir_outliers(df, col):
         df : datafreme
         col : la columna que contiene outliers
 
-    Returns: 
+    Return: 
         datafreme sustituido
 
     """
@@ -811,7 +708,7 @@ def muestra_nan(df):
     Args: 
         df : datafreme
 
-    Returns: 
+    Return: 
         detafreme : datafreme nuevo donde muestra el porcentaje de missing values. 
 
     """
@@ -913,15 +810,18 @@ def wrap_perspective_cv2(src, strength):
 def sql_rules():
     '''
     Función que hace sonar el estribillo de "No te olvides de poner el where en el delete from.
-    Primero descarga el audio en el directorio actual, y después la hace sonar a través de pygame
+    Primero descarga el audio en el directorio actual, y después la hace sonar a través de pygame.
+    Args: Sin argumentos.
     Return:
         Suena el estribil
     '''
     # get current directory and create path
     current_dir = os.getcwd()
-    
-    ssl._create_default_https_context = ssl._create_unverified_context
-    path = current_dir + '/noteolvidesdeponerelwhere.mp3'
+    if '/Users' in current_dir:
+        path = current_dir + '/noteolvidesdeponerelwhere.mp3'
+    else:
+        # AQUÍ HAY QUE CAMBIAR LA / EN EL NOMBRE DEL ARCHIVO PARA QUE SEA PARA WINDOWS, NO SÉ SI HAY QUE HACER OTRO PARA LINUX
+        path = current_dir + '/noteolvidesdeponerelwhere.mp3'
 
     # download the wav file in your current directory
     url = 'https://drive.google.com/uc?export=download&id=1_2xEhK3rBiG8XaNJTymTy7TpDXGEo7Id'
@@ -960,11 +860,11 @@ def feature_important(model,X):
     '''
     funcion que saca feature important del modelo  y su grafico
 
-    args:
+    Args:
         model: el modelo
         X: datafeme de los features
 
-    returns:
+    Returns:
         datafreme de feature impottant
         grafico de feature impottant
     '''
@@ -979,12 +879,12 @@ def subplots(df,X,y1,y2):
     '''
     función que hace un subplot de una variable, distribuida según los datos de otras dos variables
     
-    args:
+    Args:
         x:columa elegido para x
         y1:columa elegido para y de scatterplot
         y2:columa elegido para y de  lineplot
 
-    returns:
+    Returns:
         grafico subplot 
 
     '''
@@ -997,10 +897,10 @@ def graf_displot(df):
     '''
     funcion que genera n graficos de distribucion segun las columnas numericas que tiene
 
-    args:
+    Args:
         df: datafreme
     
-    returns:
+    Returns:
         n graficos de distribucion
 
     '''
@@ -1017,15 +917,15 @@ def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
         Se realiza después del train test split.
 
         Args:
-        X_train (array)  : valores de X_train
-        y_train (array)  : valores de y_train
-        randomstate (int) : valor del randomstate
-        scalertype (str) : nombre del scaler:  minmax , standard
-        sampletype (str) : nombre del sampler : over, under , random
+            X_train (array)  : valores de X_train
+            y_train (array)  : valores de y_train
+            randomstate (int) : valor del randomstate
+            scalertype (str) : nombre del scaler:  minmax , standard
+            sampletype (str) : nombre del sampler : over, under , random
 
         Returns:
-        X_train_res (array) : nuevo array del X_train scaled y sampled
-        y_train_res (array) : nuevo array del y_train scaled y sampled
+            X_train_res (array) : nuevo array del X_train scaled y sampled
+            y_train_res (array) : nuevo array del y_train scaled y sampled
     """
     
     if scalertype == "minmax":
@@ -1038,25 +938,25 @@ def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
     X_train_scal = scaler.fit_transform(X_train)  # Valor mínimo 10 --> 0, Valor máximo 50 --> 1
     print ("data scaled with scaler:", scaler)
 
-    over = SMOTE(random_state = randomstate)
+    over = RandomOverSampler (random_state = randomstate)
     under = RandomUnderSampler(random_state = randomstate)
-    rus = RandomUnderSampler(random_state = randomstate)
+    
 
     if sampletype == "over":
         steps = [('o',over)]  
     elif sampletype == "under":
         steps = [('u',under)]
-    else:
-        steps = [('r',rus)]
-
+   
 
     pipeline1 = Pipeline(steps=steps)
     X_train_res, y_train_res = pipeline1.fit_resample(X_train_scal, y_train)
 
-    
-    print('After scaling and sampling, the shape of train_X: {}'.format(X_train_res.shape))
-    print('After scaling and sampling, the shape of train_y: {} \n'.format(y_train_res.shape))
+    shape1 = X_train_res.shape
+    shape2 =y_train_res.shape
+    print(f'After scaling and {sampletype} -sampling, the shape of train_X: {shape1}')
+    print(f'After scaling and {sampletype} -sampling, the shape of train_y: {shape2}')
     print ("applied Methods: ",steps)
+
 
     return  X_train_res,  y_train_res
 
@@ -1066,57 +966,19 @@ def string_replacer (df,col,replacestring,newvalue):
     """ Reemplaza un string deseado por otro string deseado en toda la columna.
 
         Args:
-        df (DataFrame) :   Dataframe en que se debe aplicar
-        col (str) :        Nombre de la columna
-        replacestring (str) :  El string que debe ser reemplazado
-        newvalue (str) : El nuevo valor 
+            df (DataFrame) :   Dataframe en que se debe aplicar
+            col (str) :        Nombre de la columna
+            replacestring (str) :  El string que debe ser reemplazado
+            newvalue (str) : El nuevo valor 
 
         Returns:
-        df[co] (array):  Array de la columna actualizado
+            df[co] (array):  Array de la columna actualizado
      """
     df[col] = df[col].apply(lambda x : x.replace(replacestring,newvalue) )
     return df[col]
 
 
-def force_number_convert (listnames,df,newtype):
-    """ 
-    Convierte una lista de columnas tipo string a un tipo deseado.
 
-    Args:
-    listnames (list) : Lista con los nombres de las columnas
-    df (DataFrame) : DataFrame a actualizar
-    newtype (string) : String del tipo nuevo por ejemplo Float64
-
-    Returns:
-    df (DataFrame) : DataFrame actualizado
-    """
-
-
-
-    for i in listnames:
-        df[i] = df[i].astype(newtype)
-
-    return df
-
-
-
-def dt64_to_float(dt64):
-   """ 
-   Convierte una columna del datetime en un float
-   
-   Args:
-   dt64 (array) : Array en el formato DateTime64
-
-   Returns:
-   values_float (array)  : Array con los valores convertidos de datetime a float
-
-   """
-   year = dt64.astype('M8[Y]')
-   days = (dt64 - year).astype('timedelta64[D]')
-   year_next = year + np.timedelta64(1, 'Y')
-   days_of_year = (year_next.astype('M8[D]') - year.astype('M8[D]')).astype('timedelta64[D]')
-   values_float = 1970 + year.astype(float) + days / (days_of_year)
-   return values_float
 
 
 
@@ -1126,10 +988,10 @@ def basic_encoding (df):
     sin agregar nuevas columnas.
 
     Args:
-    df (DataFrame) : DataFrame actual
+        df (DataFrame) : DataFrame actual
 
     Returns:
-    df (DataFrame) : Devuelve nuevo DataFrame
+        df (DataFrame) : Devuelve nuevo DataFrame
 
     
     """
@@ -1146,11 +1008,11 @@ def clean_emoji(text):
     ''' Funcion para limpiar los emojis que aparecen dentro de un texto.
     
         Args:
-        text (str): texto sobre el que se pretende realizar la función.
+            text (str): texto sobre el que se pretende realizar la función.
         
         Returns:
-        emoj_text (text): el texto que se introduce en el argumento pero 
-        sin ningún emoji.
+            emoj_text (text): el texto que se introduce en el argumento pero 
+            sin ningún emoji.
     
     '''
     emoji_text = re.compile("["
@@ -1166,21 +1028,21 @@ def clean_emoji(text):
 
 def nine_Regressor_Models( X_train, y_train, X_test, y_test):
     '''Función para aplicar los modelos KNeighborsRegressor, GradientBoostingRegressor, ExtraTreesRegressor, .\n
-       RandomForestRegressor, RandomForestRegressor, DecisionTreeRegressor y LinearRegression.
+        RandomForestRegressor, RandomForestRegressor, DecisionTreeRegressor y LinearRegression.
        
-       Args:
-       X_train (array o dataFrame): valores de X_train
-       y_train (array o dataFrame): valores de y_train
-       X_test (array o dataFrame): valores de X_train
-       y_test (array o dataFrame): valores de y_train
+        Args:
+            X_train (array o dataFrame): valores de X_train
+            y_train (array o dataFrame): valores de y_train
+            X_test (array o dataFrame): valores de X_train
+            y_test (array o dataFrame): valores de y_train
        
-       Returns:
-       la función imprime:
-       Modelo
-       Training time
-       Explained variance
-       Mean absolute error
-       R2 score
+        Returns:
+            la función imprime:
+            Modelo
+            Training time
+            Explained variance
+            Mean absolute error
+            R2 score
     '''
     
     lista_modelo = []
@@ -1224,11 +1086,11 @@ def drop_outliers(df, field_name):
     ''' Esta función borra los outliers de la columna (field_name) del dataSet(df)
 
         Args:
-        df (dataFrame): dataFrame original
-        field_name (pandas.core.series): columna original
+            df (dataFrame): dataFrame original
+            field_name (pandas.core.series): columna original
         
         Returns:
-        df (dataFrame): nuevo dataFrame sin outliers en field_name
+            df (dataFrame): nuevo dataFrame sin outliers en field_name
     '''
     
     iqr = 1.5 * (np.percentile(df[field_name], 75) - np.percentile(df[field_name], 25))
@@ -1244,6 +1106,7 @@ def drop_outliers(df, field_name):
 
     return df
 
+## | Antonio |
 def PruebaModelos(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), KNeighborsRegressor(), SVR()], 
 ModelosClasificacion = [LogisticRegression(), DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), KNeighborsClassifier(), SVC()], 
 agregar = [], quitar = [], metricas = [], tipo = "regresion"):
@@ -1287,10 +1150,10 @@ agregar = [], quitar = [], metricas = [], tipo = "regresion"):
             ModelosRegresion.remove(i)
         for modelo in ModelosRegresion:
             if modelo != SVR():
-                modelo.fit(x, y)
+                modelo.fit(xtrain, ytrain)
             else:
-                stdr = StandardScaler.fit_transform(x)
-                modelo.fit(stdr, y)
+                stdr = StandardScaler.fit_transform(xtrain)
+                modelo.fit(stdr, ytrain)
             if metricas == []:
                 medidas.append(str("MAE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_absolute_error(ytest, modelo.predict(xtest)))))
                 medidas.append(str("MSE" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.mean_squared_error(ytest, modelo.predict(xtest)))))
@@ -1306,10 +1169,10 @@ agregar = [], quitar = [], metricas = [], tipo = "regresion"):
             ModelosRegresion.remove(i)
         for modelo in ModelosClasificacion:
             if modelo != SVC():
-                modelo.fit(x, y)
+                modelo.fit(xtrain, ytrain)
             else:
-                stdr = StandardScaler.fit_transform(x)
-                modelo.fit(stdr, y)
+                stdr = StandardScaler.fit_transform(xtrain)
+                modelo.fit(stdr, ytrain)
             if metricas == []:
                 medidas.append(str("Accuracy" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.accuracy_score(ytest, modelo.predict(xtest)))))
                 medidas.append(str("Precission" + " " + str(modelo)[:-2] + ":" + " " + str(metrics.precision_score(ytest, modelo.predict(xtest)))))
@@ -1369,3 +1232,71 @@ def DfTransType(data, type1 = "object", type2 = "float64"):
     """
     for i in data.dtypes[data.dtypes == type1].index:
         data[i] = data[i].astype(type2)
+
+
+## Tarik
+
+def sustituye_nan_moda(data):
+    '''
+    Funcion que rellena e iguala los valores de las columnas con la moda,
+    para la correcta visualización y estudio del dataset.
+    
+    Args:
+        data = dataset que contiene los datos con objeto de estudio.
+    
+    Return: dataframe listo para su estudio y visualización.
+    '''
+    iguala = [column for column in data.columns if data[column].isna().sum() > 0]
+
+    for column in iguala:
+        data[column] = data[column].fillna(data[column].value_counts().index[0])
+
+
+
+def train_regression(model, xtrain, ytrain, xtest, ytest):
+    '''
+    Funcion que entrena modelo de regresión y devuelve las metricas.
+    Args:
+        model(model) = modelo que vamos a entrenar.
+    
+        xtrain, ytrain, xtest, ytest = los valores que vamos a entrenar, para entrenar el modelo.
+    
+    Return: Devuelve las predicciones del model
+    
+    '''
+    model.fit(xtrain,ytrain)
+    print("intercepto:", model.intercept_)
+    print("coeficientes:", model.coef_)
+    mp = model.predict(xtest)
+    print('-'*100)
+    print('MAE') 
+    print(mean_absolute_error(ytest, mp))
+    print('-'*100)
+    print('MSE')
+    print(mean_squared_error(ytest,mp))
+    print('-'*100)
+    print('RMSE') 
+    print(np.sqrt(mean_squared_error(ytest, mp)))
+    print('-'*100)
+    print('R2 SCORE')
+    print(r2_score(ytest,mp))
+
+    return mp
+
+
+def clean_edad(edad):   
+    '''
+    Función que elimina los datos de edad, que son imposibles,
+    ya que le hemos dado un rango, en el cual 119 es el maximo,
+    ya que es el record de longevidad.
+
+    Args: 
+        edad: columna o union de estas que contiene los datos.
+    
+    Return: Todas las edades reales, comprendidas en el rango impuesto.
+    '''                                                  
+    if edad>=0 and edad<=119:                                            
+        return edad
+    else:
+        return np.nan
+
