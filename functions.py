@@ -343,9 +343,9 @@ def error_modelo(model, X_test, y_test):
     métricas más relevantes de un módelo clasificatorio.
 
     Args:
-        model: modelo entrenado de regresión lineal
-        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal.
+        model: modelo entrenado de regresión clasificatorio
+        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión clasificatorio
+        y_test: Dataframe de las variables target para el testeo del modelo de regresión clasificatorio.
 
     Return:
         df_error: Dataframe donde aparecen los datos de 'Accuracy','f-1 score','Recall','Precision'.
