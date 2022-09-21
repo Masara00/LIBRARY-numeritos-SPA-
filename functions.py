@@ -48,7 +48,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn import metrics
 from datetime import datetime
-from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import RandomOverSampler
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.pipeline import Pipeline 
@@ -423,15 +423,7 @@ def feature_visual(url):
     profile=ProfileReport(df, title="Pandas Profiling Report")
     return print(profile)
 
-# def Feature_analisis(df):
-#     '''Análisis incial del df '''
-#     print(df.head())
-#     print(-*10)
-#     print(df.info())
-#     print(-*10)
-#     print(df.isnull().sum())
-#     print(-*10)
-#     print(df.value_counts())
+
     
 
 ## | SARA | 20_09_14_28
@@ -1022,25 +1014,25 @@ def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
     X_train_scal = scaler.fit_transform(X_train)  # Valor mínimo 10 --> 0, Valor máximo 50 --> 1
     print ("data scaled with scaler:", scaler)
 
-    over = SMOTE(random_state = randomstate)
+    over = RandomOverSampler (random_state = randomstate)
     under = RandomUnderSampler(random_state = randomstate)
-    rus = RandomUnderSampler(random_state = randomstate)
+    
 
     if sampletype == "over":
         steps = [('o',over)]  
     elif sampletype == "under":
         steps = [('u',under)]
-    else:
-        steps = [('r',rus)]
-
+   
 
     pipeline1 = Pipeline(steps=steps)
     X_train_res, y_train_res = pipeline1.fit_resample(X_train_scal, y_train)
 
-    
-    print('After scaling and sampling, the shape of train_X: {}'.format(X_train_res.shape))
-    print('After scaling and sampling, the shape of train_y: {} \n'.format(y_train_res.shape))
+    shape1 = X_train_res.shape
+    shape2 =y_train_res.shape
+    print(f'After scaling and {sampletype} -sampling, the shape of train_X: {shape1}')
+    print(f'After scaling and {sampletype} -sampling, the shape of train_y: {shape2}')
     print ("applied Methods: ",steps)
+
 
     return  X_train_res,  y_train_res
 
@@ -1062,45 +1054,7 @@ def string_replacer (df,col,replacestring,newvalue):
     return df[col]
 
 
-def force_number_convert (listnames,df,newtype):
-    """ 
-    Convierte una lista de columnas tipo string a un tipo deseado.
 
-    Args:
-    listnames (list) : Lista con los nombres de las columnas
-    df (DataFrame) : DataFrame a actualizar
-    newtype (string) : String del tipo nuevo por ejemplo Float64
-
-    Returns:
-    df (DataFrame) : DataFrame actualizado
-    """
-
-
-
-    for i in listnames:
-        df[i] = df[i].astype(newtype)
-
-    return df
-
-
-
-def dt64_to_float(dt64):
-   """ 
-   Convierte una columna del datetime en un float
-   
-   Args:
-   dt64 (array) : Array en el formato DateTime64
-
-   Returns:
-   values_float (array)  : Array con los valores convertidos de datetime a float
-
-   """
-   year = dt64.astype('M8[Y]')
-   days = (dt64 - year).astype('timedelta64[D]')
-   year_next = year + np.timedelta64(1, 'Y')
-   days_of_year = (year_next.astype('M8[D]') - year.astype('M8[D]')).astype('timedelta64[D]')
-   values_float = 1970 + year.astype(float) + days / (days_of_year)
-   return values_float
 
 
 
