@@ -90,8 +90,8 @@ def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
     '''
     
     lin_reg = LinearRegression()   
-    lin_reg.fit(X_train, y_train)                           #   Entrenas/generas el modelo para determinar los coeficientes
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size_1, random_state=random_state_1)
+    lin_reg.fit(X_train, y_train)                           #   Entrenas/generas el modelo para determinar los coeficientes
 
     print("Estos son los datos del test y del target:\n-----")
     print("Total features shape:", X.shape)
