@@ -15,7 +15,7 @@
 #### [Christian Jerome Bader](https://github.com/jeromebader)
 #### [Sara Bareda](saradevera)
 #### [Enrique](https://github.com/EnriRuRu)
-#### [Xin](xyaimao)
+#### [Xin](https://github.com/xyaimao)
 #### [Qinhua](https://github.com/qinghua03)
 #### [Irene Glez](https://github.com/irene-glez)
 #### [Luis](https://github.com/lumivalsa)
