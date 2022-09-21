@@ -9,7 +9,7 @@
 ## Equipo:
 
 #### [Laura Barreda](https://github.com/lauragreemko) / [Javier Tenorio](https://github.com/75Engel) / [Antonio Morales](https://github.com/Toni2Morales) / [Mario](https://github.com/Masara00)
-#### [Christian Jerome Bader](https://github.com/jeromebader) / [Sara Bareda](saradevera) / [Enrique](https://github.com/EnriRuRu) / [Xin](https://github.com/xyaimao)
+#### [Christian Jerome Bader](https://github.com/jeromebader) / [Sara de Vera](https://github.com/saradevera) / [Enrique](https://github.com/EnriRuRu) / [Xin](https://github.com/xyaimao)
 #### [Qinhua](https://github.com/qinghua03)/ [Irene Glez](https://github.com/irene-glez) / [Luis](https://github.com/lumivalsa) / [Tarik](https://github.com/tarikelhannach)
 
 ----
