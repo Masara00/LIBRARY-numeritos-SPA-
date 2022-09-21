@@ -1,6 +1,26 @@
 '''
-Librerias a utilizar
+---------
+Numeritos
+---------
+
+>>> Contiene 54 funciones orientadas a:
+---------------------------------------
+    1. Procesado de datos
+    2. Visualización de datos
+    3. Machine learning
+
+>>> Cómo instalar la librería:
+------------------------------
+    pip install numeritos
+    > Todas las librerías necesarias para su uso serán instaladas automáticamente en este paso.
+
+>>> Cómo importar la librería:
+------------------------------
+    import numeritos as nitos
+
 '''
+
+
 import profile
 import numpy as np
 import pandas as pd
