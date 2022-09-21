@@ -44,7 +44,7 @@ from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, a
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, Ridge,Lasso, ElasticNet, LogisticRegression
 from sklearn import linear_model, metrics, model_selection
-from sklearn.ensemble import BaggingRegressor, RandomForestRegressor, GradientBoostingRegressor, VotingRegressor, ExtraTreesRegressor
+from sklearn.ensemble import BaggingRegressor, RandomForestRegressor, GradientBoostingRegressor, VotingRegressor, ExtraTreesRegressor, RandomForestClassifier, ExtraTreesClassifier
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
 from sklearn.svm import SVR, SVC
