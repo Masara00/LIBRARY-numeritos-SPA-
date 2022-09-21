@@ -142,18 +142,17 @@ Las librerías que hemos ido utilizando durante el desarrollo son:
 * *plotly*
 * *re*
 * *Seaborn*
-* **Pandas**
-* **Numpy**
-* **CV2**
-* **Sklearn**
-* **Skimage**
-* **time**
-* **pygame**
-* **joypy**
-* **plotly**
-* **matplotlib**
-* **Seaborn**
-* **re**
-* **os**
-=======
+* *Pandas*
+* *Numpy*
+* *CV2*
+* *Sklearn*
+* *Skimage*
+* *time*
+* *pygame*
+* *joypy*
+* *plotly*
+* *matplotlib*
+* *Seaborn*
+* *re*
+* *os*
 
