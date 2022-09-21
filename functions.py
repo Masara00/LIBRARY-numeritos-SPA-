@@ -59,7 +59,7 @@ import wget
 
 ## | JAVI | 20_09_14_28
 
-def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
+def linear_regression_fit(X,y,test_size_1:float,random_state_1:int):
     '''
     Función para ingresar los datos de las variables previsoras (X) y la variable target (y), 
     los parámetros necesarios para realizar el train test split (random_state y test_size).
@@ -99,9 +99,8 @@ def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
 
     return X_train, X_test, y_train, y_test,lin_reg, lin_reg.intercept_,lin_reg.coef_
     
-
-
-def funcion_metricas_error (model,X_test,y_test,X_train,y_train):
+    
+def error_metrics_regression (model,X_test,y_test,X_train,y_train):
     '''
     Función que a partir de la función entrenada te facilita las métricas más importantes en regresión lineal.
     
@@ -151,7 +150,7 @@ def funcion_metricas_error (model,X_test,y_test,X_train,y_train):
     return mae_pred,mape_pred,mse_pred,msqe_pred,mae_train,mape_train,mse_train,msqe_train
 
 
-def funcion_ridge (model,X_test,y_test,X_train,y_train,alpha_1):
+def ridge_fit (model,X_test,y_test,X_train,y_train,alpha_1):
     '''
     Función para entrenar la función de ridge y el calculo del error regularizando o sin regularizar del MSE.
 
@@ -185,7 +184,7 @@ def funcion_ridge (model,X_test,y_test,X_train,y_train,alpha_1):
    
     return ridgeR
 
-def funcion_lasso(model,X_test,y_test,X_train,y_train,alpha_1:int):
+def lasso_fit(model,X_test,y_test,X_train,y_train,alpha_1:int):
     '''
     Función para entrenar la función de Lasso y el calculo del error regularizando o sin regularizar del MSE.
 
@@ -219,7 +218,7 @@ def funcion_lasso(model,X_test,y_test,X_train,y_train,alpha_1:int):
 
     return lassoR
 
-def error_modelo(model, X_test, y_test):
+def error_metrics_classifier(model, X_test, y_test):
     '''
     Función que a partir de un modelo entrenado con las variables X_test e y_test, muestra las
     métricas más relevantes de un módelo clasificatorio.
@@ -232,9 +231,7 @@ def error_modelo(model, X_test, y_test):
     Return:
         df_error: Dataframe donde aparecen los datos de 'Accuracy','f-1 score','Recall','Precision'.
         Grafica de la matriz de confunsión. 
-
     '''
-
     y_pred = model.predict(X_test)
     f1_model=f1_score(y_test, y_pred,average='macro')
     acc_model=accuracy_score(y_test, y_pred)
@@ -257,15 +254,14 @@ def error_modelo(model, X_test, y_test):
 
 ## | LUIS | 20_09_14_28
 
-def time_now():
-    """
+def current_time():
+    '''
     Función que devuelve la fecha y hora actual
 
     Args: No tiene parámetros.
 
     Return(tuple): Tupla de strings con el día de la semana, día del mes, mes, año, hora, minuto y segundo actual.
-    """
-
+    '''
     dt = datetime.now()
 
     dia = str(dt.day).zfill(2)
@@ -279,10 +275,13 @@ def time_now():
     diaSemana = hoy.strftime("%A")
 
     return diaSemana, dia, mes, anyo, hora, minuto, segundo
+    
 
-def feature_visual(csv):
-  '''  
-  Función que permite desde un archivo csv realizar un analisi completo de cada columna 
+def csv_visual_analysis(csv):
+    '''
+    Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
+    (Comparativa por columnas, mapa de calor, mapa de correlaciones.)
+
     Args:
         df: dataframe
         requiere de instalacion del paquete de pandas profile
@@ -290,7 +289,6 @@ def feature_visual(csv):
     Returns:
         Analisis completo de cada columna
     '''
-
     df=pd.read_csv(csv)
     profile=ProfileReport(df, title="Pandas Profiling Report")
     return (profile)
@@ -300,7 +298,7 @@ def feature_visual(csv):
 
 ## | SARA | 20_09_14_28
 
-def grafico_goscatter(df, columna_eje_x, columna_eje_y, color, texto_labels):
+def goscatter_one_column(df, columna_eje_x, columna_eje_y, color, texto_labels):
     '''
     Función para crear un gráfico PLOTLY scatter de tipo lineal
     a partir de una columna de un dataframe,
@@ -329,7 +327,7 @@ def grafico_goscatter(df, columna_eje_x, columna_eje_y, color, texto_labels):
     iplot(fig)
 
 
-def sustituye_texto(df, columna, condicion, reemplazo):
+def replace_text(df, columna, condicion, reemplazo):
     '''
     Función para sustituir texto por columnas,
     donde se cumpla una condición mediante == (máscara).
@@ -355,7 +353,7 @@ def sustituye_texto(df, columna, condicion, reemplazo):
     return df
 
 
-def extraer_con_regex(df, columna, clave_regex):
+def regex_extraction(df, columna, clave_regex):
     '''
     Función para quedarnos con la parte del texto o del dato que queramos
     mediante regex. 
@@ -380,7 +378,7 @@ def extraer_con_regex(df, columna, clave_regex):
     return df
 
 
-def eliminar_entre_parentesis_en_df(df, columna):
+def remove_text_parenthesis(df, columna):
     '''
     Función para eliminar texto entre paréntesis (acotaciones).
     Se aplica sobre toda la columna del dataframe.
@@ -399,7 +397,7 @@ def eliminar_entre_parentesis_en_df(df, columna):
     return df
 
 
-def where_contains(df, columna, nueva_columna, palabra_clave):
+def new_col_where_contains(df, columna, nueva_columna, palabra_clave):
     '''
     Función para crear columnas nuevas en un dataframe,
     a partir de si en otra columna está o no la palabra_clave.
@@ -424,7 +422,7 @@ def where_contains(df, columna, nueva_columna, palabra_clave):
     return df
 
 
-def drop_con_condicion(df, columna, condicion):
+def drop_when_condition(df, columna, condicion):
     '''
     Funcion para eliminar los registros de una columna que cumplen
     una condición de tipo == condicion.
@@ -445,7 +443,6 @@ def drop_con_condicion(df, columna, condicion):
 ## | IRENE | 20_09_15_00
 
 def data_report(df):
-
     '''
     Genera DF cuyas columnas son las del df, y filas q indican el tipo de dato, porcentaje de missings, número de valores únicos 
     y porcentaje de cardinalidad.
@@ -456,7 +453,6 @@ def data_report(df):
     Return:
         Dataframe de valor informativo
     '''
-
     cols = pd.DataFrame(df.columns.values, columns=["COL_N"])
 
     types = pd.DataFrame(df.dtypes.values, columns=["DATA_TYPE"])
@@ -476,10 +472,9 @@ def data_report(df):
     return concatenado.T
 
 
-def number_of_outliers(df):
-    
+def outliers_count(df):
     '''
-    Devuelve la suma de outliers en cada columna
+    Devuelve el count de outliers en cada columna
 
     Arg:
         df: dataframe 
@@ -487,7 +482,6 @@ def number_of_outliers(df):
     Return:
         Imprime por pantalla la suma de outliers para cada columna
     '''
-    
     Q1 = df.quantile(0.25)
     Q3 = df.quantile(0.75)
     IQR = Q3 - Q1
@@ -496,7 +490,6 @@ def number_of_outliers(df):
 
 
 def radical_dropping(df):
-
     '''
     Elimina todos los missings y duplicados
 
@@ -506,7 +499,6 @@ def radical_dropping(df):
     Return:
         Dataframe modificado
     '''
-
     df.drop_duplicates(inplace=True)
 
     df.dropna(inplace=True)
@@ -516,9 +508,9 @@ def radical_dropping(df):
 ## | MARIO | 20-09-2022
 
     
-def read_data_bw(path, im_size, class_names_label):
-
-    '''Lectura y etiquetado de imágenes en blanco y negro.
+def read_images_folder_bw(path, im_size, class_names_label):
+    '''
+    Lectura y etiquetado de imágenes en blanco y negro.
 
     Args:
         path(str): ruta donde estarán el resto de carpetas.
@@ -562,9 +554,9 @@ def read_data_bw(path, im_size, class_names_label):
 
 
 
-def read_data_color(path, im_size, class_names_label):
-
-    '''Lectura y etiquetado de imágenes a color.
+def read_images_folder_color(path, im_size, class_names_label):
+    '''
+    Lectura y etiquetado de imágenes a color.
 
     Args:
         path(str): ruta donde estarán el resto de carpetas.
@@ -578,7 +570,6 @@ def read_data_color(path, im_size, class_names_label):
 
         Y: array con los label correspondientes a las imágenes.
     '''
-
     X = []
     Y = []
     
@@ -604,39 +595,37 @@ def read_data_color(path, im_size, class_names_label):
     return np.array(X), np.array(Y)
 
 
-def read_data(path):
-    '''Lectura de imágenes de una carpeta.
-
+def read_images(path, img_size):
+    '''
+    Lectura de imágenes de una carpeta y resize al tamaño seleccionado
     Args:
         path(str): ruta donde están las imágenes.
-      
-    Return:
-        X: el array de los datos de las imágenes.
+        img_size: tamaño de las imágenes
 
+    Returns:
+        X: el array de los datos de las imágenes.
     '''
-    
     X = []
     for file in os.listdir(path):
         image = imread(path + '/' + file)
-        smallimage = cv2.resize(image, (224,224))
+        resize_image = cv2.resize(image, img_size)
         print(path + '/' + file)
 
-        X.append(smallimage)
+        X.append(resize_image)
     return np.array(X)
 
-## | Xin | 20-09-2022
+## | Xin |
 
-def gen_diagrama_caja(df):
-
-    """Funcion que genera n diagramas de caja segun el numero de columnas numericas que contiene el datafreme.
+def boxplot_num_columns(df):
+    '''
+    Funcion que genera diagramas de caja segun el numero de columnas numericas que contiene el datafreme.
 
     Args: 
         df : datafreme
 
     Return: 
         n diagrama de caja 
-
-    """
+    '''
     num_cols = df.select_dtypes(exclude='object').columns
     for col in num_cols:
         fig = plt.figure(figsize= (5,5))
@@ -646,8 +635,9 @@ def gen_diagrama_caja(df):
 
 
 
-def sustituir_outliers(df, col):
-    """Funcion que detecta los outliers del datafreme, y lo sustituye por la media. 
+def replace_outliers(df, col):
+    '''
+    Funcion que detecta los outliers del datafreme, y lo sustituye por la media. 
 
     Args: 
         df : datafreme
@@ -655,9 +645,7 @@ def sustituir_outliers(df, col):
 
     Return: 
         datafreme sustituido
-
-    """
-
+    '''
     q1 = df[col].quantile(0.25)
     q3 = df[col].quantile(0.75)
     intraquartile_range = q3 - q1
@@ -669,17 +657,16 @@ def sustituir_outliers(df, col):
     return df
 
 
-def muestra_nan(df):
-
-    """Funcion que muestra los missing values de cada columna de detafreme y el porcentaje de missing values.
+def show_nan_with_percentage(df):
+    '''
+    Funcion que muestra los missing values de cada columna de detafreme y el porcentaje de missing values.
 
     Args: 
         df : datafreme
 
     Return: 
         detafreme : datafreme nuevo donde muestra el porcentaje de missing values. 
-
-    """
+    '''
     suma_nan = df.isnull().sum().sort_values(ascending = False)
     percentaje_nan = (df.isnull().sum() / df.isnull().count()*100).sort_values(ascending = False)
     return pd.concat([suma_nan, percentaje_nan], axis=1, keys = ['suma_nan', 'percentaje_nan'])
@@ -691,6 +678,7 @@ def pieplot_one_column(dataframe, column, title, background_colour, colour_map=N
     '''
     Función para representar un pie plot, mostrando el value.counts de una columna
     Permite personalizar paleta de colores, color de fondo y título.
+
     Args:
         dataframe: Dataframe a utilizar (dataframe)
         column: Nombre de la columna para hacer el value counts (str)
@@ -698,6 +686,7 @@ def pieplot_one_column(dataframe, column, title, background_colour, colour_map=N
         background_colour: Color de fondo en formate HEX o palabra (str)
         colour_map: Mapa de color de matplotlib en formato: cm.seismic, las paletas se 
                     pueden encontrar en https://matplotlib.org/stable/tutorials/colors/colormaps.html
+
     Return:
         Gráfica pieplot
     '''
@@ -708,11 +697,13 @@ def pieplot_one_column(dataframe, column, title, background_colour, colour_map=N
     plt.title(title, pad=30, fontsize = 15)
     plt.show();
 
+
 def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line_colour='white', colour_map=None, 
                        figsize=(7,4), x_limit=None):
     '''
     Función para representar un joyplot, mostrando los valores de una columna, agrupados por otra
     Permite personalizar paleta de colores, título y color de linea.
+
     Args:
         dataframe: Dataframe a utilizar (dataframe)
         classifier_column: Columna por la que se quiere hacer un groupby (str)
@@ -724,6 +715,7 @@ def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line
                     Por defecto es la paleta automática de matplotlib
         figsize: Tamaño de la figura, en formato tupla. Por defecto es (7,4)
         x_limit: Límites para el eje x, formato lista. Por defecto es None.
+
     Return:
         Gráfica joyplot
     '''
@@ -734,10 +726,11 @@ def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line
     plt.show()
 
 
-def acotar_valores_clase(dataframe, columnaclases, clase, columna_a_filtrar, max_val, min_val):
+def narrow_down_col_by_class(dataframe, columnaclases, clase, columna_a_filtrar, max_val, min_val):
     '''
     Función para acotar el rango de valores de una determinada columna, haciendo una máscara por cada 
     clase, o valor de otra columna. Las filas por encima y por debajo de los valores dados se eliminarán.
+
     Args:
         dataframe: Dataframe a utilizar (dataframe)
         columna_clases: Columna categórica que contiene las clases con las que queremos crear máscaras para filtrar (str)
@@ -745,6 +738,7 @@ def acotar_valores_clase(dataframe, columnaclases, clase, columna_a_filtrar, max
         columna_a_filtrar: Columna numérica con la cual se quieren acotar los valores númericos (str)
         max_val: Valor máximo, los valores de la columna a filtrar que estén por encima se eliminarán (num)
         min_val: Valor mínimo, los valores de la columna a filtrar que estén por debajo se eliminarán (num)
+
     Return:
         Elimina los valores por encima y por debajo de cierto valor
     '''
@@ -758,9 +752,11 @@ def acotar_valores_clase(dataframe, columnaclases, clase, columna_a_filtrar, max
 def wrap_perspective_cv2(src, strength):
     '''
     Función que utiliza OpenCV para aplicar una distrosión a una imagen (wrap perspective)
+
     Args:
         src: Array de píxels de la imagen a transformar 
         strength: Nivel de distorsión, a más alto, mayor distorsión (int)
+
     Return:
         Devuelve la imagen distorsionada
     '''
@@ -779,9 +775,11 @@ def sql_rules():
     '''
     Función que hace sonar el estribillo de "No te olvides de poner el where en el delete from.
     Primero descarga el audio en el directorio actual, y después la hace sonar a través de pygame.
+
     Args: Sin argumentos.
+
     Return:
-        Suena el estribil
+        Suena el estribillo
     '''
     # get current directory and create path
     current_dir = os.getcwd()
@@ -804,6 +802,9 @@ def sql_rules():
 def help_data():
     '''
     Función que esr¡be 'me da error' en bucle, con estilo tipografía (las letras salen en diferentes tiempos).
+
+    Args: Sin argumentos.
+
     Return:
         El texto de 'me da error'
     '''
@@ -824,9 +825,9 @@ def help_data():
 ## | QINGHUA | 20-09-2022
 
 
-def feature_important(model,X):
+def feature_importances(model,X):
     '''
-    funcion que saca feature important del modelo  y su grafico
+    Funcion que saca feature important del modelo  y su grafico
 
     Args:
         model: el modelo
@@ -840,12 +841,13 @@ def feature_important(model,X):
                 X.columns,
                 columns = ["Feature imp"]).sort_values("Feature imp", ascending=False)
     grafico=df.sort_values("Feature imp").plot.barh(y='Feature imp')
+
     return (df,grafico)
 
 
-def subplots(df,X,y1,y2):
+def plots_scatter_line_column(df,X,y1,y2):
     '''
-    función que hace un subplot de una variable, distribuida según los datos de otras dos variables
+    Función que hace un subplot de una variable, distribuida según los datos de otras dos variables
     
     Args:
         x:columa elegido para x
@@ -861,16 +863,15 @@ def subplots(df,X,y1,y2):
     sns.lineplot(x=X,y=y2,data=df,ax=axi2)
 
 
-def graf_displot(df):
+def displot_multiple_col(df):
     '''
-    funcion que genera n graficos de distribucion segun las columnas numericas que tiene
+    Funcion que genera n graficos de distribucion segun las columnas numericas que tiene
 
     Args:
         df: datafreme
     
     Returns:
         n graficos de distribucion
-
     '''
     numCols = df.select_dtypes(exclude='object').columns
     for col in numCols:
@@ -880,21 +881,21 @@ def graf_displot(df):
 
 ## | Christian | 20-09-2022
 def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
-    """ Función para realizar over o undersampling o randomsampling para datos no balanceados.\n
-        Se realiza después del train test split.
+    '''
+    Función para realizar over o undersampling o randomsampling para datos no balanceados.
+    Se realiza después del train test split.
 
-        Args:
-            X_train (array)  : valores de X_train
-            y_train (array)  : valores de y_train
-            randomstate (int) : valor del randomstate
-            scalertype (str) : nombre del scaler:  minmax , standard
-            sampletype (str) : nombre del sampler : over, under , random
+    Args:
+        X_train (array)  : valores de X_train
+        y_train (array)  : valores de y_train
+        randomstate (int) : valor del randomstate
+        scalertype (str) : nombre del scaler:  minmax , standard
+        sampletype (str) : nombre del sampler : over, under , random
 
-        Returns:
-            X_train_res (array) : nuevo array del X_train scaled y sampled
-            y_train_res (array) : nuevo array del y_train scaled y sampled
-    """
-    
+    Returns:
+        X_train_res (array) : nuevo array del X_train scaled y sampled
+        y_train_res (array) : nuevo array del y_train scaled y sampled
+    '''
     if scalertype == "minmax":
         scaler = MinMaxScaler()
     elif scalertype == "standard":
@@ -930,25 +931,24 @@ def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
 
 
 def string_replacer (df,col,replacestring,newvalue):
-    """ Reemplaza un string deseado por otro string deseado en toda la columna.
+    '''
+    Reemplaza un string deseado por otro string deseado en toda la columna.
 
-        Args:
-            df (DataFrame) :   Dataframe en que se debe aplicar
-            col (str) :        Nombre de la columna
-            replacestring (str) :  El string que debe ser reemplazado
-            newvalue (str) : El nuevo valor 
+    Args:
+        df (DataFrame) :   Dataframe en que se debe aplicar
+        col (str) :        Nombre de la columna
+        replacestring (str) :  El string que debe ser reemplazado
+        newvalue (str) : El nuevo valor 
 
-        Returns:
-            df[co] (array):  Array de la columna actualizado
-     """
+    Returns:
+        df[co] (array):  Array de la columna actualizado
+    '''
     df[col] = df[col].apply(lambda x : x.replace(replacestring,newvalue) )
     return df[col]
 
-
-
 def basic_encoding (df):
-    """
-    Realiza el encoding de variables categorícas en númericas de manera simple,  \n 
+    '''
+    Realiza el encoding de variables categorícas en númericas de manera simple, 
     sin agregar nuevas columnas.
 
     Args:
@@ -956,9 +956,7 @@ def basic_encoding (df):
 
     Returns:
         df (DataFrame) : Devuelve nuevo DataFrame
-
-    
-    """
+    '''
     le = LabelEncoder()
     for i in df.columns:
             if df[i].dtype == 'object':
@@ -970,15 +968,15 @@ def basic_encoding (df):
 ## | Enrique | 20-09-2022
 
 def clean_emoji(text):
-    ''' Funcion para limpiar los emojis que aparecen dentro de un texto.
+    ''' 
+    Funcion para limpiar los emojis que aparecen dentro de un texto.
     
-        Args:
-            text (str): texto sobre el que se pretende realizar la función.
-        
-        Returns:
-            emoj_text (text): el texto que se introduce en el argumento pero 
-            sin ningún emoji.
+    Args:
+        text (str): texto sobre el que se pretende realizar la función.
     
+    Returns:
+        emoj_text (text): el texto que se introduce en el argumento pero 
+        sin ningún emoji.
     '''
     emoji_text = re.compile("["
                            u"\U0001F600-\U0001F64F"  # emoticons
@@ -991,23 +989,24 @@ def clean_emoji(text):
     return emoji_text.sub(r'', text)
 
 
-def nine_Regressor_Models( X_train, y_train, X_test, y_test):
-    '''Función para aplicar los modelos KNeighborsRegressor, GradientBoostingRegressor, ExtraTreesRegressor, .\n
-        RandomForestRegressor, RandomForestRegressor, DecisionTreeRegressor y LinearRegression.
+def nine_regressor_models( X_train, y_train, X_test, y_test):
+    '''
+    Función para aplicar los modelos KNeighborsRegressor, GradientBoostingRegressor, ExtraTreesRegressor, .\n
+    RandomForestRegressor, RandomForestRegressor, DecisionTreeRegressor y LinearRegression.
        
-        Args:
-            X_train (array o dataFrame): valores de X_train
-            y_train (array o dataFrame): valores de y_train
-            X_test (array o dataFrame): valores de X_train
-            y_test (array o dataFrame): valores de y_train
+    Args:
+        X_train (array o dataFrame): valores de X_train
+        y_train (array o dataFrame): valores de y_train
+        X_test (array o dataFrame): valores de X_train
+        y_test (array o dataFrame): valores de y_train
        
-        Returns:
-            la función imprime:
-            Modelo
-            Training time
-            Explained variance
-            Mean absolute error
-            R2 score
+    Returns:
+        la función imprime:
+        Modelo
+        Training time
+        Explained variance
+        Mean absolute error
+        R2 score
     '''
     
     lista_modelo = []
@@ -1047,15 +1046,16 @@ def nine_Regressor_Models( X_train, y_train, X_test, y_test):
         print()
         
         
-def drop_outliers(df, field_name):
-    ''' Esta función borra los outliers de la columna (field_name) del dataSet(df)
+def drop_outliers_one_column(df, field_name):
+    ''' 
+    Esta función borra los outliers de la columna (field_name) del dataSet(df)
 
-        Args:
-            df (dataFrame): dataFrame original
-            field_name (pandas.core.series): columna original
+    Args:
+        df (dataFrame): dataFrame original
+        field_name (pandas.core.series): columna original
         
-        Returns:
-            df (dataFrame): nuevo dataFrame sin outliers en field_name
+    Returns:
+        df (dataFrame): nuevo dataFrame sin outliers en field_name
     '''
     
     iqr = 1.5 * (np.percentile(df[field_name], 75) - np.percentile(df[field_name], 25))
@@ -1071,41 +1071,39 @@ def drop_outliers(df, field_name):
 
     return df
 
-## | Antonio | 20-09-2022
-def PruebaModelos(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), KNeighborsRegressor(), SVR()], 
-ModelosClasificacion = [LogisticRegression(), DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), KNeighborsClassifier(), SVC()], 
-agregar = [], quitar = [], metricas = [], tipo = "regresion"):
-    """Función para probar un conjunto de modelos de regresión y clasificación con los parámetros por defecto devolviendo las metricas de precisión de cada modelo.
-        Esto es útil para hacerse una primera idea de hacia cuál modelo poder enfocarse
+
+## | Antonio |
+
+def try_multiple_models(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), 
+                        ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), 
+                        KNeighborsRegressor(), SVR()], ModelosClasificacion = [LogisticRegression(), 
+                        DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), 
+                        KNeighborsClassifier(), SVC()], agregar = [], quitar = [], metricas = [], tipo = "regresion"):
+    '''
+    Función para probar un conjunto de modelos de regresión y clasificación con los parámetros por defecto devolviendo las metricas de precisión de cada modelo.
+    Esto es útil para hacerse una primera idea de hacia cuál modelo poder enfocarse
     
     Args:
         xtrain(array): Variables predictoras usadas para entrenar el modelo.
-
         ytrain(array): Variable a predecir usada para entrenar el modelo.
-
         xtest(array): Variables predictoras con las que predecir y comprobar la eficacia del modelo.
-
         ytest(array): Variable predictora con la que comporbar la eficacia del modelo.
-
-
-        ModelosRegresión(list): por defecto, LinearRegression, Ridge, Lasso, ElasticNet, DecisionTreeRegressor, RandomForestRegressor, ExtraTreesRegressor, KNeighborsRegressory SVR.
-
-        Se puede pasar otra lista entera si se desea.
-
-        ModelosClasificacion(list):por defecto, LogisticRegression, DecisionTreeClassifier, RandomForestClassifier, ExtraTreesClassifier, KNeighborsClassifier y SVC
-
-        Se puede pasar otra lista entera si se desea.
-
+        ModelosRegresión(list): por defecto, LinearRegression, Ridge, Lasso, ElasticNet, DecisionTreeRegressor, 
+                                RandomForestRegressor, ExtraTreesRegressor, KNeighborsRegressory SVR.
+                                * Se puede pasar otra lista entera si se desea.
+        ModelosClasificacion(list): por defecto, LogisticRegression, DecisionTreeClassifier, RandomForestClassifier, 
+                                    ExtraTreesClassifier, KNeighborsClassifier y SVC
+                                    * Se puede pasar otra lista entera si se desea.
         agregar(list): Agrega un nuevo modelo para entrenar a lo que vienen por defecto.
-
         quitar(list): Quita un modelo para entrenar de los que vienen por defecto.
-
-        metricas(list): Añade una metrica nueva para ver la eficacia del modelo(Para un tipo de modelo de regresión se puede añadir MAPE y para uno de clasificación se puede añadir Recall)
-
-        tipo(str): Elige entre si quieres entrenar modelos de regresión o de clasificación. Las opciones son "regresión" o "clasificacion".
+        metricas(list): Añade una metrica nueva para ver la eficacia del modelo (para un tipo de modelo de 
+                        regresión se puede añadir MAPE y para uno de clasificación se puede añadir Recall)
+        tipo(str): Elige entre si quieres entrenar modelos de regresión o de clasificación.
+                   Las opciones son "regresión" o "clasificacion".
     
-    Return:None
-    """
+    Return:
+        None
+    '''
     medidas = []
     resultado = ""
     if tipo == "regresion":
@@ -1153,18 +1151,21 @@ agregar = [], quitar = [], metricas = [], tipo = "regresion"):
         resultado = resultado + m + "\n"
     print(resultado)
 
-def MinMaxCorr(data, min, max = None):
-    """Función para buscar las columnas que tienen una correlación dentro de un rango. Su uso común es buscar las columnas que tienen mayor correlación entre ellas la cual sea
-        diferente de 1.
+
+def min_max_corr(data, min, max = None):
+    '''
+    Función para buscar las columnas que tienen una correlación dentro de un rango. Su uso común es buscar las 
+    columnas que tienen mayor correlación entre ellas la cual sea diferente de 1.
     
     Args:
         data(DataFrame): DataFrame del cual obtener la correlación.
-
         min(int): Número mínimo de correlación que buscar.
+        max(int): Número máximo de correlación que buscas. Por defecto tiene None y buscará todos los 
+                  valores por encima del parámetro min que no sea 1.bit_length
 
-        max(int): Número máximo de correlación que buscas. Por defecto tiene None y buscará todos los valores por encima del parámetro min que no sea 1.bit_length
-    Return: Matriz de correlación con las columnas que tienen más correlación entre ellas
-    """
+    Return: 
+        Matriz de correlación con las columnas que tienen más correlación entre ellas
+    '''
     if max == None:
         resultado = data.corr()[(data.corr() > min) & (data.corr() != 1)].dropna(axis = 1, how = "all").dropna(axis = 0, how = "all")
     else:
@@ -1172,36 +1173,38 @@ def MinMaxCorr(data, min, max = None):
     return resultado
 
 def root_mean_squared_error(y_true, y_pred):
-    """Función para añadir la métrica de RMSE que no viene por defecto en Sklean.
+    '''
+    Función para añadir la métrica de RMSE que no viene por defecto en Sklean.
     
     Args:
         y_true(array): Variable objetivo con los valores correctos.
-
         y_pred(array): Variable objetivo con valores predichos por el modelo deseado.
     
-    Return:int
-    """
+    Return: 
+        int
+    '''
     return np.square(metrics.mean_squared_error(y_true, y_pred))
 
-def DfTransType(data, type1 = "object", type2 = "float64"):
-    """Función para transoformar todas las columnas un DataFrame con un tipo de dato concreto a otro.
+
+def transform_all_columns(data, type1 = "object", type2 = "float64"):
+    '''
+    Función para transoformar todas las columnas un DataFrame con un tipo de dato concreto a otro.
     
     Args:
         data(DataFrame): DataFrame al cual transformar sus columnas.
-
         type1(str): Tipo de dato a cambiar. Por defecto es "object".
-
         type2(str): Tipo de dato al cual cambiar. Por defecto es "float64".
     
-    Return:None
-    """
+    Return: 
+        None
+    '''
     for i in data.dtypes[data.dtypes == type1].index:
         data[i] = data[i].astype(type2)
 
 
 ## | Tarik | 20-09-2022
 
-def sustituye_nan_moda(data):
+def replace_nan_mode(data):
     '''
     Funcion que rellena e iguala los valores de las columnas con la moda,
     para la correcta visualización y estudio del dataset.
@@ -1209,7 +1212,8 @@ def sustituye_nan_moda(data):
     Args:
         data = dataset que contiene los datos con objeto de estudio.
     
-    Return: dataframe listo para su estudio y visualización.
+    Return: 
+        dataframe listo para su estudio y visualización.
     '''
     iguala = [column for column in data.columns if data[column].isna().sum() > 0]
 
@@ -1247,7 +1251,4 @@ def train_regression(model, xtrain, ytrain, xtest, ytest):
     print(r2_score(ytest,mp))
 
     return mp
-
-
-
 
