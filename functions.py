@@ -69,28 +69,6 @@ import numpy as np
 
 ## | JAVI |
 
-def graficas (df,y):
-    '''
-    Función para representar varias graficas antes de realizar cualquier modelo
-    df es un DataFrame.
-
-    Args:
-        df:Dataframe con las variables numéricas
-        y: Variable target.
-
-    Return:
-        Subplot compuesto por:
-        Gráfica 'pairplot'
-        Gráfica 'heatmap'
-    '''
-    plt.figure(figsize=(20,20))
-    sns.pairplot(df)
-    plt.fig, axes = plt.subplots(2,1)
-    sns.distplot(y, ax = axes[0])
-    sns.heatmap(df.corr(), annot=True, ax = axes[1])
-    axes[0].set_title("Distribucion")
-    axes[1].set_title("Mapa Correlación");
-
 def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
     '''
     Función para ingresar los datos de las variables previsoras (X) y la variable target (y), 
@@ -128,15 +106,10 @@ def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
     print("Estos son los datos del valor de y en x=0 y de las pendientes de cada gradiente de las variables:\n-----")
     print(lin_reg.intercept_)
     print(lin_reg.coef_)
-    coeff_df = pd.DataFrame(lin_reg.coef_,
-                            X.columns,
-                            columns=['Coefficient'])
-    print("Estos son las pendientes de cada gradiente visto en un Dataframe:\n-----")
-    print(coeff_df)
 
-    return X_train, X_test, y_train, y_test,lin_reg, lin_reg.intercept_,lin_reg.coef_,coeff_df
-
-def función_metricas_error (model,X_test,y_test,X_train,y_train):
+    return X_train, X_test, y_train, y_test,lin_reg, lin_reg.intercept_,lin_reg.coef_
+    
+def funcion_metricas_error (model,X_test,y_test,X_train,y_train):
     '''
     Función que a partir de la función entrenada te facilita las métricas más importantes en regresión lineal.
     
