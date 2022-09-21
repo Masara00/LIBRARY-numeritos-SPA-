@@ -1,22 +1,42 @@
 # NUMERITOS
 
-Librería enfocada a todo el campo de Data Science para poder ahorrar tiempo de desarrollo de código para tareas comunes.
-Cuenta con más de 54 funciones documentadas de visualización, transformación de datos y entrenamiento de modelos.
+Te damos la bienvenida a la librería 'Numeritos'.
 
------
+Muchas gracias por tu interés 😊
 
-## Equipo:
+Te invitamos a probar nuestra librería, un proyecto global que quiere facilitarle la vida a l@s científic@s de datos a través de un conjunto de funciones originales para Python.
 
-#### [Laura Barreda](https://github.com/lauragreemko) / [Javier Tenorio](https://github.com/75Engel) / [Antonio Morales](https://github.com/Toni2Morales) / [Mario Sabrás](https://github.com/Masara00)
-#### [Christian Jerome Bader](https://github.com/jeromebader) / [Sara Devera](saradevera) / [Enrique Rubio](https://github.com/EnriRuRu) / [Xinmeng Ye](xyaimao)
-#### [Qinhua Liang](https://github.com/qinghua03) / [Irene Glez](https://github.com/irene-glez) / [Luis Miguel Valverde](https://github.com/lumivalsa) / [Tarik El Hannach](https://github.com/tarikelhannach)
 
-----
+---
 
-### [Enlace a Paquete Pypi]()
+### Introducción:
 
-----
-## Visualización
+Este proyecto nace de la colaboración entre los alumnos del BootCamp de Data Science de The Bridge - Digital Talent Accelerator, de la promoción de junio del 2022.
+
+Hemos puesto en común funciones que cada uno ha ido desarrollando a lo largo del curso para sus proyectos individuales. 
+
+Hemos logrado agrupar 54 funciones muy útiles para tareas relativas a:
+
+  > visualización de datos
+  >
+  > procesado de datos
+  >
+  > Machine Learning
+
+
+Estos pedazos de código encapsulado nos han resultado muy útiles a lo largo de nuestra formación, y por eso queremos compartirlos con todas las personas del fascinante mundo de los datos 🔮
+
+
+---
+
+### Qué contiene esta librería: 
+
+Te ofrecemos las siguientes funciones:
+
+
+
+##### Visualización
+
 * feature_visual
 * grafico_goscatter
 * gen_diagram_caja
@@ -26,7 +46,8 @@ Cuenta con más de 54 funciones documentadas de visualización, transformación 
 * graf_displot
 
 
-## Transformación de datos
+##### Transformación de datos
+
 * time_now
 * sustituye_texto
 * extraer_con_regex
@@ -54,7 +75,8 @@ Cuenta con más de 54 funciones documentadas de visualización, transformación 
 * clean_edad
 
 
-## Modelos de ML
+##### Machine Learning
+
 * funcion_lineal_regression
 * funcion_metricas_error
 * funcion_ridge
@@ -65,26 +87,57 @@ Cuenta con más de 54 funciones documentadas de visualización, transformación 
 * PruebaModelos
 * root_mean_squared_error
 
+***
+
+### Equipo:
+
+[Laura Barreda](https://github.com/laurabarredaagusti)
+
+[Javier Tenorio](https://github.com/75Engel) 
+
+[Antonio Morales](https://github.com/Toni2Morales)
+
+[Mario Sabrás](https://github.com/Masara00)
+
+[Christian Jerome Bader](https://github.com/jeromebader)
+
+[Sara De Vera](saradevera)
+
+[Irene Glez](https://github.com/irene-glez)
+
+[Xinmeng Ye](xyaimao)
+
+[Qinhua Liang](https://github.com/qinghua03)
+
+[Luis Miguel Valverde](https://github.com/lumivalsa)
+
+[Enrique Rubio](https://github.com/EnriRuRu)
+
+[Tarik El Hannach](https://github.com/tarikelhannach)
+
+***
+
+### [Enlace a Paquete Pypi]()
+
+
 ----
 
 ## Dependencias principales
 
-* **Pandas**
-* **Numpy**
-* **CV2**
-* **Sklearn**
-* **Skimage**
-* **time**
-* **pygame**
-* **joypy**
-* **plotly**
-* **matplotlib**
-* **Seaborn**
-* **re**
-* **os**
-=======
-#### [Christian J. Bader](https://github.com/jeromebader) / [Sara de Vera](https://github.com/saradevera) / [Enrique Rubio](https://github.com/EnriRuRu) / [Xinmeng Ye](https://github.com/xyaimao)
-#### [Qinghua Liang](https://github.com/qinghua03)/ [Irene Gonzalez](https://github.com/irene-glez) / [Luis Valverde](https://github.com/lumivalsa) / [Tarik El Hannach](https://github.com/tarikelhannach)
+Las librerías que hemos ido utilizando durante el desarrollo son:
 
-----
-### [Enlace a Paquete Pypi]()
+
+* *CV2*
+* *imblearn*
+* *matplotlib*
+* *joypy*
+* *Numpy*
+* *os*
+* *Pandas*
+* *pygame*
+* *Skimage*
+* *Sklearn*
+* *time*
+* *plotly*
+* *re*
+* *Seaborn*
