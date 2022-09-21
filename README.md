@@ -16,12 +16,46 @@
 ### [Enlace a Paquete Pypi]()
 
 ## Visualización
+#### graficas
+#### feature_visual
+#### grafico_goscatter
+#### 
+#### 
+#### 
+#### 
+#### 
+#### 
+#### 
+#### 
+#### 
+#### 
+#### 
+#### 
 
 
 
 ## Transformación de datos
-
+#### time_now
+#### sustituye_texto
+#### extraer_con_regex
+#### eliminar_entre_parentesis_en_df
+#### where_contains
+#### 
+#### 
+#### 
+#### 
+#### 
 ## Modelos de ML
+#### funcion_lineal_regression
+#### funcion_metricas_error
+#### funcion_ridge
+#### funcion_lasso
+#### correccion_ridge_a_aplicar
+#### correccion_lasso_a_aplicar
+#### error_modelo
+#### 
+#### 
+#### 
 
 ----
 
