@@ -15,8 +15,10 @@ from joypy import joyplot
 import random
 import wget
 import pygame
-import ssl
-
+from sklearn.metrics import mean_squared_error
+import numpy as np
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error
 
 import cv2 as cv
 from time import time
@@ -919,9 +921,11 @@ def sql_rules():
     '''
     # get current directory and create path
     current_dir = os.getcwd()
-    
-    ssl._create_default_https_context = ssl._create_unverified_context
-    path = current_dir + '/noteolvidesdeponerelwhere.mp3'
+    if '/Users' in current_dir:
+        path = current_dir + '/noteolvidesdeponerelwhere.mp3'
+    else:
+        # AQUÍ HAY QUE CAMBIAR LA / EN EL NOMBRE DEL ARCHIVO PARA QUE SEA PARA WINDOWS, NO SÉ SI HAY QUE HACER OTRO PARA LINUX
+        path = current_dir + '/noteolvidesdeponerelwhere.mp3'
 
     # download the wav file in your current directory
     url = 'https://drive.google.com/uc?export=download&id=1_2xEhK3rBiG8XaNJTymTy7TpDXGEo7Id'
@@ -1351,7 +1355,6 @@ def DfTransType(data, type1 = "object", type2 = "float64"):
     for i in data.dtypes[data.dtypes == type1].index:
         data[i] = data[i].astype(type2)
 
-##
 def igualador(data):
     '''
     Funcion que rellena e iguala los valores de las columnas,
@@ -1364,10 +1367,6 @@ def igualador(data):
     for column in iguala:
         data[column] = data[column].fillna(data[column].value_counts().index[0])
 
-from sklearn.metrics import mean_squared_error
-import numpy as np
-from sklearn.metrics import r2_score
-from sklearn.metrics import mean_absolute_error
 
 def train(model, x, y):
     '''
