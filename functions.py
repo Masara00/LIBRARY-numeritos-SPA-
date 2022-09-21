@@ -218,7 +218,7 @@ def funcion_ridge (model,X_test,y_test,X_train,y_train,alpha_1):
    
     return ridgeR
 
-def correccion_Lasso_a_aplicar(model,X_test,y_test,X_train,y_train,alpha_1:int):
+def funcion_lasso(model,X_test,y_test,X_train,y_train,alpha_1:int):
     '''
     Función para entrenar la función de Lasso y el calculo del error regularizando o sin regularizar del MSE.
 
