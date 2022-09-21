@@ -124,6 +124,7 @@ Te ofrecemos las siguientes funciones:
 
 ## Dependencias principales
 
+
 Las librerías que hemos ido utilizando durante el desarrollo son:
 
 
@@ -141,3 +142,19 @@ Las librerías que hemos ido utilizando durante el desarrollo son:
 * *plotly*
 * *re*
 * *Seaborn*
+=======
+* **Pandas**
+* **Numpy**
+* **CV2**
+* **Sklearn**
+* **Skimage**
+* **time**
+* **pygame**
+* **joypy**
+* **plotly**
+* **matplotlib**
+* **Seaborn**
+* **re**
+* **os**
+=======
+
