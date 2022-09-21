@@ -15,7 +15,10 @@ from joypy import joyplot
 import random
 import wget
 import pygame
-
+from sklearn.metrics import mean_squared_error
+import numpy as np
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error
 
 import cv2 as cv
 from time import time
@@ -38,6 +41,10 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.svm import SVR
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import mean_squared_error
+import numpy as np
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -45,7 +52,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn import metrics
 from datetime import datetime
-from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import RandomOverSampler
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.pipeline import Pipeline 
@@ -215,7 +222,7 @@ def funcion_ridge (model,X_test,y_test,X_train,y_train,alpha_1):
    
     return ridgeR
 
-def correccion_Lasso_a_aplicar(model,X_test,y_test,X_train,y_train,alpha_1:int):
+def funcion_lasso(model,X_test,y_test,X_train,y_train,alpha_1:int):
     '''
     Función para entrenar la función de Lasso y el calculo del error regularizando o sin regularizar del MSE.
 
@@ -394,9 +401,10 @@ def error_modelo(model, X_test, y_test):
 def time_now():
     """
     Función que devuelve la fecha y hora actual
-    :param: No tiene parámetros.
-    :return: Tupla de strings con el día de la semana, día del mes, mes, año, hora, minuto y segundo actual.
-    :rtype: tuple
+
+    Args: No tiene parámetros.
+
+    Return(tuple): Tupla de strings con el día de la semana, día del mes, mes, año, hora, minuto y segundo actual.
     """
 
     dt = datetime.now()
@@ -420,15 +428,7 @@ def feature_visual(url):
     profile=ProfileReport(df, title="Pandas Profiling Report")
     return print(profile)
 
-# def Feature_analisis(df):
-#     '''Análisis incial del df '''
-#     print(df.head())
-#     print(-*10)
-#     print(df.info())
-#     print(-*10)
-#     print(df.isnull().sum())
-#     print(-*10)
-#     print(df.value_counts())
+
     
 
 ## | SARA | 20_09_14_28
@@ -473,7 +473,7 @@ def sustituye_texto(df, columna, condicion, reemplazo):
         condicion: lo que queremos sustituir
         reemplazo: lo que queremos que aparezca
 
-    Returns:
+    Return:
         Dataframe modificado.
 
     Ejemplos:
@@ -502,10 +502,10 @@ def extraer_con_regex(df, columna, clave_regex):
         clave_regex: la clave regex que seleccione lo que nos queremos quedar.
              *Formato para la clave_regex = '(regex)'
  
-    Returns:
+    Return:
         Dataframe modificado.
 
-    Ejemplo:
+    Ejemplos:
         df['personaje'] = df['personaje'].str.extract(r'(^\w+)')
     '''
     
@@ -522,7 +522,7 @@ def eliminar_entre_parentesis_en_df(df, columna):
         df: dataframe
         columna: columna del dataframe
 
-    Returns:
+    Return:
         Dataframe modificado.
     '''
 
@@ -546,7 +546,7 @@ def where_contains(df, columna, palabra_clave):
         columna: columna del dataframe
         palabra_clave: string
 
-    Returns:
+    Return:
         Dataframe modificado.
 
     Ejemplo:
@@ -567,7 +567,7 @@ def drop_con_condicion(df, columna, condicion):
         columna: columna del dataframe
         condicion: lo que tienen que cumplir los registros que queremos eliminar
 
-    Returns:
+    Return:
         Dataframe modificado.
     '''
 
@@ -586,7 +586,7 @@ def data_report(df):
     Arg:
         df: dataframe
 
-    Returns:
+    Return:
         Dataframe de valor informativo
     '''
 
@@ -617,7 +617,7 @@ def number_of_outliers(df):
     Arg:
         df: dataframe 
 
-    Returns:
+    Return:
         Imprime por pantalla la suma de outliers para cada columna
     '''
     
@@ -636,7 +636,7 @@ def radical_dropping(df):
     Arg:
         df: dataframe
 
-    Returns:
+    Return:
         Dataframe modificado
     '''
 
@@ -654,13 +654,13 @@ def read_data_bw(path, im_size, class_names_label):
     '''Lectura y etiquetado de imágenes en blanco y negro.
 
     Args:
-        path: ruta donde estarán el resto de carpetas.
+        path(str): ruta donde estarán el resto de carpetas.
 
-        im_size: tamaño al que queremos pasar todas las imagenes.
+        im_size(tuple): tamaño al que queremos pasar todas las imagenes.
 
-        class_names_label: nombre de las variables a etiquetar.
+        class_names_label(dict): nombre de las variables a etiquetar.
       
-    Returns:
+    Return:
         X: el array de los datos de las imágenes.
 
         Y: array con los label correspondientes a las imágenes.
@@ -700,13 +700,13 @@ def read_data_color(path, im_size, class_names_label):
     '''Lectura y etiquetado de imágenes a color.
 
     Args:
-        path: ruta donde estarán el resto de carpetas.
+        path(str): ruta donde estarán el resto de carpetas.
 
-        im_size: tamaño al que queremos pasar todas las imagenes.
+        im_size(tuple): tamaño al que queremos pasar todas las imagenes.
 
-        class_names_label: nombre de las variables a etiquetar.
+        class_names_label(dict): nombre de las variables a etiquetar.
       
-    Returns:
+    Return:
         X: el array de los datos de las imágenes.
 
         Y: array con los label correspondientes a las imágenes.
@@ -741,9 +741,9 @@ def read_data(path):
     '''Lectura de imágenes de una carpeta.
 
     Args:
-        path: ruta donde están las imágenes.
+        path(str): ruta donde están las imágenes.
       
-    Returns:
+    Return:
         X: el array de los datos de las imágenes.
 
     '''
@@ -766,7 +766,7 @@ def gen_diagrama_caja(df):
     Args: 
         df : datafreme
 
-    Returns: 
+    Return: 
         n diagrama de caja 
 
     """
@@ -786,7 +786,7 @@ def sustituir_outliers(df, col):
         df : datafreme
         col : la columna que contiene outliers
 
-    Returns: 
+    Return: 
         datafreme sustituido
 
     """
@@ -809,7 +809,7 @@ def muestra_nan(df):
     Args: 
         df : datafreme
 
-    Returns: 
+    Return: 
         detafreme : datafreme nuevo donde muestra el porcentaje de missing values. 
 
     """
@@ -867,25 +867,24 @@ def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line
     plt.show()
 
 
-def acotar_valores_clase(dataframe, columna_filtro, clase, max_val, min_val):
+def acotar_valores_clase(dataframe, columnaclases, clase, columna_a_filtrar, max_val, min_val):
     '''
     Función para acotar el rango de valores de una determinada columna, haciendo una máscara por cada 
     clase, o valor de otra columna. Las filas por encima y por debajo de los valores dados se eliminarán.
     Args:
         dataframe: Dataframe a utilizar (dataframe)
-        columna_clases: Columna por la que se quiere hacer la máscara (str)
-        clase: Columna de la que se analizarán los datos
-        max_val: Valor máximo, los valores que estén por encima se eliminarán
-        min_val: Valor mínimo, los valores que estén por debajo se eliminarán
+        columna_clases: Columna categórica que contiene las clases con las que queremos crear máscaras para filtrar (str)
+        clase: Elemento dentro de la columna de clases, con el que se quiere realizar la máscara (str)
+        columna_a_filtrar: Columna numérica con la cual se quieren acotar los valores númericos (str)
+        max_val: Valor máximo, los valores de la columna a filtrar que estén por encima se eliminarán (num)
+        min_val: Valor mínimo, los valores de la columna a filtrar que estén por debajo se eliminarán (num)
     Return:
         Elimina los valores por encima y por debajo de cierto valor
     '''
-    clase = dataframe.loc[dataframe.clase == clase, clase]
-    
-    above_threshold = columna_filtro[columna_filtro > max_val].index.tolist()
-    below_threshold = columna_filtro[columna_filtro < min_val].index.tolist()
+    clase = dataframe.loc[dataframe[columnaclases] == clase, columna_a_filtrar]
+    above_threshold = clase[clase > max_val].index.tolist()
+    below_threshold = clase[clase < min_val].index.tolist()
     indexNames = above_threshold + below_threshold
-    
     dataframe.drop(indexNames, inplace=True)
 
 
@@ -912,7 +911,8 @@ def wrap_perspective_cv2(src, strength):
 def sql_rules():
     '''
     Función que hace sonar el estribillo de "No te olvides de poner el where en el delete from.
-    Primero descarga el audio en el directorio actual, y después la hace sonar a través de pygame
+    Primero descarga el audio en el directorio actual, y después la hace sonar a través de pygame.
+    Args: Sin argumentos.
     Return:
         Suena el estribil
     '''
@@ -941,11 +941,11 @@ def feature_important(model,X):
     '''
     funcion que saca feature important del modelo  y su grafico
 
-    args:
+    Args:
         model: el modelo
         X: datafeme de los features
 
-    returns:
+    Returns:
         datafreme de feature impottant
         grafico de feature impottant
     '''
@@ -960,12 +960,12 @@ def subplots(df,X,y1,y2):
     '''
     función que hace un subplot de una variable, distribuida según los datos de otras dos variables
     
-    args:
+    Args:
         x:columa elegido para x
         y1:columa elegido para y de scatterplot
         y2:columa elegido para y de  lineplot
 
-    returns:
+    Returns:
         grafico subplot 
 
     '''
@@ -978,10 +978,10 @@ def graf_displot(df):
     '''
     funcion que genera n graficos de distribucion segun las columnas numericas que tiene
 
-    args:
+    Args:
         df: datafreme
     
-    returns:
+    Returns:
         n graficos de distribucion
 
     '''
@@ -998,15 +998,15 @@ def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
         Se realiza después del train test split.
 
         Args:
-        X_train (array)  : valores de X_train
-        y_train (array)  : valores de y_train
-        randomstate (int) : valor del randomstate
-        scalertype (str) : nombre del scaler:  minmax , standard
-        sampletype (str) : nombre del sampler : over, under , random
+            X_train (array)  : valores de X_train
+            y_train (array)  : valores de y_train
+            randomstate (int) : valor del randomstate
+            scalertype (str) : nombre del scaler:  minmax , standard
+            sampletype (str) : nombre del sampler : over, under , random
 
         Returns:
-        X_train_res (array) : nuevo array del X_train scaled y sampled
-        y_train_res (array) : nuevo array del y_train scaled y sampled
+            X_train_res (array) : nuevo array del X_train scaled y sampled
+            y_train_res (array) : nuevo array del y_train scaled y sampled
     """
     
     if scalertype == "minmax":
@@ -1019,25 +1019,25 @@ def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
     X_train_scal = scaler.fit_transform(X_train)  # Valor mínimo 10 --> 0, Valor máximo 50 --> 1
     print ("data scaled with scaler:", scaler)
 
-    over = SMOTE(random_state = randomstate)
+    over = RandomOverSampler (random_state = randomstate)
     under = RandomUnderSampler(random_state = randomstate)
-    rus = RandomUnderSampler(random_state = randomstate)
+    
 
     if sampletype == "over":
         steps = [('o',over)]  
     elif sampletype == "under":
         steps = [('u',under)]
-    else:
-        steps = [('r',rus)]
-
+   
 
     pipeline1 = Pipeline(steps=steps)
     X_train_res, y_train_res = pipeline1.fit_resample(X_train_scal, y_train)
 
-    
-    print('After scaling and sampling, the shape of train_X: {}'.format(X_train_res.shape))
-    print('After scaling and sampling, the shape of train_y: {} \n'.format(y_train_res.shape))
+    shape1 = X_train_res.shape
+    shape2 =y_train_res.shape
+    print(f'After scaling and {sampletype} -sampling, the shape of train_X: {shape1}')
+    print(f'After scaling and {sampletype} -sampling, the shape of train_y: {shape2}')
     print ("applied Methods: ",steps)
+
 
     return  X_train_res,  y_train_res
 
@@ -1047,57 +1047,19 @@ def string_replacer (df,col,replacestring,newvalue):
     """ Reemplaza un string deseado por otro string deseado en toda la columna.
 
         Args:
-        df (DataFrame) :   Dataframe en que se debe aplicar
-        col (str) :        Nombre de la columna
-        replacestring (str) :  El string que debe ser reemplazado
-        newvalue (str) : El nuevo valor 
+            df (DataFrame) :   Dataframe en que se debe aplicar
+            col (str) :        Nombre de la columna
+            replacestring (str) :  El string que debe ser reemplazado
+            newvalue (str) : El nuevo valor 
 
         Returns:
-        df[co] (array):  Array de la columna actualizado
+            df[co] (array):  Array de la columna actualizado
      """
     df[col] = df[col].apply(lambda x : x.replace(replacestring,newvalue) )
     return df[col]
 
 
-def force_number_convert (listnames,df,newtype):
-    """ 
-    Convierte una lista de columnas tipo string a un tipo deseado.
 
-    Args:
-    listnames (list) : Lista con los nombres de las columnas
-    df (DataFrame) : DataFrame a actualizar
-    newtype (string) : String del tipo nuevo por ejemplo Float64
-
-    Returns:
-    df (DataFrame) : DataFrame actualizado
-    """
-
-
-
-    for i in listnames:
-        df[i] = df[i].astype(newtype)
-
-    return df
-
-
-
-def dt64_to_float(dt64):
-   """ 
-   Convierte una columna del datetime en un float
-   
-   Args:
-   dt64 (array) : Array en el formato DateTime64
-
-   Returns:
-   values_float (array)  : Array con los valores convertidos de datetime a float
-
-   """
-   year = dt64.astype('M8[Y]')
-   days = (dt64 - year).astype('timedelta64[D]')
-   year_next = year + np.timedelta64(1, 'Y')
-   days_of_year = (year_next.astype('M8[D]') - year.astype('M8[D]')).astype('timedelta64[D]')
-   values_float = 1970 + year.astype(float) + days / (days_of_year)
-   return values_float
 
 
 
@@ -1107,10 +1069,10 @@ def basic_encoding (df):
     sin agregar nuevas columnas.
 
     Args:
-    df (DataFrame) : DataFrame actual
+        df (DataFrame) : DataFrame actual
 
     Returns:
-    df (DataFrame) : Devuelve nuevo DataFrame
+        df (DataFrame) : Devuelve nuevo DataFrame
 
     
     """
@@ -1127,11 +1089,11 @@ def clean_emoji(text):
     ''' Funcion para limpiar los emojis que aparecen dentro de un texto.
     
         Args:
-        text (str): texto sobre el que se pretende realizar la función.
+            text (str): texto sobre el que se pretende realizar la función.
         
         Returns:
-        emoj_text (text): el texto que se introduce en el argumento pero 
-        sin ningún emoji.
+            emoj_text (text): el texto que se introduce en el argumento pero 
+            sin ningún emoji.
     
     '''
     emoji_text = re.compile("["
@@ -1147,21 +1109,21 @@ def clean_emoji(text):
 
 def nine_Regressor_Models( X_train, y_train, X_test, y_test):
     '''Función para aplicar los modelos KNeighborsRegressor, GradientBoostingRegressor, ExtraTreesRegressor, .\n
-       RandomForestRegressor, RandomForestRegressor, DecisionTreeRegressor y LinearRegression.
+        RandomForestRegressor, RandomForestRegressor, DecisionTreeRegressor y LinearRegression.
        
-       Args:
-       X_train (array o dataFrame): valores de X_train
-       y_train (array o dataFrame): valores de y_train
-       X_test (array o dataFrame): valores de X_train
-       y_test (array o dataFrame): valores de y_train
+        Args:
+            X_train (array o dataFrame): valores de X_train
+            y_train (array o dataFrame): valores de y_train
+            X_test (array o dataFrame): valores de X_train
+            y_test (array o dataFrame): valores de y_train
        
-       Returns:
-       la función imprime:
-       Modelo
-       Training time
-       Explained variance
-       Mean absolute error
-       R2 score
+        Returns:
+            la función imprime:
+            Modelo
+            Training time
+            Explained variance
+            Mean absolute error
+            R2 score
     '''
     
     lista_modelo = []
@@ -1205,11 +1167,11 @@ def drop_outliers(df, field_name):
     ''' Esta función borra los outliers de la columna (field_name) del dataSet(df)
 
         Args:
-        df (dataFrame): dataFrame original
-        field_name (pandas.core.series): columna original
+            df (dataFrame): dataFrame original
+            field_name (pandas.core.series): columna original
         
         Returns:
-        df (dataFrame): nuevo dataFrame sin outliers en field_name
+            df (dataFrame): nuevo dataFrame sin outliers en field_name
     '''
     
     iqr = 1.5 * (np.percentile(df[field_name], 75) - np.percentile(df[field_name], 25))
@@ -1225,6 +1187,7 @@ def drop_outliers(df, field_name):
 
     return df
 
+## | Antonio |
 def PruebaModelos(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), KNeighborsRegressor(), SVR()], 
 ModelosClasificacion = [LogisticRegression(), DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), KNeighborsClassifier(), SVC()], 
 agregar = [], quitar = [], metricas = [], tipo = "regresion"):
@@ -1352,10 +1315,7 @@ def DfTransType(data, type1 = "object", type2 = "float64"):
         data[i] = data[i].astype(type2)
 
 
-from sklearn.metrics import mean_squared_error
-import numpy as np
-from sklearn.metrics import r2_score
-from sklearn.metrics import mean_absolute_error
+## Tarik
 
 def sustituye_nan_moda(data):
     '''
@@ -1403,7 +1363,7 @@ def train_regression(model, xtrain, ytrain, xtest, ytest):
     print(r2_score(ytest,mp))
 
     return mp
-<<<<<<< HEAD
+
 
 def clean_edad(edad):   
     '''
@@ -1420,5 +1380,4 @@ def clean_edad(edad):
         return edad
     else:
         return np.nan
-=======
->>>>>>> 57268ce54c02c97f6a2debaeb797008eb6e41ccb
+
