@@ -93,8 +93,8 @@ def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
     '''
     
     lin_reg = LinearRegression()   
-    lin_reg.fit(X_train, y_train)                           #   Entrenas/generas el modelo para determinar los coeficientes
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size_1, random_state=random_state_1)
+    lin_reg.fit(X_train, y_train)                           #   Entrenas/generas el modelo para determinar los coeficientes
 
     print("Estos son los datos del test y del target:\n-----")
     print("Total features shape:", X.shape)
@@ -202,7 +202,7 @@ def funcion_ridge (model,X_test,y_test,X_train,y_train,alpha_1):
    
     return ridgeR
 
-def correccion_Lasso_a_aplicar(model,X_test,y_test,X_train,y_train,alpha_1:int):
+def funcion_Lasso (model,X_test,y_test,X_train,y_train,alpha_1:int):
     '''
     Función para entrenar la función de Lasso y el calculo del error regularizando o sin regularizar del MSE.
 
@@ -212,7 +212,7 @@ def correccion_Lasso_a_aplicar(model,X_test,y_test,X_train,y_train,alpha_1:int):
         X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
         y_train: Dataframe de las variables target para el entrenamiento del modelo de regresión lineal
         y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
-        alpha_1:int. Número de variable alpha para entrenar la función Ridge.
+        alpha_1:int. Número de variable alpha para entrenar la función Lasso.
 
     Return:
         LassoR: función Ridge entrenada.
@@ -286,7 +286,7 @@ def correccion_ridge_a_aplicar(model, X_test, y_test, ridgeR, log_ini:int,log_fi
     plt.title(r'Regression error ($\lambda$)', fontsize=30)
     plt.show();
 
-def correccion_Lasso_a_aplicar(model, X_test, y_test, lassoR, log_ini:int,log_fin:int,n_alphas:int):
+def correccion_Lasso_a_aplicar(model, X_test, y_test, LassoR, log_ini:int,log_fin:int,n_alphas:int):
     '''
     Función que evalua la regularización de Lasso para un modelo de regresión lineal entrenado y
     que a partir de los valores logarítmicos y alpha muestra una gráfica donde se puede localizar 
@@ -296,7 +296,7 @@ def correccion_Lasso_a_aplicar(model, X_test, y_test, lassoR, log_ini:int,log_fi
         model: modelo entrenado de regresión lineal
         X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
         y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
-        LassoR función de Lasso entrenada
+        LassoR: función de Lasso entrenada
         log_ini:int, valor inicial logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
         log_fin:int, valor final logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
         n_alphas:int. Número de variable alpha a usar para optimizar la función Ridge.
@@ -315,8 +315,8 @@ def correccion_Lasso_a_aplicar(model, X_test, y_test, lassoR, log_ini:int,log_fi
     baseline = []
 
     for a in alphas:
-        lassoR.set_params(alpha=a)
-        coef_lassoR.append(lassoR.coef_)
+        LassoR.set_params(alpha=a)
+        coef_lassoR.append(LassoR.coef_)
         y_pred = lassoR.predict(X_test)
         lasso_error = metrics.mean_squared_error(y_pred, y_test)    
         err_lasso.append(lasso_error)
