@@ -15,6 +15,7 @@ from joypy import joyplot
 import random
 import wget
 import pygame
+import ssl
 
 
 import cv2 as cv
@@ -919,6 +920,7 @@ def sql_rules():
     # get current directory and create path
     current_dir = os.getcwd()
     if '/Users' in current_dir:
+        ssl._create_default_https_context = ssl._create_unverified_context
         path = current_dir + '/noteolvidesdeponerelwhere.mp3'
     else:
         # AQUÍ HAY QUE CAMBIAR LA / EN EL NOMBRE DEL ARCHIVO PARA QUE SEA PARA WINDOWS, NO SÉ SI HAY QUE HACER OTRO PARA LINUX
