@@ -654,11 +654,11 @@ def read_data_bw(path, im_size, class_names_label):
     '''Lectura y etiquetado de imágenes en blanco y negro.
 
     Args:
-        path: ruta donde estarán el resto de carpetas.
+        path(str): ruta donde estarán el resto de carpetas.
 
-        im_size: tamaño al que queremos pasar todas las imagenes.
+        im_size(tuple): tamaño al que queremos pasar todas las imagenes.
 
-        class_names_label: nombre de las variables a etiquetar.
+        class_names_label(dict): nombre de las variables a etiquetar.
       
     Returns:
         X: el array de los datos de las imágenes.
@@ -700,11 +700,11 @@ def read_data_color(path, im_size, class_names_label):
     '''Lectura y etiquetado de imágenes a color.
 
     Args:
-        path: ruta donde estarán el resto de carpetas.
+        path(str): ruta donde estarán el resto de carpetas.
 
-        im_size: tamaño al que queremos pasar todas las imagenes.
+        im_size(tuple): tamaño al que queremos pasar todas las imagenes.
 
-        class_names_label: nombre de las variables a etiquetar.
+        class_names_label(dict): nombre de las variables a etiquetar.
       
     Returns:
         X: el array de los datos de las imágenes.
@@ -741,7 +741,7 @@ def read_data(path):
     '''Lectura de imágenes de una carpeta.
 
     Args:
-        path: ruta donde están las imágenes.
+        path(str): ruta donde están las imágenes.
       
     Returns:
         X: el array de los datos de las imágenes.
