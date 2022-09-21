@@ -65,7 +65,6 @@ import numpy as np
 
 
 ## | JAVI |
-sns.set_style('whitegrid')
 
 def graficas (df,y):
     '''
@@ -256,107 +255,6 @@ def funcion_lasso(model,X_test,y_test,X_train,y_train,alpha_1:int):
 
     return lassoR
 
-def correccion_ridge_a_aplicar(model, X_test, y_test, ridgeR, log_ini:int,log_fin:int,n_alphas:int):
-    '''
-    Función que evalua la regularización de Ridge para un modelo de regresión lineal entrenado y
-    que a partir de los valores logarítmicos y alpha muestra una gráfica donde se puede localizar 
-    el punto más bajo de los errores y así determinar cuál es el valor de alpha más adecuado.
-
-    Args:
-        model: modelo entrenado de regresión lineal
-        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
-        ridgeR: función de Ridge entrenada
-        log_ini:int, valor inicial logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        log_fin:int, valor final logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        n_alphas:int. Número de variable alpha a usar para optimizar la función Ridge.
-
-    Return:
-        Grafica: muestra los valores de alpha en abscisas en el rango indicado y los valores de Mean Square Error de la función.
-
-    
-    OJO!!! esta función está por revisar'''
-    predictions = model.predict(X_test)                   #   Determino los resultados que deberían de dar con los valores guardados para
-
-    alphas = np.logspace(log_ini, log_fin, n_alphas) 
-    baseline_error = metrics.mean_squared_error(y_test, predictions)
-    coef_ridgeR = []
-    err_ridge = []
-    baseline = []
-
-    for a in alphas:
-        ridgeR.set_params(alpha=a)
-        coef_ridgeR.append(ridgeR.coef_)
-        y_pred = ridgeR.predict(X_test)
-        lasso_error = metrics.mean_squared_error(y_pred, y_test)    
-        err_ridge.append(lasso_error)
-        baseline.append(baseline_error)
-    print(min(err_ridge))
-    
-    plt.figure(figsize=(20,12))
-    ax = plt.gca()
-    ax.plot(alphas, err_ridge, linewidth=5, color='red', label="Ridge regression")
-    ax.plot(alphas, baseline, linewidth=4,linestyle='--', color='blue', label='Linear regression')
-    ax.set_xscale('log')
-    plt.xlabel('$\lambda$', fontsize=30)
-    plt.xticks(fontsize=30)
-    plt.yticks(fontsize=30)
-    plt.ylabel('error', fontsize=30)
-    ax.legend(fontsize=30)
-    plt.title(r'Regression error ($\lambda$)', fontsize=30)
-    plt.show();
-
-def correccion_Lasso_a_aplicar(model, X_test, y_test, lassoR, log_ini:int,log_fin:int,n_alphas:int):
-    '''
-    Función que evalua la regularización de Lasso para un modelo de regresión lineal entrenado y
-    que a partir de los valores logarítmicos y alpha muestra una gráfica donde se puede localizar 
-    el punto más bajo de los errores y así determinar cuál es el valor de alpha más adecuado.
-
-    Args:
-        model: modelo entrenado de regresión lineal
-        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
-        LassoR función de Lasso entrenada
-        log_ini:int, valor inicial logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        log_fin:int, valor final logarítmica desde donde empezar a evaluar la función Ridge para conseguir el menor alpha
-        n_alphas:int. Número de variable alpha a usar para optimizar la función Ridge.
-
-    Return:
-        Grafica: muestra los valores de alpha en abscisas en el rango indicado y los valores de Mean Square Error de la función.
-
-    OJO!!! esta función está por revisar
-    '''
-
-    predictions = model.predict(X_test)
-    alphas = np.logspace(log_ini, log_fin, n_alphas) 
-    baseline_error = metrics.mean_squared_error(y_test, predictions)
-    coef_lassoR = []
-    err_lasso = []
-    baseline = []
-
-    for a in alphas:
-        lassoR.set_params(alpha=a)
-        coef_lassoR.append(lassoR.coef_)
-        y_pred = lassoR.predict(X_test)
-        lasso_error = metrics.mean_squared_error(y_pred, y_test)    
-        err_lasso.append(lasso_error)
-        baseline.append(baseline_error)
-
-
-    print(min(err_lasso))
-    plt.figure(figsize=(20,10))
-    ax = plt.gca()
-    ax.plot(alphas, err_lasso, linewidth=5, color='red', label="Lasso")
-    ax.plot(alphas, baseline, linewidth=4,linestyle='--', color='blue', label='Linear regression')
-    ax.set_xscale('log')
-    plt.xlabel('$\lambda$', fontsize=30)
-    plt.xticks(fontsize=30)
-    plt.yticks(fontsize=30)
-    plt.ylabel('error', fontsize=30)
-    ax.legend(fontsize=30)
-    plt.title(r'Regression error ($\lambda$)', fontsize=30)
-    plt.show();
-
 def error_modelo(model, X_test, y_test):
     '''
     Función que a partir de un modelo entrenado con las variables X_test e y_test, muestra las
@@ -369,7 +267,6 @@ def error_modelo(model, X_test, y_test):
 
     Return:
         df_error: Dataframe donde aparecen los datos de 'Accuracy','f-1 score','Recall','Precision'.
-        Muestra también el cálculo de la curva ROC
         Grafica de la matriz de confunsión. 
 
     '''
@@ -379,7 +276,6 @@ def error_modelo(model, X_test, y_test):
     acc_model=accuracy_score(y_test, y_pred)
     precision_model=precision_score(y_test, y_pred,average='macro')
     recall_model=recall_score(y_test, y_pred,average='macro')
-    roc_auc_score=roc_auc_score(y_test, model.predict_proba(X_test),multi_class='ovr')
     conf_model=confusion_matrix(y_test, y_pred, normalize='true')
     model_error = {'accuracy': acc_model, 'f-1': f1_model, 'recall': recall_model , 'precision': precision_model}
     df_error=pd.DataFrame.from_dict(model_error,orient='index')
@@ -389,7 +285,6 @@ def error_modelo(model, X_test, y_test):
     print('Precision', precision_model)
     print('Recall', recall_model)
     print('-'*30)
-    print('ROC', roc_auc_score)
 
     plt.figure(figsize=(10,10))
     sns.heatmap(conf_model, annot=True)
