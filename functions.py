@@ -44,3 +44,9 @@ def train(model, x, y):
     print(r2_score(y,mp))
 
     return mp
+
+def clean_edad(edad):                                                     
+    if edad>=0 and edad<=119:                                            
+        return edad
+    else:
+        return np.nan
