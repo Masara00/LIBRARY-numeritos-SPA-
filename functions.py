@@ -1,63 +1,45 @@
 '''
 Librerias a utilizar
 '''
-from datetime import datetime
-from imblearn.over_sampling import RandomOverSampler
-from imblearn.pipeline import Pipeline
-from imblearn.under_sampling import RandomUnderSampler
-from joypy import joyplot
-from matplotlib import cm
-from pandas_profiling import ProfileReport
-from plotly.offline import init_notebook_mode, iplot, plot
-from skimage.io import imread
-from sklearn import linear_model, metrics, model_selection
-from sklearn import metrics
-from sklearn import preprocessing
-from sklearn.ensemble import BaggingRegressor
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.ensemble import VotingRegressor
-from sklearn.linear_model import ElasticNet
-from sklearn.linear_model import Lasso
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import LinearRegression,Ridge,Lasso
-from sklearn.linear_model import LogisticRegression
-from sklearn.linear_model import Ridge
-from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score, mean_absolute_error, explained_variance_score
-from sklearn.metrics import mean_absolute_error
-from sklearn.metrics import r2_score
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
-from sklearn.svm import SVC
-from sklearn.svm import SVR
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.tree import DecisionTreeRegressor
-from time import time
-import cv2
-import cv2 as cv
-import joypy
-import matplotlib.pyplot as plt
-import numpy as np
-import os
-import pandas as pd
-import plotly.graph_objs as go
 import profile
-import pygame
-import random
-import re
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 import seaborn as sns
-import ssl
-import sys, time, os
+import plotly.graph_objs as go
+import re
+from plotly.offline import init_notebook_mode, iplot, plot
+from matplotlib import cm
+import joypy
+from joypy import joyplot
+import random
 import wget
+import pygame
+import ssl
+from time import time
+import sys, time, os
+from pandas_profiling import ProfileReport
+from datetime import datetime
+
+from sklearn import metrics
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, accuracy_score,precision_score, recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score, mean_absolute_error, explained_variance_score
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression, Ridge,Lasso, ElasticNet, LogisticRegression
+from sklearn import linear_model, metrics, model_selection
+from sklearn.ensemble import BaggingRegressor, RandomForestRegressor, GradientBoostingRegressor, VotingRegressor, ExtraTreesRegressor
+from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
+from sklearn.svm import SVR, SVC
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, LabelEncoder
+from sklearn import preprocessing
+
+from imblearn.over_sampling import RandomOverSampler
+from imblearn.under_sampling import RandomUnderSampler
+import cv2 as cv
+from imblearn.pipeline import Pipeline 
+from skimage.io import imread
 
 
-
-## | JAVI | 20_09_14_28
 
 def linear_regression_fit(X,y,test_size_1:float,random_state_1:int):
     '''
@@ -98,8 +80,9 @@ def linear_regression_fit(X,y,test_size_1:float,random_state_1:int):
     print(lin_reg.coef_)
 
     return X_train, X_test, y_train, y_test,lin_reg, lin_reg.intercept_,lin_reg.coef_
-    
-    
+
+
+
 def error_metrics_regression (model,X_test,y_test,X_train,y_train):
     '''
     Función que a partir de la función entrenada te facilita las métricas más importantes en regresión lineal.
@@ -147,7 +130,12 @@ def error_metrics_regression (model,X_test,y_test,X_train,y_train):
     print('MSE:', mse_train)
     print('RMSE:', msqe_train)
 
+    print("Esta es la importancia de las variables:\n-----")
+    features = pd.DataFrame(model.coef_, X_train.columns, columns=['coefficient'])
+    print(features.head().sort_values('coefficient', ascending=False))
+
     return mae_pred,mape_pred,mse_pred,msqe_pred,mae_train,mape_train,mse_train,msqe_train
+
 
 
 def ridge_fit (model,X_test,y_test,X_train,y_train,alpha_1):
@@ -184,6 +172,8 @@ def ridge_fit (model,X_test,y_test,X_train,y_train,alpha_1):
    
     return ridgeR
 
+
+
 def lasso_fit(model,X_test,y_test,X_train,y_train,alpha_1:int):
     '''
     Función para entrenar la función de Lasso y el calculo del error regularizando o sin regularizar del MSE.
@@ -218,6 +208,8 @@ def lasso_fit(model,X_test,y_test,X_train,y_train,alpha_1:int):
 
     return lassoR
 
+
+
 def error_metrics_classifier(model, X_test, y_test):
     '''
     Función que a partir de un modelo entrenado con las variables X_test e y_test, muestra las
@@ -249,10 +241,10 @@ def error_metrics_classifier(model, X_test, y_test):
 
     plt.figure(figsize=(10,10))
     sns.heatmap(conf_model, annot=True)
+
     return df_error
 
 
-## | LUIS | 20_09_14_28
 
 def current_time():
     '''
@@ -275,56 +267,19 @@ def current_time():
     diaSemana = hoy.strftime("%A")
 
     return diaSemana, dia, mes, anyo, hora, minuto, segundo
-    
+
+
 
 def csv_visual_analysis(csv):
     '''
     Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
     (Comparativa por columnas, mapa de calor, mapa de correlaciones.)
-
-    Args:
-        df: dataframe
-        requiere de instalacion del paquete de pandas profile
-    
-    Returns:
-        Analisis completo de cada columna
-    '''
+    '''    
     df=pd.read_csv(csv)
     profile=ProfileReport(df, title="Pandas Profiling Report")
+
     return (profile)
 
-
-    
-
-## | SARA | 20_09_14_28
-
-def goscatter_one_column(df, columna_eje_x, columna_eje_y, color, texto_labels):
-    '''
-    Función para crear un gráfico PLOTLY scatter de tipo lineal
-    a partir de una columna de un dataframe,
-    definiendo las columnas en el eje x e y, 
-    el color de la línea y la etiqueta de la misma.
-
-    Args:
-        df: dataframe
-        columna_eje_x: columna del dataframe que aparecerá en el eje X
-        columna_eje_y: columna del dataframe que aparecerá en el eje y
-        color: color de la línea
-        texto_labels: texto que aparece cuando pasamos por encima el cursos
-    
-    Returns:
-        Devuelve la gráfica.
-    '''
-
-    trace = go.Scatter(
-                x = df[columna_eje_x],
-                y = df[columna_eje_y],
-                mode= 'lines',
-                marker = dict(color = color),
-                texttemplate="simple_white",
-                text = df[texto_labels])
-    fig = go.Figure(data = trace)
-    iplot(fig)
 
 
 def replace_text(df, columna, condicion, reemplazo):
@@ -350,7 +305,9 @@ def replace_text(df, columna, condicion, reemplazo):
     '''
 
     df[df[columna]==condicion]=df[df[columna]==condicion].apply(lambda x: x.replace(condicion, reemplazo))
+
     return df
+
 
 
 def regex_extraction(df, columna, clave_regex):
@@ -375,7 +332,9 @@ def regex_extraction(df, columna, clave_regex):
     '''
     
     df[columna] = df[columna].str.extract(clave_regex)
+
     return df
+
 
 
 def remove_text_parenthesis(df, columna):
@@ -390,11 +349,12 @@ def remove_text_parenthesis(df, columna):
     Return:
         Dataframe modificado.
     '''
-
     for i in range(len(df[columna])):
         if '(' in df[columna][i]:
             df[columna][i] ="".join(re.split("\(|\)|\[|\]", df[columna][i]))
+
     return df
+
 
 
 def new_col_where_contains(df, columna, nueva_columna, palabra_clave):
@@ -417,9 +377,10 @@ def new_col_where_contains(df, columna, nueva_columna, palabra_clave):
     Ejemplo:
         df['details']= np.where((df['details'].str.contains('hidromasaje')),1,0)
     '''
-
     df[nueva_columna]= np.where((df[columna].str.contains(palabra_clave)),1,0)
+
     return df
+
 
 
 def drop_when_condition(df, columna, condicion):
@@ -437,10 +398,10 @@ def drop_when_condition(df, columna, condicion):
     '''
 
     df.drop(df[df[columna]==condicion].index, inplace=True)
+
     return df
 
 
-## | IRENE | 20_09_15_00
 
 def data_report(df):
     '''
@@ -453,6 +414,7 @@ def data_report(df):
     Return:
         Dataframe de valor informativo
     '''
+
     cols = pd.DataFrame(df.columns.values, columns=["COL_N"])
 
     types = pd.DataFrame(df.dtypes.values, columns=["DATA_TYPE"])
@@ -468,8 +430,8 @@ def data_report(df):
     concatenado = pd.concat([cols, types, percent_missing_df, unicos, percent_cardin_df], axis=1, sort=False)
     concatenado.set_index('COL_N', drop=True, inplace=True)
 
-
     return concatenado.T
+
 
 
 def outliers_count(df):
@@ -489,6 +451,7 @@ def outliers_count(df):
     return ((df < (Q1 - 1.5 * IQR)) | (df > (Q3 + 1.5 * IQR))).sum()
 
 
+
 def radical_dropping(df):
     '''
     Elimina todos los missings y duplicados
@@ -504,10 +467,7 @@ def radical_dropping(df):
     df.dropna(inplace=True)
 
 
-        
-## | MARIO | 20-09-2022
 
-    
 def read_images_folder_bw(path, im_size, class_names_label):
     '''
     Lectura y etiquetado de imágenes en blanco y negro.
@@ -540,17 +500,14 @@ def read_images_folder_bw(path, im_size, class_names_label):
             image = imread(image_path)
             
             # Resize de las imagenes
-            smallimage = cv2.resize(image, im_size)
+            smallimage = cv.resize(image, im_size)
             
             # Guardo en X e Y
             X.append(smallimage)
             Y.append(label)
         print('Terminamos de leer ficheros de la carpeta', folder)
-        
 
     return np.array(X), np.array(Y)
-    # Ejemplo de class_names_label: tipo diccionario
-    # class_names_label {'angry': 0,'disgust': 1,'fear': 2,'happy': 3,'neutral': 4,'sad': 5,'surprise': 6}
 
 
 
@@ -583,16 +540,16 @@ def read_images_folder_color(path, im_size, class_names_label):
             image_path = os.path.join(folder_path, file)
             # Leer la imagen a color y aplicarle el resize
             image = imread(image_path)
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            smallimage = cv2.resize(image, im_size)
+            image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+            smallimage = cv.resize(image, im_size)
             
             # Guardo en X
             X.append(smallimage)
             Y.append(label)
         print('Terminamos de leer ficheros de la carpeta', folder)
-        
 
     return np.array(X), np.array(Y)
+
 
 
 def read_images(path, img_size):
@@ -608,13 +565,14 @@ def read_images(path, img_size):
     X = []
     for file in os.listdir(path):
         image = imread(path + '/' + file)
-        resize_image = cv2.resize(image, img_size)
+        resize_image = cv.resize(image, img_size)
         print(path + '/' + file)
 
         X.append(resize_image)
+
     return np.array(X)
 
-## | Xin |
+
 
 def boxplot_num_columns(df):
     '''
@@ -657,6 +615,7 @@ def replace_outliers(df, col):
     return df
 
 
+
 def show_nan_with_percentage(df):
     '''
     Funcion que muestra los missing values de cada columna de detafreme y el porcentaje de missing values.
@@ -669,10 +628,10 @@ def show_nan_with_percentage(df):
     '''
     suma_nan = df.isnull().sum().sort_values(ascending = False)
     percentaje_nan = (df.isnull().sum() / df.isnull().count()*100).sort_values(ascending = False)
+
     return pd.concat([suma_nan, percentaje_nan], axis=1, keys = ['suma_nan', 'percentaje_nan'])
 
 
-#|| LAURA | 20-09-2022
 
 def pieplot_one_column(dataframe, column, title, background_colour, colour_map=None):
     '''
@@ -696,6 +655,7 @@ def pieplot_one_column(dataframe, column, title, background_colour, colour_map=N
     plt.legend(loc = 2, bbox_to_anchor = (1,1), prop={'size': 15}, facecolor=background_colour, edgecolor='white', )
     plt.title(title, pad=30, fontsize = 15)
     plt.show();
+
 
 
 def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line_colour='white', colour_map=None, 
@@ -726,6 +686,7 @@ def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line
     plt.show()
 
 
+
 def narrow_down_col_by_class(dataframe, columnaclases, clase, columna_a_filtrar, max_val, min_val):
     '''
     Función para acotar el rango de valores de una determinada columna, haciendo una máscara por cada 
@@ -749,6 +710,7 @@ def narrow_down_col_by_class(dataframe, columnaclases, clase, columna_a_filtrar,
     dataframe.drop(indexNames, inplace=True)
 
 
+
 def wrap_perspective_cv2(src, strength):
     '''
     Función que utiliza OpenCV para aplicar una distrosión a una imagen (wrap perspective)
@@ -769,6 +731,7 @@ def wrap_perspective_cv2(src, strength):
     trans_img = cv.warpPerspective(image, M, (src.shape[1], src.shape[0]))
 
     return trans_img
+
 
 
 def sql_rules():
@@ -799,6 +762,7 @@ def sql_rules():
     pygame.mixer.Sound.play(pygame.mixer.Sound(path))
 
 
+
 def help_data():
     '''
     Función que esr¡be 'me da error' en bucle, con estilo tipografía (las letras salen en diferentes tiempos).
@@ -821,8 +785,6 @@ def help_data():
             time.sleep(0.015)
             number += 1 
 
-
-## | QINGHUA | 20-09-2022
 
 
 def feature_importances(model,X):
@@ -856,11 +818,11 @@ def plots_scatter_line_column(df,X,y1,y2):
 
     Returns:
         grafico subplot 
-
     '''
     f,(axi1,axi2)=plt.subplots(2,1 ,figsize=(10,10))
     sns.scatterplot(x=X,y=y1,data=df,ax=axi1)
     sns.lineplot(x=X,y=y2,data=df,ax=axi2)
+
 
 
 def displot_multiple_col(df):
@@ -879,7 +841,8 @@ def displot_multiple_col(df):
         sns.displot(x=col,data=df, palette=["#ff006e", "#83c5be", "#3a0ca3"])
         plt.show()
 
-## | Christian | 20-09-2022
+
+
 def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
     '''
     Función para realizar over o undersampling o randomsampling para datos no balanceados.
@@ -908,14 +871,12 @@ def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
 
     over = RandomOverSampler (random_state = randomstate)
     under = RandomUnderSampler(random_state = randomstate)
-    
 
     if sampletype == "over":
         steps = [('o',over)]  
     elif sampletype == "under":
         steps = [('u',under)]
    
-
     pipeline1 = Pipeline(steps=steps)
     X_train_res, y_train_res = pipeline1.fit_resample(X_train_scal, y_train)
 
@@ -924,7 +885,6 @@ def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
     print(f'After scaling and {sampletype} -sampling, the shape of train_X: {shape1}')
     print(f'After scaling and {sampletype} -sampling, the shape of train_y: {shape2}')
     print ("applied Methods: ",steps)
-
 
     return  X_train_res,  y_train_res
 
@@ -943,8 +903,11 @@ def string_replacer (df,col,replacestring,newvalue):
     Returns:
         df[co] (array):  Array de la columna actualizado
     '''
-    df[col] = df[col].apply(lambda x : x.replace(replacestring,newvalue) )
+    df[col] = df[col].apply(lambda x : x.replace(replacestring,newvalue))
+
     return df[col]
+
+
 
 def basic_encoding (df):
     '''
@@ -965,7 +928,7 @@ def basic_encoding (df):
 
     return df
 
-## | Enrique | 20-09-2022
+
 
 def clean_emoji(text):
     ''' 
@@ -986,7 +949,9 @@ def clean_emoji(text):
                            u"\U00002702-\U000027B0"
                            u"\U000024C2-\U0001F251"
                            "]+", flags=re.UNICODE)
+
     return emoji_text.sub(r'', text)
+
 
 
 def nine_regressor_models( X_train, y_train, X_test, y_test):
@@ -1008,21 +973,18 @@ def nine_regressor_models( X_train, y_train, X_test, y_test):
         Mean absolute error
         R2 score
     '''
-    
     lista_modelo = []
     lista_precision =[]
     lista_mae=[]
     lista_varianza=[]
    
-    
     regressors = [
         KNeighborsRegressor(),
         GradientBoostingRegressor(),
         ExtraTreesRegressor(),
         RandomForestRegressor(),
         DecisionTreeRegressor(),
-        LinearRegression()
-    ]
+        LinearRegression()]
 
     head = 10
     for model in regressors[:head]:
@@ -1045,6 +1007,7 @@ def nine_regressor_models( X_train, y_train, X_test, y_test):
         print("\tR2 score:", r2_score(y_test, y_pred))
         print()
         
+
         
 def drop_outliers_one_column(df, field_name):
     ''' 
@@ -1057,7 +1020,6 @@ def drop_outliers_one_column(df, field_name):
     Returns:
         df (dataFrame): nuevo dataFrame sin outliers en field_name
     '''
-    
     iqr = 1.5 * (np.percentile(df[field_name], 75) - np.percentile(df[field_name], 25))
     
     try:
@@ -1072,13 +1034,10 @@ def drop_outliers_one_column(df, field_name):
     return df
 
 
-## | Antonio |
 
-def try_multiple_models(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), 
-                        ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), 
-                        KNeighborsRegressor(), SVR()], ModelosClasificacion = [LogisticRegression(), 
-                        DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), 
-                        KNeighborsClassifier(), SVC()], agregar = [], quitar = [], metricas = [], tipo = "regresion"):
+def try_multiple_models(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), KNeighborsRegressor(), SVR()], 
+ModelosClasificacion = [LogisticRegression(), DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), KNeighborsClassifier(), SVC()], 
+agregar = [], quitar = [], metricas = [], tipo = "regresion"):
     '''
     Función para probar un conjunto de modelos de regresión y clasificación con los parámetros por defecto devolviendo las metricas de precisión de cada modelo.
     Esto es útil para hacerse una primera idea de hacia cuál modelo poder enfocarse
@@ -1146,10 +1105,11 @@ def try_multiple_models(xtrain, ytrain, xtest, ytest, ModelosRegresion = [Linear
                 break
     else:
         print("Tipo de modelo inválido")
-    # print(medidas[0])
+
     for m in medidas:
         resultado = resultado + m + "\n"
     print(resultado)
+
 
 
 def min_max_corr(data, min, max = None):
@@ -1170,7 +1130,10 @@ def min_max_corr(data, min, max = None):
         resultado = data.corr()[(data.corr() > min) & (data.corr() != 1)].dropna(axis = 1, how = "all").dropna(axis = 0, how = "all")
     else:
         resultado = data.corr()[(data.corr() > min) & (data.corr() < max)].dropna(axis = 1, how = "all").dropna(axis = 0, how = "all")
+    
     return resultado
+
+
 
 def root_mean_squared_error(y_true, y_pred):
     '''
@@ -1183,7 +1146,8 @@ def root_mean_squared_error(y_true, y_pred):
     Return: 
         int
     '''
-    return np.square(metrics.mean_squared_error(y_true, y_pred))
+    print(np.square(metrics.mean_squared_error(y_true, y_pred)))
+
 
 
 def transform_all_columns(data, type1 = "object", type2 = "float64"):
@@ -1202,7 +1166,6 @@ def transform_all_columns(data, type1 = "object", type2 = "float64"):
         data[i] = data[i].astype(type2)
 
 
-## | Tarik | 20-09-2022
 
 def replace_nan_mode(data):
     '''
@@ -1219,36 +1182,3 @@ def replace_nan_mode(data):
 
     for column in iguala:
         data[column] = data[column].fillna(data[column].value_counts().index[0])
-
-
-
-def train_regression(model, xtrain, ytrain, xtest, ytest):
-    '''
-    Funcion que entrena modelo de regresión y devuelve las metricas.
-    Args:
-        model(model) = modelo que vamos a entrenar.
-    
-        xtrain, ytrain, xtest, ytest = los valores que vamos a entrenar, para entrenar el modelo.
-    
-    Return: Devuelve las predicciones del model
-    
-    '''
-    model.fit(xtrain,ytrain)
-    print("intercepto:", model.intercept_)
-    print("coeficientes:", model.coef_)
-    mp = model.predict(xtest)
-    print('-'*100)
-    print('MAE') 
-    print(mean_absolute_error(ytest, mp))
-    print('-'*100)
-    print('MSE')
-    print(metrics.mean_squared_error(ytest,mp))
-    print('-'*100)
-    print('RMSE') 
-    print(np.sqrt(metrics.mean_squared_error(ytest, mp)))
-    print('-'*100)
-    print('R2 SCORE')
-    print(r2_score(ytest,mp))
-
-    return mp
-
