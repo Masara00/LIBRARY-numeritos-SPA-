@@ -1,73 +1,63 @@
 '''
 Librerias a utilizar
 '''
-import profile
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.graph_objs as go
-import re
-from plotly.offline import init_notebook_mode, iplot, plot
-from matplotlib import cm
-import joypy
-from joypy import joyplot
-import random
-import wget
-import pygame
-import ssl
-import sys, time, os
-
-from sklearn.metrics import mean_squared_error
-import numpy as np
-from sklearn.metrics import r2_score
-from sklearn.metrics import mean_absolute_error
-
-import cv2 as cv
-from time import time
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression,Ridge,Lasso
-from sklearn import linear_model, metrics, model_selection
-from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score, mean_absolute_error, explained_variance_score
-from sklearn import metrics
-from sklearn import preprocessing
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import Ridge
-from sklearn.linear_model import Lasso
-from sklearn.linear_model import ElasticNet
-from sklearn.ensemble import BaggingRegressor
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.ensemble import VotingRegressor
-from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.svm import SVR
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import mean_squared_error
-import numpy as np
-from sklearn.metrics import r2_score
-from sklearn.metrics import mean_absolute_error
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
-from sklearn import metrics
 from datetime import datetime
 from imblearn.over_sampling import RandomOverSampler
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from imblearn.pipeline import Pipeline
 from imblearn.under_sampling import RandomUnderSampler
-from imblearn.pipeline import Pipeline 
-from sklearn.preprocessing import LabelEncoder
+from joypy import joyplot
+from matplotlib import cm
 from pandas_profiling import ProfileReport
+from plotly.offline import init_notebook_mode, iplot, plot
 from skimage.io import imread
-import os
+from sklearn import linear_model, metrics, model_selection
+from sklearn import metrics
+from sklearn import preprocessing
+from sklearn.ensemble import BaggingRegressor
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.ensemble import VotingRegressor
+from sklearn.linear_model import ElasticNet
+from sklearn.linear_model import Lasso
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression,Ridge,Lasso
+from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import Ridge
+from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score, mean_absolute_error, explained_variance_score
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import r2_score
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.svm import SVC
+from sklearn.svm import SVR
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeRegressor
+from time import time
 import cv2
+import cv2 as cv
+import joypy
+import matplotlib.pyplot as plt
 import numpy as np
+import os
+import pandas as pd
+import plotly.graph_objs as go
+import profile
+import pygame
+import random
+import re
+import seaborn as sns
+import ssl
+import sys, time, os
+import wget
 
 
-## | JAVI |
+
+## | JAVI | 20_09_14_28
 
 def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
     '''
@@ -109,6 +99,8 @@ def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
 
     return X_train, X_test, y_train, y_test,lin_reg, lin_reg.intercept_,lin_reg.coef_
     
+
+
 def funcion_metricas_error (model,X_test,y_test,X_train,y_train):
     '''
     Función que a partir de la función entrenada te facilita las métricas más importantes en regresión lineal.
@@ -155,10 +147,6 @@ def funcion_metricas_error (model,X_test,y_test,X_train,y_train):
     print('MAPE:',mape_train)
     print('MSE:', mse_train)
     print('RMSE:', msqe_train)
-
-    print("Esta es la importancia de las variables:\n-----")
-    features = pd.DataFrame(model.coef_, X_train.columns, columns=['coefficient'])
-    print(features.head().sort_values('coefficient', ascending=False))
 
     return mae_pred,mape_pred,mse_pred,msqe_pred,mae_train,mape_train,mse_train,msqe_train
 
@@ -293,9 +281,9 @@ def time_now():
     return diaSemana, dia, mes, anyo, hora, minuto, segundo
 
 def feature_visual(csv):
-  '''Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
-  (Comparativa por columnas, mapa de calor, mapa de correlaciones.)
-  '''    
+    '''Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
+    (Comparativa por columnas, mapa de calor, mapa de correlaciones.)
+    '''    
     df=pd.read_csv(csv)
     profile=ProfileReport(df, title="Pandas Profiling Report")
     return (profile)
@@ -518,7 +506,7 @@ def radical_dropping(df):
 
 
         
-## | MARIO |
+## | MARIO | 20-09-2022
 
     
 def read_data_bw(path, im_size, class_names_label):
@@ -629,7 +617,7 @@ def read_data(path):
         X.append(smallimage)
     return np.array(X)
 
-## | Xin |
+## | Xin | 20-09-2022
 
 def gen_diagrama_caja(df):
 
@@ -690,7 +678,7 @@ def muestra_nan(df):
     return pd.concat([suma_nan, percentaje_nan], axis=1, keys = ['suma_nan', 'percentaje_nan'])
 
 
-#|| LAURA ||
+#|| LAURA | 20-09-2022
 
 def pieplot_one_column(dataframe, column, title, background_colour, colour_map=None):
     '''
@@ -826,7 +814,7 @@ def help_data():
             number += 1 
 
 
-## | QINGHUA |
+## | QINGHUA | 20-09-2022
 
 
 def feature_important(model,X):
@@ -883,8 +871,7 @@ def graf_displot(df):
         sns.displot(x=col,data=df, palette=["#ff006e", "#83c5be", "#3a0ca3"])
         plt.show()
 
-## Christian
-
+## | Christian | 20-09-2022
 def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
     """ Función para realizar over o undersampling o randomsampling para datos no balanceados.\n
         Se realiza después del train test split.
@@ -952,9 +939,6 @@ def string_replacer (df,col,replacestring,newvalue):
 
 
 
-
-
-
 def basic_encoding (df):
     """
     Realiza el encoding de variables categorícas en númericas de manera simple,  \n 
@@ -976,6 +960,7 @@ def basic_encoding (df):
 
     return df
 
+## | Enrique | 20-09-2022
 
 def clean_emoji(text):
     ''' Funcion para limpiar los emojis que aparecen dentro de un texto.
@@ -1079,7 +1064,7 @@ def drop_outliers(df, field_name):
 
     return df
 
-## | Antonio |
+## | Antonio | 20-09-2022
 def PruebaModelos(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), KNeighborsRegressor(), SVR()], 
 ModelosClasificacion = [LogisticRegression(), DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), KNeighborsClassifier(), SVC()], 
 agregar = [], quitar = [], metricas = [], tipo = "regresion"):
@@ -1207,7 +1192,7 @@ def DfTransType(data, type1 = "object", type2 = "float64"):
         data[i] = data[i].astype(type2)
 
 
-## Tarik
+## | Tarik | 20-09-2022
 
 def sustituye_nan_moda(data):
     '''
@@ -1246,10 +1231,10 @@ def train_regression(model, xtrain, ytrain, xtest, ytest):
     print(mean_absolute_error(ytest, mp))
     print('-'*100)
     print('MSE')
-    print(mean_squared_error(ytest,mp))
+    print(metrics.mean_squared_error(ytest,mp))
     print('-'*100)
     print('RMSE') 
-    print(np.sqrt(mean_squared_error(ytest, mp)))
+    print(np.sqrt(metrics.mean_squared_error(ytest, mp)))
     print('-'*100)
     print('R2 SCORE')
     print(r2_score(ytest,mp))
@@ -1257,19 +1242,5 @@ def train_regression(model, xtrain, ytrain, xtest, ytest):
     return mp
 
 
-def clean_edad(edad):   
-    '''
-    Función que elimina los datos de edad, que son imposibles,
-    ya que le hemos dado un rango, en el cual 119 es el maximo,
-    ya que es el record de longevidad.
 
-    Args: 
-        edad: columna o union de estas que contiene los datos.
-    
-    Return: Todas las edades reales, comprendidas en el rango impuesto.
-    '''                                                  
-    if edad>=0 and edad<=119:                                            
-        return edad
-    else:
-        return np.nan
 
