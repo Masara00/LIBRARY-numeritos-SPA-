@@ -41,6 +41,10 @@ from sklearn.neighbors import KNeighborsRegressor
 from sklearn.svm import SVR
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import mean_squared_error
+import numpy as np
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_absolute_error
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -1310,17 +1314,24 @@ def DfTransType(data, type1 = "object", type2 = "float64"):
     for i in data.dtypes[data.dtypes == type1].index:
         data[i] = data[i].astype(type2)
 
-def igualador(data):
-    '''
-    Funcion que rellena e iguala los valores de las columnas,
-    para la correcta visualización y estudio del dataset.
 
-    data = dataset que contiene los datos con objeto de estudio.
+## Tarik
+
+def sustituye_nan_moda(data):
+    '''
+    Funcion que rellena e iguala los valores de las columnas con la moda,
+    para la correcta visualización y estudio del dataset.
+    
+    Args:
+        data = dataset que contiene los datos con objeto de estudio.
+    
+    Return: dataframe listo para su estudio y visualización.
     '''
     iguala = [column for column in data.columns if data[column].isna().sum() > 0]
 
     for column in iguala:
         data[column] = data[column].fillna(data[column].value_counts().index[0])
+
 
 
 def train_regression(model, xtrain, ytrain, xtest, ytest):
@@ -1352,3 +1363,21 @@ def train_regression(model, xtrain, ytrain, xtest, ytest):
     print(r2_score(ytest,mp))
 
     return mp
+
+
+def clean_edad(edad):   
+    '''
+    Función que elimina los datos de edad, que son imposibles,
+    ya que le hemos dado un rango, en el cual 119 es el maximo,
+    ya que es el record de longevidad.
+
+    Args: 
+        edad: columna o union de estas que contiene los datos.
+    
+    Return: Todas las edades reales, comprendidas en el rango impuesto.
+    '''                                                  
+    if edad>=0 and edad<=119:                                            
+        return edad
+    else:
+        return np.nan
+
