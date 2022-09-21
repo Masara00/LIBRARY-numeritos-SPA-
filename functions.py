@@ -1225,6 +1225,7 @@ def drop_outliers(df, field_name):
 
     return df
 
+## | Antonio |
 def PruebaModelos(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), KNeighborsRegressor(), SVR()], 
 ModelosClasificacion = [LogisticRegression(), DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), KNeighborsClassifier(), SVC()], 
 agregar = [], quitar = [], metricas = [], tipo = "regresion"):
@@ -1351,7 +1352,7 @@ def DfTransType(data, type1 = "object", type2 = "float64"):
     for i in data.dtypes[data.dtypes == type1].index:
         data[i] = data[i].astype(type2)
 
-
+##
 def igualador(data):
     '''
     Funcion que rellena e iguala los valores de las columnas,
