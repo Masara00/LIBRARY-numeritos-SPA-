@@ -280,7 +280,7 @@ def time_now():
 
     return diaSemana, dia, mes, anyo, hora, minuto, segundo
 
-def feature_visual(csv):
+def csv_visual_analysis(csv):
   '''  
   Función que permite desde un archivo csv realizar un analisi completo de cada columna 
     Args:
