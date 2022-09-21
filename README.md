@@ -82,6 +82,13 @@ Cuenta con más de 54 funciones documentadas de visualización, transformación 
 * **Seaborn**
 * **re**
 * **os**
+* **regex**
+* **wget**
+* **ssl**
+* **datetime**
+* **imblearn**
+* **opencv-python**
+* **scikit-image**
 =======
 
 ### [Enlace a Paquete Pypi]()
