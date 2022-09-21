@@ -919,6 +919,7 @@ def sql_rules():
     '''
     # get current directory and create path
     current_dir = os.getcwd()
+    
     if '/Users' in current_dir:
         ssl._create_default_https_context = ssl._create_unverified_context
         path = current_dir + '/noteolvidesdeponerelwhere.mp3'
