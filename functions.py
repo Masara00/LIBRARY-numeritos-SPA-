@@ -281,9 +281,16 @@ def time_now():
     return diaSemana, dia, mes, anyo, hora, minuto, segundo
 
 def feature_visual(csv):
-    '''Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
-    (Comparativa por columnas, mapa de calor, mapa de correlaciones.)
-    '''    
+  '''  
+  Función que permite desde un archivo csv realizar un analisi completo de cada columna 
+    Args:
+        df: dataframe
+        requiere de instalacion del paquete de pandas profile
+    
+    Returns:
+        Analisis completo de cada columna
+    '''
+
     df=pd.read_csv(csv)
     profile=ProfileReport(df, title="Pandas Profiling Report")
     return (profile)
