@@ -1,73 +1,63 @@
 '''
 Librerias a utilizar
 '''
-import profile
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.graph_objs as go
-import re
-from plotly.offline import init_notebook_mode, iplot, plot
-from matplotlib import cm
-import joypy
-from joypy import joyplot
-import random
-import wget
-import pygame
-import ssl
-import sys, time, os
-
-from sklearn.metrics import mean_squared_error
-import numpy as np
-from sklearn.metrics import r2_score
-from sklearn.metrics import mean_absolute_error
-
-import cv2 as cv
-from time import time
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression,Ridge,Lasso
-from sklearn import linear_model, metrics, model_selection
-from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score, mean_absolute_error, explained_variance_score
-from sklearn import metrics
-from sklearn import preprocessing
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import Ridge
-from sklearn.linear_model import Lasso
-from sklearn.linear_model import ElasticNet
-from sklearn.ensemble import BaggingRegressor
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.ensemble import VotingRegressor
-from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.svm import SVR
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import mean_squared_error
-import numpy as np
-from sklearn.metrics import r2_score
-from sklearn.metrics import mean_absolute_error
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
-from sklearn import metrics
 from datetime import datetime
 from imblearn.over_sampling import RandomOverSampler
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from imblearn.pipeline import Pipeline
 from imblearn.under_sampling import RandomUnderSampler
-from imblearn.pipeline import Pipeline 
-from sklearn.preprocessing import LabelEncoder
+from joypy import joyplot
+from matplotlib import cm
 from pandas_profiling import ProfileReport
+from plotly.offline import init_notebook_mode, iplot, plot
 from skimage.io import imread
-import os
+from sklearn import linear_model, metrics, model_selection
+from sklearn import metrics
+from sklearn import preprocessing
+from sklearn.ensemble import BaggingRegressor
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import ExtraTreesRegressor
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.ensemble import VotingRegressor
+from sklearn.linear_model import ElasticNet
+from sklearn.linear_model import Lasso
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression,Ridge,Lasso
+from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import Ridge
+from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score,f1_score,confusion_matrix,r2_score, mean_absolute_error, explained_variance_score
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import r2_score
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.svm import SVC
+from sklearn.svm import SVR
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeRegressor
+from time import time
 import cv2
+import cv2 as cv
+import joypy
+import matplotlib.pyplot as plt
 import numpy as np
+import os
+import pandas as pd
+import plotly.graph_objs as go
+import profile
+import pygame
+import random
+import re
+import seaborn as sns
+import ssl
+import sys, time, os
+import wget
 
 
-## | JAVI |
+
+## | JAVI | 20_09_14_28
 
 def linear_regression_fit(X,y,test_size_1:float,random_state_1:int):
     '''
@@ -108,6 +98,7 @@ def linear_regression_fit(X,y,test_size_1:float,random_state_1:int):
     print(lin_reg.coef_)
 
     return X_train, X_test, y_train, y_test,lin_reg, lin_reg.intercept_,lin_reg.coef_
+    
     
 def error_metrics_regression (model,X_test,y_test,X_train,y_train):
     '''
@@ -155,10 +146,6 @@ def error_metrics_regression (model,X_test,y_test,X_train,y_train):
     print('MAPE:',mape_train)
     print('MSE:', mse_train)
     print('RMSE:', msqe_train)
-
-    print("Esta es la importancia de las variables:\n-----")
-    features = pd.DataFrame(model.coef_, X_train.columns, columns=['coefficient'])
-    print(features.head().sort_values('coefficient', ascending=False))
 
     return mae_pred,mape_pred,mse_pred,msqe_pred,mae_train,mape_train,mse_train,msqe_train
 
@@ -288,13 +275,20 @@ def current_time():
     diaSemana = hoy.strftime("%A")
 
     return diaSemana, dia, mes, anyo, hora, minuto, segundo
-
+    
 
 def csv_visual_analysis(csv):
     '''
     Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
     (Comparativa por columnas, mapa de calor, mapa de correlaciones.)
-    '''    
+
+    Args:
+        df: dataframe
+        requiere de instalacion del paquete de pandas profile
+    
+    Returns:
+        Analisis completo de cada columna
+    '''
     df=pd.read_csv(csv)
     profile=ProfileReport(df, title="Pandas Profiling Report")
     return (profile)
@@ -304,7 +298,7 @@ def csv_visual_analysis(csv):
 
 ## | SARA | 20_09_14_28
 
-def grafico_goscatter(df, columna_eje_x, columna_eje_y, color, texto_labels):
+def goscatter_one_column(df, columna_eje_x, columna_eje_y, color, texto_labels):
     '''
     Función para crear un gráfico PLOTLY scatter de tipo lineal
     a partir de una columna de un dataframe,
@@ -449,7 +443,6 @@ def drop_when_condition(df, columna, condicion):
 ## | IRENE | 20_09_15_00
 
 def data_report(df):
-
     '''
     Genera DF cuyas columnas son las del df, y filas q indican el tipo de dato, porcentaje de missings, número de valores únicos 
     y porcentaje de cardinalidad.
@@ -460,7 +453,6 @@ def data_report(df):
     Return:
         Dataframe de valor informativo
     '''
-
     cols = pd.DataFrame(df.columns.values, columns=["COL_N"])
 
     types = pd.DataFrame(df.dtypes.values, columns=["DATA_TYPE"])
@@ -513,7 +505,7 @@ def radical_dropping(df):
 
 
         
-## | MARIO |
+## | MARIO | 20-09-2022
 
     
 def read_images_folder_bw(path, im_size, class_names_label):
@@ -622,7 +614,6 @@ def read_images(path, img_size):
         X.append(resize_image)
     return np.array(X)
 
-
 ## | Xin |
 
 def boxplot_num_columns(df):
@@ -681,7 +672,7 @@ def show_nan_with_percentage(df):
     return pd.concat([suma_nan, percentaje_nan], axis=1, keys = ['suma_nan', 'percentaje_nan'])
 
 
-#|| LAURA ||
+#|| LAURA | 20-09-2022
 
 def pieplot_one_column(dataframe, column, title, background_colour, colour_map=None):
     '''
@@ -831,7 +822,7 @@ def help_data():
             number += 1 
 
 
-## | QINGHUA |
+## | QINGHUA | 20-09-2022
 
 
 def feature_importances(model,X):
@@ -888,8 +879,7 @@ def displot_multiple_col(df):
         sns.displot(x=col,data=df, palette=["#ff006e", "#83c5be", "#3a0ca3"])
         plt.show()
 
-## Christian
-
+## | Christian | 20-09-2022
 def train_sampler (X_train, y_train,randomstate,scalertype,sampletype):
     '''
     Función para realizar over o undersampling o randomsampling para datos no balanceados.
@@ -956,7 +946,6 @@ def string_replacer (df,col,replacestring,newvalue):
     df[col] = df[col].apply(lambda x : x.replace(replacestring,newvalue) )
     return df[col]
 
-
 def basic_encoding (df):
     '''
     Realiza el encoding de variables categorícas en númericas de manera simple, 
@@ -976,6 +965,7 @@ def basic_encoding (df):
 
     return df
 
+## | Enrique | 20-09-2022
 
 def clean_emoji(text):
     ''' 
@@ -1081,11 +1071,14 @@ def drop_outliers_one_column(df, field_name):
 
     return df
 
+
 ## | Antonio |
 
-def try_multiple_models(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), KNeighborsRegressor(), SVR()], 
-ModelosClasificacion = [LogisticRegression(), DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), KNeighborsClassifier(), SVC()], 
-agregar = [], quitar = [], metricas = [], tipo = "regresion"):
+def try_multiple_models(xtrain, ytrain, xtest, ytest, ModelosRegresion = [LinearRegression(), Ridge(), Lasso(), 
+                        ElasticNet(), DecisionTreeRegressor(), RandomForestRegressor(), ExtraTreesRegressor(), 
+                        KNeighborsRegressor(), SVR()], ModelosClasificacion = [LogisticRegression(), 
+                        DecisionTreeClassifier(), RandomForestClassifier(), ExtraTreesClassifier(), 
+                        KNeighborsClassifier(), SVC()], agregar = [], quitar = [], metricas = [], tipo = "regresion"):
     '''
     Función para probar un conjunto de modelos de regresión y clasificación con los parámetros por defecto devolviendo las metricas de precisión de cada modelo.
     Esto es útil para hacerse una primera idea de hacia cuál modelo poder enfocarse
@@ -1209,7 +1202,7 @@ def transform_all_columns(data, type1 = "object", type2 = "float64"):
         data[i] = data[i].astype(type2)
 
 
-## Tarik
+## | Tarik | 20-09-2022
 
 def replace_nan_mode(data):
     '''
@@ -1226,3 +1219,36 @@ def replace_nan_mode(data):
 
     for column in iguala:
         data[column] = data[column].fillna(data[column].value_counts().index[0])
+
+
+
+def train_regression(model, xtrain, ytrain, xtest, ytest):
+    '''
+    Funcion que entrena modelo de regresión y devuelve las metricas.
+    Args:
+        model(model) = modelo que vamos a entrenar.
+    
+        xtrain, ytrain, xtest, ytest = los valores que vamos a entrenar, para entrenar el modelo.
+    
+    Return: Devuelve las predicciones del model
+    
+    '''
+    model.fit(xtrain,ytrain)
+    print("intercepto:", model.intercept_)
+    print("coeficientes:", model.coef_)
+    mp = model.predict(xtest)
+    print('-'*100)
+    print('MAE') 
+    print(mean_absolute_error(ytest, mp))
+    print('-'*100)
+    print('MSE')
+    print(metrics.mean_squared_error(ytest,mp))
+    print('-'*100)
+    print('RMSE') 
+    print(np.sqrt(metrics.mean_squared_error(ytest, mp)))
+    print('-'*100)
+    print('R2 SCORE')
+    print(r2_score(ytest,mp))
+
+    return mp
+
