@@ -1,8 +1,7 @@
 # NUMERITOS
 
-#### Este es una librería enfocada a todo el campo de Data Science para poder ahorrar tiempo de desarrollo de código para tareas comunes.
-
-#### Esta librería cuenta con más de 40 funciones documentadas de visualización, transformación de datos y entrenamiento de modelos.
+Librería enfocada a todo el campo de Data Science para poder ahorrar tiempo de desarrollo de código para tareas comunes.
+Cuenta con más de 54 funciones documentadas de visualización, transformación de datos y entrenamiento de modelos.
 
 -----
 
@@ -83,3 +82,9 @@
 * **Seaborn**
 * **re**
 * **os**
+=======
+#### [Christian J. Bader](https://github.com/jeromebader) / [Sara de Vera](https://github.com/saradevera) / [Enrique Rubio](https://github.com/EnriRuRu) / [Xinmeng Ye](https://github.com/xyaimao)
+#### [Qinghua Liang](https://github.com/qinghua03)/ [Irene Gonzalez](https://github.com/irene-glez) / [Luis Valverde](https://github.com/lumivalsa) / [Tarik El Hannach](https://github.com/tarikelhannach)
+
+----
+### [Enlace a Paquete Pypi]()
