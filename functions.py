@@ -103,15 +103,10 @@ def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
     print("Estos son los datos del valor de y en x=0 y de las pendientes de cada gradiente de las variables:\n-----")
     print(lin_reg.intercept_)
     print(lin_reg.coef_)
-    coeff_df = pd.DataFrame(lin_reg.coef_,
-                            X.columns,
-                            columns=['Coefficient'])
-    print("Estos son las pendientes de cada gradiente visto en un Dataframe:\n-----")
-    print(coeff_df)
 
-    return X_train, X_test, y_train, y_test,lin_reg, lin_reg.intercept_,lin_reg.coef_,coeff_df
-
-def función_metricas_error (model,X_test,y_test,X_train,y_train):
+    return X_train, X_test, y_train, y_test,lin_reg, lin_reg.intercept_,lin_reg.coef_
+    
+def funcion_metricas_error (model,X_test,y_test,X_train,y_train):
     '''
     Función que a partir de la función entrenada te facilita las métricas más importantes en regresión lineal.
     
@@ -157,6 +152,10 @@ def función_metricas_error (model,X_test,y_test,X_train,y_train):
     print('MAPE:',mape_train)
     print('MSE:', mse_train)
     print('RMSE:', msqe_train)
+
+    print("Esta es la importancia de las variables:\n-----")
+    features = pd.DataFrame(model.coef_, X_train.columns, columns=['coefficient'])
+    print(features.head().sort_values('coefficient', ascending=False))
 
     return mae_pred,mape_pred,mse_pred,msqe_pred,mae_train,mape_train,mse_train,msqe_train
 
