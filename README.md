@@ -16,61 +16,69 @@
 ### [Enlace a Paquete Pypi]()
 
 ## Visualización
-#### graficas
-#### feature_visual
-#### grafico_goscatter
-#### 
-#### 
-#### 
-#### 
-#### 
-#### 
-#### 
-#### 
-#### 
-#### 
-#### 
-#### 
+* feature_visual
+* grafico_goscatter
+* gen_diagram_caja
+* pieplot_one_column
+* joyplot_one_column
+* subplots
+* graf_displot
 
 
 
 ## Transformación de datos
-#### time_now
-#### sustituye_texto
-#### extraer_con_regex
-#### eliminar_entre_parentesis_en_df
-#### where_contains
-#### 
-#### 
-#### 
-#### 
-#### 
+* time_now
+* sustituye_texto
+* extraer_con_regex
+* eliminar_entre_parentesis_en_df
+* where_contains
+* drop_con_condicion
+* data_report---
+* number_of_outliers---
+* radical_dropping
+* read_data_bw
+* read_data_color
+* read_data
+* sustituir_outliers
+* muestra_nan---
+* acotar_valores_clase
+* wrap_perspective_cv2
+* train_sampler
+* string_replacer
+* basic_encoding
+* clean_emoji
+* MinMaxCorr---
+* DfTransType
+* sustituye_nan_moda
+* train_regression
+* clean_edad
+
+
 ## Modelos de ML
-#### funcion_lineal_regression
-#### funcion_metricas_error
-#### funcion_ridge
-#### funcion_lasso
-#### correccion_ridge_a_aplicar
-#### correccion_lasso_a_aplicar
-#### error_modelo
-#### 
-#### 
-#### 
+* funcion_lineal_regression
+* funcion_metricas_error
+* funcion_ridge
+* funcion_lassoV
+* error_modelo
+* feature_importance
+* nine_Regressor_Models
+* PruebaModelos
+* root_mean_squared_error
 
 ----
 
-## Dependencias
+## Dependencias principales
 
-#### Pandas
-#### Numpy
-#### CV2
-#### Sklearn
-#### Skimage
-#### time
-#### pygame
-#### joypy
-#### plotly
-#### matplotlib
-#### Seaborn
-#### re
-#### os
+* **Pandas**
+* **Numpy**
+* **CV2**
+* **Sklearn**
+* **Skimage**
+* **time**
+* **pygame**
+* **joypy**
+* **plotly**
+* **matplotlib**
+* **Seaborn**
+* **re**
+* **os**
