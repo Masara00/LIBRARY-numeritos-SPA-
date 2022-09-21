@@ -142,7 +142,6 @@ Las librerías que hemos ido utilizando durante el desarrollo son:
 * *plotly*
 * *re*
 * *Seaborn*
-=======
 * **Pandas**
 * **Numpy**
 * **CV2**
