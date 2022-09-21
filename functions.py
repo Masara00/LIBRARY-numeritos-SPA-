@@ -868,25 +868,24 @@ def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line
     plt.show()
 
 
-def acotar_valores_clase(dataframe, columna_a_filtrar, clase, max_val, min_val):
+def acotar_valores_clase(dataframe, columnaclases, clase, columna_a_filtrar, max_val, min_val):
     '''
     Función para acotar el rango de valores de una determinada columna, haciendo una máscara por cada 
     clase, o valor de otra columna. Las filas por encima y por debajo de los valores dados se eliminarán.
     Args:
         dataframe: Dataframe a utilizar (dataframe)
-        columna_clases: Columna por la que se quiere hacer la máscara (str)
-        clase: Columna de la que se analizarán los datos
-        max_val: Valor máximo, los valores que estén por encima se eliminarán
-        min_val: Valor mínimo, los valores que estén por debajo se eliminarán
+        columna_clases: Columna categórica que contiene las clases con las que queremos crear máscaras para filtrar (str)
+        clase: Elemento dentro de la columna de clases, con el que se quiere realizar la máscara (str)
+        columna_a_filtrar: Columna numérica con la cual se quieren acotar los valores númericos (str)
+        max_val: Valor máximo, los valores de la columna a filtrar que estén por encima se eliminarán (num)
+        min_val: Valor mínimo, los valores de la columna a filtrar que estén por debajo se eliminarán (num)
     Return:
         Elimina los valores por encima y por debajo de cierto valor
     '''
-    clase = dataframe.loc[dataframe.clase == clase, columna_a_filtrar]
-    
+    clase = dataframe.loc[dataframe[columnaclases] == clase, columna_a_filtrar]
     above_threshold = clase[clase > max_val].index.tolist()
     below_threshold = clase[clase < min_val].index.tolist()
     indexNames = above_threshold + below_threshold
-    
     dataframe.drop(indexNames, inplace=True)
 
 
