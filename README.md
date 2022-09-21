@@ -83,8 +83,5 @@ Cuenta con más de 54 funciones documentadas de visualización, transformación 
 * **re**
 * **os**
 =======
-#### [Christian J. Bader](https://github.com/jeromebader) / [Sara de Vera](https://github.com/saradevera) / [Enrique Rubio](https://github.com/EnriRuRu) / [Xinmeng Ye](https://github.com/xyaimao)
-#### [Qinghua Liang](https://github.com/qinghua03)/ [Irene Gonzalez](https://github.com/irene-glez) / [Luis Valverde](https://github.com/lumivalsa) / [Tarik El Hannach](https://github.com/tarikelhannach)
 
-----
 ### [Enlace a Paquete Pypi]()
