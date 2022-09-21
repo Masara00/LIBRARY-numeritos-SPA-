@@ -8,13 +8,15 @@
 
 ## Equipo:
 
-#### [Laura Barreda](https://github.com/lauragreemko) / [Javier Tenorio](https://github.com/75Engel) / [Antonio Morales](https://github.com/Toni2Morales) / [Mario](https://github.com/Masara00)
-#### [Christian Jerome Bader](https://github.com/jeromebader) / [Sara Devera](saradevera) / [Enrique Rubio](https://github.com/EnriRuRu) / [Xin](xyaimao)
-#### [Qinhua](https://github.com/qinghua03) / [Irene Glez](https://github.com/irene-glez) / [Luis](https://github.com/lumivalsa) / [Tarik El Hannach](https://github.com/tarikelhannach)
+#### [Laura Barreda](https://github.com/lauragreemko) / [Javier Tenorio](https://github.com/75Engel) / [Antonio Morales](https://github.com/Toni2Morales) / [Mario Sabrás](https://github.com/Masara00)
+#### [Christian Jerome Bader](https://github.com/jeromebader) / [Sara Devera](saradevera) / [Enrique Rubio](https://github.com/EnriRuRu) / [Xinmeng Ye](xyaimao)
+#### [Qinhua Liang](https://github.com/qinghua03) / [Irene Glez](https://github.com/irene-glez) / [Luis Miguel Valverde](https://github.com/lumivalsa) / [Tarik El Hannach](https://github.com/tarikelhannach)
 
 ----
+
 ### [Enlace a Paquete Pypi]()
 
+----
 ## Visualización
 * feature_visual
 * grafico_goscatter
@@ -25,7 +27,6 @@
 * graf_displot
 
 
-
 ## Transformación de datos
 * time_now
 * sustituye_texto
@@ -33,21 +34,21 @@
 * eliminar_entre_parentesis_en_df
 * where_contains
 * drop_con_condicion
-* data_report---
-* number_of_outliers---
+* data_report
+* number_of_outliers
 * radical_dropping
 * read_data_bw
 * read_data_color
 * read_data
 * sustituir_outliers
-* muestra_nan---
+* muestra_nan
 * acotar_valores_clase
 * wrap_perspective_cv2
 * train_sampler
 * string_replacer
 * basic_encoding
 * clean_emoji
-* MinMaxCorr---
+* MinMaxCorr
 * DfTransType
 * sustituye_nan_moda
 * train_regression
