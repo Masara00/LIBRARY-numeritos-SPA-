@@ -404,7 +404,7 @@ def eliminar_entre_parentesis_en_df(df, columna):
     return df
 
 
-def where_contains(df, columna, palabra_clave):
+def where_contains(df, columna, nueva_columna, palabra_clave):
     '''
     Función para crear columnas nuevas en un dataframe,
     a partir de si en otra columna está o no la palabra_clave.
@@ -425,7 +425,7 @@ def where_contains(df, columna, palabra_clave):
         df['details']= np.where((df['details'].str.contains('hidromasaje')),1,0)
     '''
 
-    df[columna]= np.where((df[columna].str.contains(palabra_clave)),1,0)
+    df[nueva_columna]= np.where((df[columna].str.contains(palabra_clave)),1,0)
     return df
 
 
