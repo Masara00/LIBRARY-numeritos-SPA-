@@ -16,6 +16,7 @@ import random
 import wget
 import pygame
 import ssl
+import sys, time, os
 
 
 import cv2 as cv
@@ -930,6 +931,26 @@ def sql_rules():
     pygame.init()
     pygame.mixer.init()
     pygame.mixer.Sound.play(pygame.mixer.Sound(path))
+
+
+def help_data():
+    '''
+    Función que esr¡be 'me da error' en bucle, con estilo tipografía (las letras salen en diferentes tiempos).
+    Return:
+        El texto de 'me da error'
+    '''
+    print('Help it\'s on the way')
+    time.sleep(2)
+
+    message = 'me da error \n'
+    number = 0
+
+    while number < 2000:
+        for char in message:
+            sys.stdout.write(char)
+            sys.stdout.flush()
+            time.sleep(0.015)
+            number += 1 
 
 
 ## | QINGHUA |
