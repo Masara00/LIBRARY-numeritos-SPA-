@@ -52,7 +52,7 @@ def linear_regression_fit(X,y,test_size_1:float,random_state_1:int):
         test_size:float, porcentaje designado para test
         random_state: semilla para reproducir la función.
 
-    Return:
+    Returns:
         Devuelve las siguientes variables:
         X_train: Dataframe de las variables predictoras para el entrenamiento del modelo de regresión lineal
         X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
@@ -94,7 +94,7 @@ def error_metrics_regression (model,X_test,y_test,X_train,y_train):
         y_train: Dataframe de las variables target para el entrenamiento del modelo de regresión lineal
         y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal.
 
-    Return:
+    Returns:
         Devuelve las siguientes variables:
         mae_pred: Mean Absolute Error de las prediciones 
         mape_pred: Mean absolute percentage error de las predicciones
@@ -150,7 +150,7 @@ def ridge_fit (model,X_test,y_test,X_train,y_train,alpha_1):
         y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
         alpha_1:int. Número de variable alpha para entrenar la función Ridge.
 
-    Return:
+    Returns:
         RidgeR: función Ridge entrenada.
     '''
     
@@ -186,7 +186,7 @@ def lasso_fit(model,X_test,y_test,X_train,y_train,alpha_1:int):
         y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
         alpha_1:int. Número de variable alpha para entrenar la función Ridge.
 
-    Return:
+    Returns:
         LassoR: función Ridge entrenada.
     '''
 
@@ -220,7 +220,7 @@ def error_metrics_classifier(model, X_test, y_test):
         X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
         y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal.
 
-    Return:
+    Returns:
         df_error: Dataframe donde aparecen los datos de 'Accuracy','f-1 score','Recall','Precision'.
         Grafica de la matriz de confunsión. 
     '''
@@ -252,7 +252,7 @@ def current_time():
 
     Args: No tiene parámetros.
 
-    Return(tuple): Tupla de strings con el día de la semana, día del mes, mes, año, hora, minuto y segundo actual.
+    Returns(tuple): Tupla de strings con el día de la semana, día del mes, mes, año, hora, minuto y segundo actual.
     '''
     dt = datetime.now()
 
@@ -274,6 +274,12 @@ def csv_visual_analysis(csv):
     '''
     Función que permite importar el archivo csv y devolver un analisis de cada columna del dataframe.
     (Comparativa por columnas, mapa de calor, mapa de correlaciones.)
+
+    Args:
+        csv: archivo en formato csv del que se quiere hacer el análisis
+
+    Returns:
+        Análisis visual y de correlaciones de las diferentes variables numéricas en el dataset
     '''    
     df=pd.read_csv(csv)
     profile=ProfileReport(df, title="Pandas Profiling Report")
@@ -293,7 +299,7 @@ def replace_text(df, columna, condicion, reemplazo):
         condicion: lo que queremos sustituir
         reemplazo: lo que queremos que aparezca
 
-    Return:
+    Returns:
         Dataframe modificado.
 
     Ejemplos:
@@ -324,7 +330,7 @@ def regex_extraction(df, columna, clave_regex):
         clave_regex: la clave regex que seleccione lo que nos queremos quedar.
              *Formato para la clave_regex = '(regex)'
  
-    Return:
+    Returns:
         Dataframe modificado.
 
     Ejemplos:
@@ -346,7 +352,7 @@ def remove_text_parenthesis(df, columna):
         df: dataframe
         columna: columna del dataframe
 
-    Return:
+    Returns:
         Dataframe modificado.
     '''
     for i in range(len(df[columna])):
@@ -371,7 +377,7 @@ def new_col_where_contains(df, columna, nueva_columna, palabra_clave):
         columna: columna del dataframe
         palabra_clave: string
 
-    Return:
+    Returns:
         Dataframe modificado.
 
     Ejemplo:
@@ -393,7 +399,7 @@ def drop_when_condition(df, columna, condicion):
         columna: columna del dataframe
         condicion: lo que tienen que cumplir los registros que queremos eliminar
 
-    Return:
+    Returns:
         Dataframe modificado.
     '''
 
@@ -411,7 +417,7 @@ def data_report(df):
     Arg:
         df: dataframe
 
-    Return:
+    Returns:
         Dataframe de valor informativo
     '''
 
@@ -441,7 +447,7 @@ def outliers_count(df):
     Arg:
         df: dataframe 
 
-    Return:
+    Returns:
         Imprime por pantalla la suma de outliers para cada columna
     '''
     Q1 = df.quantile(0.25)
@@ -459,7 +465,7 @@ def radical_dropping(df):
     Arg:
         df: dataframe
 
-    Return:
+    Returns:
         Dataframe modificado
     '''
     df.drop_duplicates(inplace=True)
@@ -479,7 +485,7 @@ def read_images_folder_bw(path, im_size, class_names_label):
 
         class_names_label(dict): nombre de las variables a etiquetar.
       
-    Return:
+    Returns:
         X: el array de los datos de las imágenes.
 
         Y: array con los label correspondientes a las imágenes.
@@ -522,7 +528,7 @@ def read_images_folder_color(path, im_size, class_names_label):
 
         class_names_label(dict): nombre de las variables a etiquetar.
       
-    Return:
+    Returns:
         X: el array de los datos de las imágenes.
 
         Y: array con los label correspondientes a las imágenes.
@@ -581,7 +587,7 @@ def boxplot_num_columns(df):
     Args: 
         df : datafreme
 
-    Return: 
+    Returns: 
         n diagrama de caja 
     '''
     num_cols = df.select_dtypes(exclude='object').columns
@@ -601,7 +607,7 @@ def replace_outliers(df, col):
         df : datafreme
         col : la columna que contiene outliers
 
-    Return: 
+    Returns: 
         datafreme sustituido
     '''
     q1 = df[col].quantile(0.25)
@@ -623,7 +629,7 @@ def show_nan_with_percentage(df):
     Args: 
         df : datafreme
 
-    Return: 
+    Returns: 
         detafreme : datafreme nuevo donde muestra el porcentaje de missing values. 
     '''
     suma_nan = df.isnull().sum().sort_values(ascending = False)
@@ -646,7 +652,7 @@ def pieplot_one_column(dataframe, column, title, background_colour, colour_map=N
         colour_map: Mapa de color de matplotlib en formato: cm.seismic, las paletas se 
                     pueden encontrar en https://matplotlib.org/stable/tutorials/colors/colormaps.html
 
-    Return:
+    Returns:
         Gráfica pieplot
     '''
     fig, ax = plt.subplots(facecolor=background_colour, figsize=(13, 8))
@@ -676,7 +682,7 @@ def joyplot_one_column(dataframe, classifier_column, numeric_column, title, line
         figsize: Tamaño de la figura, en formato tupla. Por defecto es (7,4)
         x_limit: Límites para el eje x, formato lista. Por defecto es None.
 
-    Return:
+    Returns:
         Gráfica joyplot
     '''
     fig, axes = joyplot(dataframe, by = classifier_column, column = numeric_column, colormap=colour_map, fade = True, 
@@ -700,7 +706,7 @@ def narrow_down_col_by_class(dataframe, columnaclases, clase, columna_a_filtrar,
         max_val: Valor máximo, los valores de la columna a filtrar que estén por encima se eliminarán (num)
         min_val: Valor mínimo, los valores de la columna a filtrar que estén por debajo se eliminarán (num)
 
-    Return:
+    Returns:
         Elimina los valores por encima y por debajo de cierto valor
     '''
     clase = dataframe.loc[dataframe[columnaclases] == clase, columna_a_filtrar]
@@ -719,7 +725,7 @@ def wrap_perspective_cv2(src, strength):
         src: Array de píxels de la imagen a transformar 
         strength: Nivel de distorsión, a más alto, mayor distorsión (int)
 
-    Return:
+    Returns:
         Devuelve la imagen distorsionada
     '''
     image = src
@@ -741,7 +747,7 @@ def sql_rules():
 
     Args: Sin argumentos.
 
-    Return:
+    Returns:
         Suena el estribillo
     '''
     # get current directory and create path
@@ -769,7 +775,7 @@ def help_data():
 
     Args: Sin argumentos.
 
-    Return:
+    Returns:
         El texto de 'me da error'
     '''
     print('Help it\'s on the way')
@@ -1060,7 +1066,7 @@ agregar = [], quitar = [], metricas = [], tipo = "regresion"):
         tipo(str): Elige entre si quieres entrenar modelos de regresión o de clasificación.
                    Las opciones son "regresión" o "clasificacion".
     
-    Return:
+    Returns:
         None
     '''
     medidas = []
@@ -1123,7 +1129,7 @@ def min_max_corr(data, min, max = None):
         max(int): Número máximo de correlación que buscas. Por defecto tiene None y buscará todos los 
                   valores por encima del parámetro min que no sea 1.bit_length
 
-    Return: 
+    Returns: 
         Matriz de correlación con las columnas que tienen más correlación entre ellas
     '''
     if max == None:
@@ -1143,8 +1149,8 @@ def root_mean_squared_error(y_true, y_pred):
         y_true(array): Variable objetivo con los valores correctos.
         y_pred(array): Variable objetivo con valores predichos por el modelo deseado.
     
-    Return: 
-        int
+    Returns: 
+        Root Mean Squared Error de la variable target del test y las predicciones
     '''
     print(np.square(metrics.mean_squared_error(y_true, y_pred)))
 
@@ -1159,7 +1165,7 @@ def transform_all_columns(data, type1 = "object", type2 = "float64"):
         type1(str): Tipo de dato a cambiar. Por defecto es "object".
         type2(str): Tipo de dato al cual cambiar. Por defecto es "float64".
     
-    Return: 
+    Returns: 
         None
     '''
     for i in data.dtypes[data.dtypes == type1].index:
@@ -1175,7 +1181,7 @@ def replace_nan_mode(data):
     Args:
         data = dataset que contiene los datos con objeto de estudio.
     
-    Return: 
+    Returns: 
         dataframe listo para su estudio y visualización.
     '''
     iguala = [column for column in data.columns if data[column].isna().sum() > 0]
