@@ -66,28 +66,6 @@ import numpy as np
 
 ## | JAVI |
 
-def graficas (df,y):
-    '''
-    Función para representar varias graficas antes de realizar cualquier modelo
-    df es un DataFrame.
-
-    Args:
-        df:Dataframe con las variables numéricas
-        y: Variable target.
-
-    Return:
-        Subplot compuesto por:
-        Gráfica 'pairplot'
-        Gráfica 'heatmap'
-    '''
-    plt.figure(figsize=(20,20))
-    sns.pairplot(df)
-    plt.fig, axes = plt.subplots(2,1)
-    sns.distplot(y, ax = axes[0])
-    sns.heatmap(df.corr(), annot=True, ax = axes[1])
-    axes[0].set_title("Distribucion")
-    axes[1].set_title("Mapa Correlación");
-
 def funcion_lineal_regression(X,y,test_size_1:float,random_state_1:int):
     '''
     Función para ingresar los datos de las variables previsoras (X) y la variable target (y), 
@@ -179,10 +157,6 @@ def función_metricas_error (model,X_test,y_test,X_train,y_train):
     print('MAPE:',mape_train)
     print('MSE:', mse_train)
     print('RMSE:', msqe_train)
-
-    print("Esta es la importancia de las variables:\n-----")
-    features = pd.DataFrame(model.coef_, X_train.columns, columns=['coefficient'])
-    print(features.head().sort_values('coefficient', ascending=False))
 
     return mae_pred,mape_pred,mse_pred,msqe_pred,mae_train,mape_train,mse_train,msqe_train
 
