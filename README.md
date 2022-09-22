@@ -117,7 +117,7 @@ Te ofrecemos las siguientes funciones:
 
 ***
 
-### [Enlace a Paquete Pypi]()
+### [Enlace a Paquete Pypi](https://pypi.org/project/numeritos/1.0/)
 
 
 ----
