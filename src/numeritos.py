@@ -199,7 +199,7 @@ def lasso_fit(model,X_test,y_test,X_train,y_train,alpha_1:int):
         X_test: Dataframe de las variables predictoras para el testeo del modelo de regresión lineal
         y_train: Dataframe de la variable target para el entrenamiento del modelo de regresión lineal
         y_test: Dataframe de la variable target para el testeo del modelo de regresión lineal
-        alpha_1:int. Número de variable alpha para entrenar la función Ridge.
+        alpha_1:int. Número de variable alpha para entrenar la función Lasso.
 
     Returns:
         LassoR: función Lasso entrenada.
