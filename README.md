@@ -15,7 +15,7 @@ Este proyecto nace de la colaboración entre los alumnos del BootCamp de Data Sc
 
 Hemos puesto en común funciones que cada uno ha ido desarrollando a lo largo del curso para sus proyectos individuales. 
 
-Hemos logrado agrupar 54 funciones muy útiles para tareas relativas a:
+Hemos logrado agrupar 40 funciones muy útiles para tareas relativas a:
 
   > visualización de datos
   >
