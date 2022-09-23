@@ -37,55 +37,52 @@ Te ofrecemos las siguientes funciones:
 
 ##### Visualización
 
-* feature_visual
-* grafico_goscatter
-* gen_diagram_caja
-* pieplot_one_column
+* boxplot_num_columns
+* displot_multiple_col
+* feature_importances
 * joyplot_one_column
-* subplots
-* graf_displot
+* pieplot_one_column
+* plots_scatter_line_column
 
 
 ##### Transformación de datos
 
-* time_now
-* sustituye_texto
-* extraer_con_regex
-* eliminar_entre_parentesis_en_df
-* where_contains
-* drop_con_condicion
-* data_report
-* number_of_outliers
-* radical_dropping
-* read_data_bw
-* read_data_color
-* read_data
-* sustituir_outliers
-* muestra_nan
-* acotar_valores_clase
-* wrap_perspective_cv2
-* train_sampler
-* string_replacer
 * basic_encoding
 * clean_emoji
-* MinMaxCorr
-* DfTransType
-* sustituye_nan_moda
-* train_regression
-* clean_edad
+* current_time
+* data_report
+* drop_outliers_one_column
+* drop_when_condition
+* min_max_corr
+* narrow_down_col_by_class
+* new_col_where_contains
+* outliers_count
+* radical_dropping
+* read_images
+* read_images_folder_bw
+* read_images_folder_color
+* regex_extraction
+* remove_text_parenthesis
+* replace_outliers
+* replace_text
+* show_nan_with_percentage
+* string_replacer
+* train_sampler
+* wrap_perspective_cv2
 
 
 ##### Machine Learning
 
-* funcion_lineal_regression
-* funcion_metricas_error
-* funcion_ridge
-* funcion_lassoV
-* error_modelo
-* feature_importance
-* nine_Regressor_Models
-* PruebaModelos
+* error_metrics_classifier
+* error_metrics_regression
+* lasso_fit
+* linear_regression_fit
+* nine_regressor_models
+* replace_nan_mode
+* ridge_fit
 * root_mean_squared_error
+* transform_all_columns
+* try_multiple_models
 
 ***
 
