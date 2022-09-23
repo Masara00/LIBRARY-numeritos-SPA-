@@ -3,7 +3,7 @@
 Numeritos
 ---------
 
->>> Contiene 54 funciones orientadas a:
+>>> Contiene 40 funciones orientadas a:
 ---------------------------------------
     1. Procesado de datos
     2. Visualización de datos
@@ -74,9 +74,9 @@ def linear_regression_fit(X,y,test_size_1:float,random_state_1:int):
         Devuelve las siguientes variables:
         X_train: Dataframe de las variables predictoras para el entrenamiento del modelo de regresión lineal
         X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_train: Dataframe de las variables target para el entrenamiento del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
-        lin_reg: módelo entrenado
+        y_train: Dataframe de la variable target para el entrenamiento del modelo de regresión lineal
+        y_test: Dataframe de la variable target para el testeo del modelo de regresión lineal
+        lin_reg: modelo entrenado
         lin_reg.intercept_: float, valor de ordenadas de la función de regresión lineal
         lin_reg.coef_: lista, coeficientes de la función de regresión lineal
         coeff_df: Dataframe con los coeficientes de la función de regresión lineal.
@@ -108,18 +108,18 @@ def error_metrics_regression (model,X_test,y_test,X_train,y_train):
     Args:
         model: modelo entrenado de regresión lineal
         X_train: Dataframe de las variables predictoras para el entrenamiento del modelo de regresión lineal
-        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_train: Dataframe de las variables target para el entrenamiento del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal.
+        X_test: Dataframe de las variables predictoras para el testeo del modelo de regresión lineal
+        y_train: Dataframe de la variable target para el entrenamiento del modelo de regresión lineal
+        y_test: Dataframe de la variable target para el testeo del modelo de regresión lineal.
 
     Returns:
         Devuelve las siguientes variables:
         mae_pred: Mean Absolute Error de las prediciones 
-        mape_pred: Mean absolute percentage error de las predicciones
+        mape_pred: Mean Absolute Percentage Error de las predicciones
         mse_pred: Mean Squared Error de las prediciones
         msqe_pred: Mean Squared Quadratic Error de las predicciones
         mae_train: Mean Absolute Error del entrenamiento
-        mape_train: Mean absolute percentage error del entrenamiento
+        mape_train: Mean Absolute Percentage Error del entrenamiento
         mse_train: Mean Squared Error del entrenamiento
         msqe_train: Mean Squared Quadratic Error de las entrenamiento.
     '''
@@ -136,7 +136,7 @@ def error_metrics_regression (model,X_test,y_test,X_train,y_train):
     mse_train=metrics.mean_squared_error(y_train, model.predict(X_train))
     msqe_train=np.sqrt(metrics.mean_squared_error(y_train, model.predict(X_train)))
 
-    print("El factor de correlacion de la regresión es: ",score)
+    print("El factor de correlación de la regresión es: ",score)
     print("Errores de las predicciones:\n---")
     print('MAE:', mae_pred)
     print('MAPE:', mape_pred)
@@ -158,14 +158,14 @@ def error_metrics_regression (model,X_test,y_test,X_train,y_train):
 
 def ridge_fit (model,X_test,y_test,X_train,y_train,alpha_1):
     '''
-    Función para entrenar la función de ridge y el calculo del error regularizando o sin regularizar del MSE.
+    Función para entrenar la función de Ridge y el calculo del error regularizando o sin regularizar del MSE.
 
     Args:
         model: modelo entrenado de regresión lineal
         X_train: Dataframe de las variables predictoras para el entrenamiento del modelo de regresión lineal
-        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_train: Dataframe de las variables target para el entrenamiento del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
+        X_test: Dataframe de las variables predictoras para el testeo del modelo de regresión lineal
+        y_train: Dataframe de la variable target para el entrenamiento del modelo de regresión lineal
+        y_test: Dataframe de la variable target para el testeo del modelo de regresión lineal
         alpha_1:int. Número de variable alpha para entrenar la función Ridge.
 
     Returns:
@@ -199,13 +199,13 @@ def lasso_fit(model,X_test,y_test,X_train,y_train,alpha_1:int):
     Args:
         model: modelo entrenado de regresión lineal
         X_train: Dataframe de las variables predictoras para el entrenamiento del modelo de regresión lineal
-        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_train: Dataframe de las variables target para el entrenamiento del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal
+        X_test: Dataframe de las variables predictoras para el testeo del modelo de regresión lineal
+        y_train: Dataframe de la variable target para el entrenamiento del modelo de regresión lineal
+        y_test: Dataframe de la variable target para el testeo del modelo de regresión lineal
         alpha_1:int. Número de variable alpha para entrenar la función Ridge.
 
     Returns:
-        LassoR: función Ridge entrenada.
+        LassoR: función Lasso entrenada.
     '''
 
     lassoR = Lasso(alpha=alpha_1)
@@ -234,14 +234,15 @@ def error_metrics_classifier(model, X_test, y_test):
     métricas más relevantes de un módelo clasificatorio.
 
     Args:
-        model: modelo entrenado de regresión lineal
-        X_test: Dataframe de las variables predictoras para el testo del modelo de regresión lineal
-        y_test: Dataframe de las variables target para el testeo del modelo de regresión lineal.
+        model: modelo entrenado de clasificación
+        X_test: Dataframe de las variables predictoras para el calculo de modelos clasificatorios
+        y_test: Dataframe de la variable target para el calculo de modelos clasificatorios.
 
     Returns:
         df_error: Dataframe donde aparecen los datos de 'Accuracy','f-1 score','Recall','Precision'.
-        Grafica de la matriz de confunsión. 
+        Grafica de la matriz de confusión. 
     '''
+
     y_pred = model.predict(X_test)
     f1_model=f1_score(y_test, y_pred,average='macro')
     acc_model=accuracy_score(y_test, y_pred)
@@ -272,6 +273,7 @@ def current_time():
 
     Returns(tuple): Tupla de strings con el día de la semana, día del mes, mes, año, hora, minuto y segundo actual.
     '''
+    
     dt = datetime.now()
 
     dia = str(dt.day).zfill(2)
@@ -297,7 +299,7 @@ def replace_text(df, columna, condicion, reemplazo):
         df: dataframe
         columna: columna del dataframe
         condicion: lo que queremos sustituir
-        reemplazo: lo que queremos que aparezca
+        reemplazo: lo que queremos que aparezca.
 
     Returns:
         Dataframe modificado.
@@ -318,17 +320,15 @@ def replace_text(df, columna, condicion, reemplazo):
 
 def regex_extraction(df, columna, clave_regex):
     '''
-    Función para quedarnos con la parte del texto o del dato que queramos
-    mediante regex. 
-    La columna existente se reemplaza por el resultado después de aplicar
-    regex.
-    *Formato para la clave_regex = '(regex)'
+    Función para extraer todo o una parte del texto que queramos mediante regex. 
+    La columna existente se reemplaza por el resultado después de aplicar regex.
+    *Formato para la clave_regex = '(regex)'.
 
     Args:
         df: dataframe
         columna: columna del dataframe
         clave_regex: la clave regex que seleccione lo que nos queremos quedar.
-             *Formato para la clave_regex = '(regex)'
+             *Formato para la clave_regex = '(regex)'.
  
     Returns:
         Dataframe modificado.
@@ -350,11 +350,12 @@ def remove_text_parenthesis(df, columna):
     
     Args:
         df: dataframe
-        columna: columna del dataframe
+        columna: columna del dataframe.
 
     Returns:
         Dataframe modificado.
     '''
+    
     for i in range(len(df[columna])):
         if '(' in df[columna][i]:
             df[columna][i] ="".join(re.split("\(|\)|\[|\]", df[columna][i]))
@@ -375,7 +376,7 @@ def new_col_where_contains(df, columna, nueva_columna, palabra_clave):
     Args:
         df: dataframe
         columna: columna del dataframe
-        palabra_clave: string
+        palabra_clave: string.
 
     Returns:
         Dataframe modificado.
@@ -383,6 +384,7 @@ def new_col_where_contains(df, columna, nueva_columna, palabra_clave):
     Ejemplo:
         df['details']= np.where((df['details'].str.contains('hidromasaje')),1,0)
     '''
+    
     df[nueva_columna]= np.where((df[columna].str.contains(palabra_clave)),1,0)
 
     return df
@@ -391,13 +393,13 @@ def new_col_where_contains(df, columna, nueva_columna, palabra_clave):
 
 def drop_when_condition(df, columna, condicion):
     '''
-    Funcion para eliminar los registros de una columna que cumplen
+    Función para eliminar los registros de una columna que cumplen
     una condición de tipo == condicion.
         
     Args:
         df: dataframe
         columna: columna del dataframe
-        condicion: lo que tienen que cumplir los registros que queremos eliminar
+        condicion: lo que tienen que cumplir los registros que queremos eliminar.
 
     Returns:
         Dataframe modificado.
@@ -411,14 +413,14 @@ def drop_when_condition(df, columna, condicion):
 
 def data_report(df):
     '''
-    Genera DF cuyas columnas son las del df, y filas q indican el tipo de dato, porcentaje de missings, número de valores únicos 
+    Genera un Dataframe cuyas columnas son las del dataframe original y filas que indican el tipo de dato, porcentaje de missings, número de valores únicos 
     y porcentaje de cardinalidad.
 
     Arg:
-        df: dataframe
+        df: dataframe.
 
     Returns:
-        Dataframe de valor informativo
+        Dataframe de valor informativo.
     '''
 
     cols = pd.DataFrame(df.columns.values, columns=["COL_N"])
@@ -442,13 +444,13 @@ def data_report(df):
 
 def outliers_count(df):
     '''
-    Devuelve el count de outliers en cada columna
+    Devuelve el conteo de outliers en cada columna.
 
     Arg:
-        df: dataframe 
+        df: dataframe.
 
     Returns:
-        Imprime por pantalla la suma de outliers para cada columna
+        Imprime por pantalla la suma de outliers para cada columna.
     '''
     Q1 = df.quantile(0.25)
     Q3 = df.quantile(0.75)
@@ -460,13 +462,13 @@ def outliers_count(df):
 
 def radical_dropping(df):
     '''
-    Elimina todos los missings y duplicados
+    Elimina todos los missings y duplicados.
 
     Arg:
-        df: dataframe
+        df: dataframe.
 
     Returns:
-        Dataframe modificado
+        Dataframe modificado.
     '''
     df.drop_duplicates(inplace=True)
 
@@ -479,14 +481,14 @@ def read_images_folder_bw(path, im_size, class_names_label):
     Lectura y etiquetado de imágenes en blanco y negro.
 
     Args:
-        path(str): ruta donde estarán el resto de carpetas.
+        path(str): ruta donde estarán el resto de carpetas
 
-        im_size(tuple): tamaño al que queremos pasar todas las imagenes.
+        im_size(tuple): tamaño al que queremos pasar todas las imágenes
 
         class_names_label(dict): nombre de las variables a etiquetar.
       
     Returns:
-        X: el array de los datos de las imágenes.
+        X: array con los datos de las imágenes
 
         Y: array con los label correspondientes a las imágenes.
     '''
@@ -522,14 +524,14 @@ def read_images_folder_color(path, im_size, class_names_label):
     Lectura y etiquetado de imágenes a color.
 
     Args:
-        path(str): ruta donde estarán el resto de carpetas.
+        path(str): ruta donde estarán el resto de carpetas
 
-        im_size(tuple): tamaño al que queremos pasar todas las imagenes.
+        im_size(tuple): tamaño al que queremos pasar todas las imágenes
 
         class_names_label(dict): nombre de las variables a etiquetar.
       
     Returns:
-        X: el array de los datos de las imágenes.
+        X: array con los datos de las imágenes
 
         Y: array con los label correspondientes a las imágenes.
     '''
@@ -560,13 +562,14 @@ def read_images_folder_color(path, im_size, class_names_label):
 
 def read_images(path, img_size):
     '''
-    Lectura de imágenes de una carpeta y resize al tamaño seleccionado
+    Lectura de imágenes de una carpeta y cambio al tamaño (resize)) seleccionado.
+
     Args:
-        path(str): ruta donde están las imágenes.
-        img_size: tamaño de las imágenes
+        path(str): ruta donde están las imágenes
+        img_size: tamaño de las imágenes.
 
     Returns:
-        X: el array de los datos de las imágenes.
+        X: con array de los datos de las imágenes.
     '''
     X = []
     for file in os.listdir(path):
