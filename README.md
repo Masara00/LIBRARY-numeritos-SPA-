@@ -13,7 +13,7 @@ Te invitamos a probar nuestra librería, un proyecto global que quiere facilitar
 
 Este proyecto nace de la colaboración entre los alumnos del BootCamp de Data Science de The Bridge - Digital Talent Accelerator, de la promoción de junio del 2022.
 
-Hemos puesto en común funciones que cada uno ha ido desarrollando a lo largo del curso para sus proyectos individuales. 
+Hemos puesto en común funciones que cada uno ha ido desarrollando a lo largo del curso para sus proyectos individuales.  
 
 Hemos logrado agrupar 40 funciones muy útiles para tareas relativas a:
 
